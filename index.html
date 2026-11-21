@@ -38,6 +38,91 @@ header{
 .sort-btn{padding:0 12px;height:44px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap}
 .sort-btn:active{transform:scale(.96)}
 
+/* MAIN CATEGORY CARDS */
+.maincats{
+  padding:14px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+.maincat{
+  position:relative;
+  border-radius:16px;
+  padding:16px 14px;
+  background:var(--card);
+  border:1px solid var(--border);
+  cursor:pointer;
+  overflow:hidden;
+  min-height:110px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:transform .15s,box-shadow .2s;
+  box-shadow:var(--shadow);
+}
+.maincat:active{transform:scale(.97)}
+.maincat::before{
+  content:"";
+  position:absolute;
+  top:-40px;right:-40px;
+  width:120px;height:120px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  opacity:.18;
+}
+.maincat .mc-icon{font-size:26px;margin-bottom:6px;position:relative;z-index:1}
+.maincat .mc-title{font-size:14px;font-weight:700;line-height:1.25;position:relative;z-index:1}
+.maincat .mc-count{
+  display:inline-flex;align-items:center;gap:4px;
+  margin-top:8px;
+  padding:4px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  font-size:11px;font-weight:700;color:var(--muted);
+  position:relative;z-index:1;
+  align-self:flex-start;
+}
+body.light .maincat .mc-count{background:rgba(0,0,0,.06)}
+.maincat.active{border-color:var(--accent);background:linear-gradient(135deg,var(--card),var(--card2))}
+.maincat.active .mc-count{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff}
+
+/* SUBCATEGORY GRID */
+.subcats{
+  padding:0 14px 8px;
+  display:none;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+}
+.subcats.show{display:flex}
+.subcat-title{
+  font-size:11px;color:var(--muted);font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;
+  width:100%;
+  margin-bottom:4px;
+}
+.subcat{
+  padding:8px 12px;border-radius:10px;
+  background:var(--card2);
+  border:1px solid var(--border);
+  font-size:12px;cursor:pointer;
+  color:var(--muted);
+  transition:.15s;
+  display:flex;align-items:center;gap:6px;
+}
+.subcat:active{transform:scale(.96)}
+.subcat .sub-count{
+  font-size:10px;
+  background:rgba(255,255,255,.1);
+  padding:1px 6px;
+  border-radius:999px;
+  font-weight:700;
+}
+body.light .subcat .sub-count{background:rgba(0,0,0,.06)}
+.subcat.active{background:var(--accent);color:#fff;border-color:transparent}
+.subcat.active .sub-count{background:rgba(0,0,0,.2);color:#fff}
+
+/* SORT SHEET */
 .sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
 .sheet-overlay.show{opacity:1;pointer-events:auto}
 .sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-radius:20px 20px 0 0;padding:16px;z-index:201;transform:translateY(100%);transition:transform .25s}
@@ -46,21 +131,10 @@ header{
 .sheet-option{padding:14px;border-radius:12px;background:var(--card);margin-bottom:8px;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .sheet-option.active{background:var(--accent);color:#fff}
 
-.tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 14px 4px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex:0 0 auto;padding:10px 16px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--muted);transition:.2s;display:flex;align-items:center;gap:6px}
-.tab .badge{background:rgba(255,255,255,.15);color:inherit;font-size:11px;padding:2px 7px;border-radius:999px;font-weight:700}
-.tab.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
-.tab.active .badge{background:rgba(0,0,0,.2);color:#fff}
-
-.subchips{display:flex;gap:8px;overflow-x:auto;padding:8px 14px 4px;scrollbar-width:none;flex-wrap:nowrap}
-.subchips::-webkit-scrollbar{display:none}
-.chip{flex:0 0 auto;padding:8px 14px;border-radius:999px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--muted);display:flex;align-items:center;gap:6px;transition:.2s;text-transform:capitalize}
-.chip .badge{background:rgba(255,255,255,.12);font-size:10px;padding:1px 6px;border-radius:999px;font-weight:700}
-.chip.active{background:var(--accent);color:#fff;border-color:transparent}
-.chip.active .badge{background:rgba(0,0,0,.2)}
-
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:14px}
+/* PRODUCT GRID */
+.grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 14px 14px;
+}
 @media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
 
@@ -128,6 +202,25 @@ input:checked + .slider:before{transform:translateX(22px)}
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:grid;place-items:center;transition:opacity .3s}
 .loading-overlay.hide{opacity:0;pointer-events:none}
 .loading-overlay .spinner{width:50px;height:50px;border-width:4px}
+
+.section-title{
+  padding:16px 14px 8px;
+  font-size:14px;font-weight:700;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.section-title .count-pill{
+  font-size:11px;color:var(--muted);
+  background:var(--card);padding:3px 10px;border-radius:999px;font-weight:700;
+}
+.back-btn{
+  display:none;
+  padding:6px 12px;border-radius:10px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text);font-size:12px;cursor:pointer;
+  margin:12px 14px 0;align-items:center;gap:6px;font-weight:600;
+}
+.back-btn.show{display:inline-flex}
+.back-btn:active{transform:scale(.96)}
 </style>
 </head>
 <body>
@@ -147,8 +240,25 @@ input:checked + .slider:before{transform:translateX(22px)}
   </div>
 </header>
 
-<div class="tabs" id="tabs"></div>
-<div class="subchips" id="subchips"></div>
+<!-- MAIN CATEGORY CARDS -->
+<div class="maincats" id="maincats"></div>
+
+<!-- SUBCATEGORY AREA -->
+<div class="subcats" id="subcats">
+  <div class="subcat-title" id="subcatTitle">Subcategories</div>
+</div>
+
+<!-- BACK BUTTON (to return to main cats) -->
+<button class="back-btn" id="backBtn">
+  <span>←</span><span id="backText">Back to categories</span>
+</button>
+
+<!-- SECTION TITLE -->
+<div class="section-title" id="sectionTitle" style="display:none">
+  <span id="sectionTitleText">Products</span>
+  <span class="count-pill" id="sectionCount">0</span>
+</div>
+
 <div class="grid" id="grid"></div>
 <div id="sentinel"></div>
 
@@ -288,7 +398,7 @@ const I18N = {
   en:{
     search:"Search products or categories...",
     all:"All Categories", allSub:"All",
-    buy:"View Deal",
+    buy:"View Deal", browse:"Browse products",
     sortBy:"Sort By",
     sortDefault:"Default / Random",
     sortPriceAsc:"Price: Low to High",
@@ -311,12 +421,15 @@ const I18N = {
     copy:"Copy", copied:"Email copied!", bridgeNotAvailable:"Bridge not available (browser mode)",
     noProducts:"No products found.", noLink:"Link not available", linkMissing:"This product has no purchase link.",
     cat_all:"All Categories", cat_eu_local_stock:"EU Local Stock",
-    cat_eu_special_30k:"Special Offer 30K", cat_up_to_50_off:"Up to 50% Off"
+    cat_eu_special_30k:"Special Offer 30K", cat_up_to_50_off:"Up to 50% Off",
+    subcategories:"Subcategories", products:"Products",
+    backToCats:"Back to categories", chooseCategory:"Choose a category to browse",
+    showAll:"Show all", tapToOpen:"Tap to open"
   },
   tr:{
     search:"Ürün veya kategori ara...",
     all:"Tüm Kategoriler", allSub:"Tümü",
-    buy:"Fırsatı Gör",
+    buy:"Fırsatı Gör", browse:"Ürünleri incele",
     sortBy:"Sırala",
     sortDefault:"Varsayılan / Rastgele",
     sortPriceAsc:"Fiyat: Düşük → Yüksek",
@@ -339,12 +452,15 @@ const I18N = {
     copy:"Kopyala", copied:"E-posta kopyalandı!", bridgeNotAvailable:"Köprü kullanılamıyor (tarayıcı modu)",
     noProducts:"Ürün bulunamadı.", noLink:"Bağlantı mevcut değil", linkMissing:"Bu ürünün satın alma bağlantısı yok.",
     cat_all:"Tüm Kategoriler", cat_eu_local_stock:"AB Yerel Stok",
-    cat_eu_special_30k:"Özel Teklif 30K", cat_up_to_50_off:"%50'ye Varan İndirim"
+    cat_eu_special_30k:"Özel Teklif 30K", cat_up_to_50_off:"%50'ye Varan İndirim",
+    subcategories:"Alt Kategoriler", products:"Ürünler",
+    backToCats:"Kategorilere dön", chooseCategory:"İncelemek için bir kategori seçin",
+    showAll:"Tümünü göster", tapToOpen:"Açmak için dokun"
   },
   es:{
     search:"Buscar productos o categorías...",
     all:"Todas las categorías", allSub:"Todas",
-    buy:"Ver oferta",
+    buy:"Ver oferta", browse:"Explorar productos",
     sortBy:"Ordenar por",
     sortDefault:"Predeterminado / Aleatorio",
     sortPriceAsc:"Precio: Menor a Mayor",
@@ -367,12 +483,15 @@ const I18N = {
     copy:"Copiar", copied:"¡Correo copiado!", bridgeNotAvailable:"Puente no disponible (modo navegador)",
     noProducts:"No se encontraron productos.", noLink:"Enlace no disponible", linkMissing:"Este producto no tiene enlace de compra.",
     cat_all:"Todas las categorías", cat_eu_local_stock:"Stock Local UE",
-    cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Hasta 50% de Descuento"
+    cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Hasta 50% de Descuento",
+    subcategories:"Subcategorías", products:"Productos",
+    backToCats:"Volver a categorías", chooseCategory:"Elige una categoría para explorar",
+    showAll:"Mostrar todo", tapToOpen:"Toca para abrir"
   },
   de:{
     search:"Produkte oder Kategorien suchen...",
     all:"Alle Kategorien", allSub:"Alle",
-    buy:"Angebot ansehen",
+    buy:"Angebot ansehen", browse:"Produkte durchsuchen",
     sortBy:"Sortieren nach",
     sortDefault:"Standard / Zufällig",
     sortPriceAsc:"Preis: Niedrig → Hoch",
@@ -395,12 +514,15 @@ const I18N = {
     copy:"Kopieren", copied:"E-Mail kopiert!", bridgeNotAvailable:"Brücke nicht verfügbar (Browser-Modus)",
     noProducts:"Keine Produkte gefunden.", noLink:"Kein Link verfügbar", linkMissing:"Dieses Produkt hat keinen Kauflink.",
     cat_all:"Alle Kategorien", cat_eu_local_stock:"EU-Lagerbestand",
-    cat_eu_special_30k:"Sonderangebot 30K", cat_up_to_50_off:"Bis zu 50% Rabatt"
+    cat_eu_special_30k:"Sonderangebot 30K", cat_up_to_50_off:"Bis zu 50% Rabatt",
+    subcategories:"Unterkategorien", products:"Produkte",
+    backToCats:"Zurück zu Kategorien", chooseCategory:"Wählen Sie eine Kategorie zum Stöbern",
+    showAll:"Alle anzeigen", tapToOpen:"Zum Öffnen tippen"
   },
   fr:{
     search:"Rechercher des produits ou catégories...",
     all:"Toutes les catégories", allSub:"Tout",
-    buy:"Voir l'offre",
+    buy:"Voir l'offre", browse:"Parcourir les produits",
     sortBy:"Trier par",
     sortDefault:"Par défaut / Aléatoire",
     sortPriceAsc:"Prix : Croissant",
@@ -423,12 +545,15 @@ const I18N = {
     copy:"Copier", copied:"E-mail copié !", bridgeNotAvailable:"Pont non disponible (mode navigateur)",
     noProducts:"Aucun produit trouvé.", noLink:"Aucun lien disponible", linkMissing:"Ce produit n'a pas de lien d'achat.",
     cat_all:"Toutes les catégories", cat_eu_local_stock:"Stock local UE",
-    cat_eu_special_30k:"Offre spéciale 30K", cat_up_to_50_off:"Jusqu'à 50% de réduction"
+    cat_eu_special_30k:"Offre spéciale 30K", cat_up_to_50_off:"Jusqu'à 50% de réduction",
+    subcategories:"Sous-catégories", products:"Produits",
+    backToCats:"Retour aux catégories", chooseCategory:"Choisissez une catégorie à parcourir",
+    showAll:"Tout afficher", tapToOpen:"Appuyez pour ouvrir"
   },
   it:{
     search:"Cerca prodotti o categorie...",
     all:"Tutte le categorie", allSub:"Tutte",
-    buy:"Vedi offerta",
+    buy:"Vedi offerta", browse:"Sfoglia i prodotti",
     sortBy:"Ordina per",
     sortDefault:"Predefinito / Casuale",
     sortPriceAsc:"Prezzo: Basso → Alto",
@@ -451,12 +576,15 @@ const I18N = {
     copy:"Copia", copied:"Email copiata!", bridgeNotAvailable:"Ponte non disponibile (modalità browser)",
     noProducts:"Nessun prodotto trovato.", noLink:"Nessun link disponibile", linkMissing:"Questo prodotto non ha un link di acquisto.",
     cat_all:"Tutte le categorie", cat_eu_local_stock:"Stock locale UE",
-    cat_eu_special_30k:"Offerta speciale 30K", cat_up_to_50_off:"Fino al 50% di sconto"
+    cat_eu_special_30k:"Offerta speciale 30K", cat_up_to_50_off:"Fino al 50% di sconto",
+    subcategories:"Sottocategorie", products:"Prodotti",
+    backToCats:"Torna alle categorie", chooseCategory:"Scegli una categoria da esplorare",
+    showAll:"Mostra tutto", tapToOpen:"Tocca per aprire"
   },
   pt:{
     search:"Pesquisar produtos ou categorias...",
     all:"Todas as categorias", allSub:"Todas",
-    buy:"Ver oferta",
+    buy:"Ver oferta", browse:"Explorar produtos",
     sortBy:"Ordenar por",
     sortDefault:"Padrão / Aleatório",
     sortPriceAsc:"Preço: Menor → Maior",
@@ -479,12 +607,15 @@ const I18N = {
     copy:"Copiar", copied:"E-mail copiado!", bridgeNotAvailable:"Ponte não disponível (modo navegador)",
     noProducts:"Nenhum produto encontrado.", noLink:"Nenhum link disponível", linkMissing:"Este produto não tem link de compra.",
     cat_all:"Todas as categorias", cat_eu_local_stock:"Estoque Local UE",
-    cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Até 50% de Desconto"
+    cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Até 50% de Desconto",
+    subcategories:"Subcategorias", products:"Produtos",
+    backToCats:"Voltar às categorias", chooseCategory:"Escolha uma categoria para explorar",
+    showAll:"Mostrar tudo", tapToOpen:"Toque para abrir"
   },
   ja:{
     search:"商品やカテゴリを検索...",
     all:"すべてのカテゴリ", allSub:"すべて",
-    buy:"詳細を見る",
+    buy:"詳細を見る", browse:"商品を閲覧",
     sortBy:"並び替え",
     sortDefault:"デフォルト / ランダム",
     sortPriceAsc:"価格：安い順",
@@ -507,12 +638,15 @@ const I18N = {
     copy:"コピー", copied:"メールをコピーしました！", bridgeNotAvailable:"ブリッジが利用できません（ブラウザモード）",
     noProducts:"商品が見つかりません。", noLink:"リンクがありません", linkMissing:"この商品には購入リンクがありません。",
     cat_all:"すべてのカテゴリ", cat_eu_local_stock:"EU現地在庫",
-    cat_eu_special_30k:"特別オファー30K", cat_up_to_50_off:"最大50%オフ"
+    cat_eu_special_30k:"特別オファー30K", cat_up_to_50_off:"最大50%オフ",
+    subcategories:"サブカテゴリ", products:"商品",
+    backToCats:"カテゴリに戻る", chooseCategory:"閲覧するカテゴリを選択",
+    showAll:"すべて表示", tapToOpen:"タップして開く"
   },
   ko:{
     search:"제품 또는 카테고리 검색...",
     all:"모든 카테고리", allSub:"전체",
-    buy:"거래 보기",
+    buy:"거래 보기", browse:"제품 둘러보기",
     sortBy:"정렬 기준",
     sortDefault:"기본 / 무작위",
     sortPriceAsc:"가격: 낮은 순",
@@ -535,12 +669,15 @@ const I18N = {
     copy:"복사", copied:"이메일이 복사되었습니다!", bridgeNotAvailable:"브리지를 사용할 수 없습니다 (브라우저 모드)",
     noProducts:"제품을 찾을 수 없습니다.", noLink:"사용 가능한 링크가 없습니다", linkMissing:"이 제품에는 구매 링크가 없습니다.",
     cat_all:"모든 카테고리", cat_eu_local_stock:"EU 현지 재고",
-    cat_eu_special_30k:"특별 혜택 30K", cat_up_to_50_off:"최대 50% 할인"
+    cat_eu_special_30k:"특별 혜택 30K", cat_up_to_50_off:"최대 50% 할인",
+    subcategories:"하위 카테고리", products:"제품",
+    backToCats:"카테고리로 돌아가기", chooseCategory:"둘러볼 카테고리 선택",
+    showAll:"모두 표시", tapToOpen:"탭하여 열기"
   },
   zh:{
     search:"搜索产品或类别...",
     all:"所有类别", allSub:"全部",
-    buy:"查看优惠",
+    buy:"查看优惠", browse:"浏览产品",
     sortBy:"排序方式",
     sortDefault:"默认 / 随机",
     sortPriceAsc:"价格：从低到高",
@@ -563,7 +700,10 @@ const I18N = {
     copy:"复制", copied:"邮件已复制！", bridgeNotAvailable:"桥接不可用（浏览器模式）",
     noProducts:"未找到产品。", noLink:"无可用链接", linkMissing:"此产品没有购买链接。",
     cat_all:"所有类别", cat_eu_local_stock:"欧盟本地库存",
-    cat_eu_special_30k:"特别优惠 30K", cat_up_to_50_off:"高达 50% 折扣"
+    cat_eu_special_30k:"特别优惠 30K", cat_up_to_50_off:"高达 50% 折扣",
+    subcategories:"子类别", products:"产品",
+    backToCats:"返回类别", chooseCategory:"选择要浏览的类别",
+    showAll:"显示全部", tapToOpen:"点击打开"
   }
 };
 
@@ -573,17 +713,28 @@ const I18N = {
 const state = {
   allProducts: [],
   filtered: [],
-  activeCat: 'all',
-  activeSub: '',
+  activeCat: 'all',      // main category selected
+  activeSub: '',         // subcategory
+  view: 'main',          // 'main' | 'products'
   search: '',
   sort: 'default',
   page: 0,
-  shuffledSeed: Date.now(),
+  shuffledSeed: null,    // daily seed
   isLoading: false
 };
 
 let currentLang = localStorage.getItem('pr_lang') || 'en';
 function t(key){return (I18N[currentLang]&&I18N[currentLang][key])||I18N.en[key]||key;}
+
+/* ============================================================
+   DAILY SEED — her gün farklı sıralama, aynı gün içinde sabit
+============================================================ */
+function getDailySeed(){
+  const d = new Date();
+  // YYYYMMDD sayısı; her gün değişir ama gün içinde sabit
+  return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
+}
+state.shuffledSeed = getDailySeed();
 
 function applyTheme(mode){
   document.body.classList.toggle('light', mode==='light');
@@ -631,13 +782,19 @@ function applyLang(lang){
   document.getElementById('privacyTitle').textContent = t('privacyTitle');
   document.getElementById('termsTitle').textContent = t('termsTitle');
   document.getElementById('copyMail').textContent = t('copy');
+  document.getElementById('backText').textContent = t('backToCats');
+  document.getElementById('subcatTitle').textContent = t('subcategories');
 
   document.getElementById('privacyBody').innerHTML = buildPrivacyHTML();
   document.getElementById('termsBody').innerHTML = buildTermsHTML();
 
-  buildTabs();
-  buildSubchips();
-  applyFilter();
+  // Rerender current view
+  if(state.view === 'main'){
+    renderMainCats();
+  } else {
+    renderSubcats();
+    applyFilter();
+  }
 }
 
 function buildPrivacyHTML(){
@@ -743,38 +900,27 @@ function detectDelimiter(text){
   return best;
 }
 
-/* ============================================================
-   NORMALIZE — CSV sütunlarına göre düzeltildi
-============================================================ */
 function pick(obj, keys){
   for(const k of keys){
     if(obj[k]!==undefined && String(obj[k]).trim()!=='') return String(obj[k]).trim();
   }
   return '';
 }
-
-// Fiyat parse: "32 USD", "0.3 USD", "1,234.56 USD" -> number
 function parseMoney(raw){
   if(raw===undefined || raw===null) return 0;
   let s = String(raw).trim();
   if(!s) return 0;
-  // Remove currency words
   s = s.replace(/[A-Z]{2,}/g,'').replace(/[€$£¥₹₺₽₩]/g,'').trim();
-  // Handle "1,234.56" or "1.234,56"
   const lastComma = s.lastIndexOf(',');
   const lastDot = s.lastIndexOf('.');
   if(lastComma > lastDot){
-    // comma is decimal sep
     s = s.replace(/\./g,'').replace(',', '.');
   } else {
-    // dot is decimal
     s = s.replace(/,/g,'');
   }
   const n = parseFloat(s);
   return isFinite(n)? n : 0;
 }
-
-// Currency detection from price string
 function detectCurrency(raw){
   if(!raw) return 'USD';
   const m = String(raw).match(/[A-Z]{3}/);
@@ -784,11 +930,7 @@ function detectCurrency(raw){
   if(/£/.test(raw)) return 'GBP';
   return 'USD';
 }
-
 function normalizeProduct(raw, catKey){
-  // CSV: category_name, id, title, description, price, image_url, size,
-  // Google_product_category, condition, availability, MPN, Shipping,
-  // language, Delivery time, Manufacturer, GTIN, deep_link
   const title = pick(raw, ['title','product_name','name','product','product_title','urun_adi']);
   const img   = pick(raw, ['image_url','image','img','picture','image_link','product_image','resim']);
   const priceRaw = pick(raw, ['price','sale_price','discounted_price','current_price','fiyat']);
@@ -814,14 +956,10 @@ function normalizeProduct(raw, catKey){
     link: link,
     category: cat,
     catKey: catKey,
-    description: pick(raw, ['description','desc','aciklama']),
     _rand: Math.random()
   };
 }
 
-/* ============================================================
-   LOAD
-============================================================ */
 async function loadAll(){
   state.isLoading = true;
   const promises = Object.entries(CONFIG.FILES).map(async ([key, file]) => {
@@ -849,54 +987,65 @@ async function loadAll(){
   });
   state.isLoading = false;
   document.getElementById('loadingOverlay').classList.add('hide');
-  buildTabs();
-  buildSubchips();
-  applyFilter();
+  renderMainCats();
 }
 
 /* ============================================================
-   TABS
+   MAIN CATEGORY CARDS
 ============================================================ */
-function catLabel(cat){ return t('cat_' + cat) || cat; }
-function buildTabs(){
-  const wrap = document.getElementById('tabs');
+const MAIN_CATS = [
+  {key:'all', icon:'🛍️', labelKey:'cat_all'},
+  {key:'eu_local_stock', icon:'🇪🇺', labelKey:'cat_eu_local_stock'},
+  {key:'eu_special_30k', icon:'⭐', labelKey:'cat_eu_special_30k'},
+  {key:'up_to_50_off', icon:'🔥', labelKey:'cat_up_to_50_off'}
+];
+
+function renderMainCats(){
+  state.view = 'main';
+  const wrap = document.getElementById('maincats');
+  wrap.style.display = 'grid';
   wrap.innerHTML = '';
-  const cats = [
-    {key:'all'},
-    {key:'eu_local_stock'},
-    {key:'eu_special_30k'},
-    {key:'up_to_50_off'}
-  ];
-  cats.forEach(c => {
+  document.getElementById('subcats').classList.remove('show');
+  document.getElementById('backBtn').classList.remove('show');
+  document.getElementById('sectionTitle').style.display = 'none';
+  document.getElementById('grid').innerHTML = '';
+  document.getElementById('sentinel').style.display = 'none';
+
+  MAIN_CATS.forEach(c => {
     const count = c.key==='all'
       ? state.allProducts.length
       : state.allProducts.filter(p=>p.catKey===c.key).length;
     const el = document.createElement('div');
-    el.className = 'tab' + (state.activeCat===c.key?' active':'');
-    el.innerHTML = `<span>${catLabel(c.key)}</span><span class="badge">${count}</span>`;
-    el.onclick = () => {
-      state.activeCat = c.key;
-      state.activeSub = '';
-      state.page = 0;
-      buildTabs();
-      buildSubchips();
-      applyFilter();
-      window.scrollTo({top:0,behavior:'smooth'});
-    };
+    el.className = 'maincat' + (state.activeCat===c.key && state.activeSub==='' ? ' active':'');
+    el.innerHTML = `
+      <div class="mc-icon">${c.icon}</div>
+      <div class="mc-title">${t(c.labelKey)}</div>
+      <div class="mc-count">${count} ${t('products').toLowerCase()}</div>
+    `;
+    el.onclick = () => openCategory(c.key);
     wrap.appendChild(el);
   });
 }
 
-/* ============================================================
-   SUBCHIPS — CSV category_name'den geliyor
-============================================================ */
-function buildSubchips(){
-  const wrap = document.getElementById('subchips');
+function openCategory(catKey){
+  state.activeCat = catKey;
+  state.activeSub = '';
+  state.view = 'products';
+  state.page = 0;
+  document.getElementById('maincats').style.display = 'none';
+  document.getElementById('backBtn').classList.add('show');
+  document.getElementById('sentinel').style.display = 'grid';
+  renderSubcats();
+  applyFilter();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderSubcats(){
+  const wrap = document.getElementById('subcats');
   const pool = state.activeCat==='all'
     ? state.allProducts
     : state.allProducts.filter(p=>p.catKey===state.activeCat);
 
-  // Her kategori kaç ürün var
   const map = {};
   pool.forEach(p => {
     if(!p.category) return;
@@ -904,37 +1053,50 @@ function buildSubchips(){
   });
   const cats = Object.keys(map).sort();
 
+  // Clear existing chips but keep title
   wrap.innerHTML = '';
-  if(cats.length===0){ wrap.style.display='none'; return; }
-  wrap.style.display='flex';
+  const title = document.createElement('div');
+  title.className = 'subcat-title';
+  title.textContent = t('subcategories');
+  wrap.appendChild(title);
 
-  // All chip
+  wrap.classList.add('show');
+
+  // "All" chip
   const allChip = document.createElement('div');
-  allChip.className = 'chip' + (state.activeSub===''?' active':'');
-  allChip.innerHTML = `<span>${t('allSub')}</span><span class="badge">${pool.length}</span>`;
+  allChip.className = 'subcat' + (state.activeSub===''?' active':'');
+  allChip.innerHTML = `<span>${t('allSub')}</span><span class="sub-count">${pool.length}</span>`;
   allChip.onclick = () => {
     state.activeSub = '';
     state.page = 0;
-    buildSubchips();
+    renderSubcats();
     applyFilter();
   };
   wrap.appendChild(allChip);
 
   cats.forEach(c => {
     const el = document.createElement('div');
-    el.className = 'chip' + (state.activeSub===c?' active':'');
-    // capitalize first letter
+    el.className = 'subcat' + (state.activeSub===c?' active':'');
     const display = c.charAt(0).toUpperCase() + c.slice(1);
-    el.innerHTML = `<span>${display}</span><span class="badge">${map[c]}</span>`;
+    el.innerHTML = `<span>${display}</span><span class="sub-count">${map[c]}</span>`;
     el.onclick = () => {
       state.activeSub = state.activeSub===c ? '' : c;
       state.page = 0;
-      buildSubchips();
+      renderSubcats();
       applyFilter();
     };
     wrap.appendChild(el);
   });
 }
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  state.activeCat = 'all';
+  state.activeSub = '';
+  state.search = '';
+  document.getElementById('searchInput').value = '';
+  renderMainCats();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
 
 /* ============================================================
    FILTER + SORT
@@ -970,13 +1132,23 @@ function applyFilter(){
   }
   state.filtered = list;
   state.page = 0;
+
+  // Update section title
+  const st = document.getElementById('sectionTitle');
+  st.style.display = 'flex';
+  const label = t('cat_' + state.activeCat) || state.activeCat;
+  document.getElementById('sectionTitleText').textContent = state.activeSub
+    ? state.activeSub.charAt(0).toUpperCase() + state.activeSub.slice(1)
+    : label;
+  document.getElementById('sectionCount').textContent = list.length;
+
   document.getElementById('grid').innerHTML = '';
   renderPage();
   updateEmpty();
 }
 
 /* ============================================================
-   RENDER
+   RENDER PRODUCTS
 ============================================================ */
 const grid = document.getElementById('grid');
 const sentinel = document.getElementById('sentinel');
@@ -1091,12 +1263,12 @@ function updateEmpty(){
   }
 }
 
-/* INFINITE SCROLL */
 let io;
 function initObserver(){
   if(io) io.disconnect();
   io = new IntersectionObserver(entries => {
     if(entries[0].isIntersecting){
+      if(state.view !== 'products') return;
       if(state.page * CONFIG.PAGE_SIZE < state.filtered.length){
         renderPage();
       }
@@ -1111,7 +1283,18 @@ let searchTimer;
 document.getElementById('searchInput').addEventListener('input', e => {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => {
-    state.search = e.target.value.trim();
+    const q = e.target.value.trim();
+    state.search = q;
+    if(q && state.view === 'main'){
+      // switch to products view showing all
+      state.activeCat = 'all';
+      state.activeSub = '';
+      state.view = 'products';
+      document.getElementById('maincats').style.display = 'none';
+      document.getElementById('backBtn').classList.add('show');
+      document.getElementById('sentinel').style.display = 'grid';
+      renderSubcats();
+    }
     state.page = 0;
     applyFilter();
     window.scrollTo({top:0,behavior:'smooth'});
@@ -1212,6 +1395,9 @@ function showToast(msg){
 
 document.getElementById('langSelect').addEventListener('change', e => applyLang(e.target.value));
 
+/* ============================================================
+   INIT
+============================================================ */
 applyLang(currentLang);
 loadAll();
 </script>
