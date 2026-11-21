@@ -1,1 +1,565 @@
-aaa
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Productora</title>
+    <style>
+        :root {
+            --primary: #FF6A00;
+            --primary-dark: #E65100;
+            --bg: #F5F7FA;
+            --surface: #FFFFFF;
+            --text: #1A1A1A;
+            --text-secondary: #666666;
+            --border: #E0E0E0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+
+        [data-theme="dark"] {
+            --bg: #121212;
+            --surface: #1E1E1E;
+            --text: #E0E0E0;
+            --text-secondary: #AAAAAA;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; padding-bottom: 80px; }
+        
+        /* Header */
+        .header { position: sticky; top: 0; z-index: 100; background: var(--surface); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow); }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-area img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
+        .logo-area h1 { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .icon-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text); padding: 8px; border-radius: 50%; }
+        .icon-btn:active { background: var(--border); }
+
+        /* Search & Filter */
+        .controls { padding: 12px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+        .search-box { display: flex; gap: 8px; margin-bottom: 12px; }
+        .search-box input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.95rem; outline: none; }
+        .search-box select { padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+
+        /* Categories */
+        .categories { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 12px; background: var(--surface); scrollbar-width: none; }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Product Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
+        @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        
+        .product-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; text-decoration: none; color: var(--text); position: relative; }
+        .img-container { position: relative; width: 100%; padding-top: 100%; background: var(--bg); overflow: hidden; }
+        .img-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
+        .img-container img.loaded { opacity: 1; }
+        .img-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+        
+        .p-info { padding: 10px; flex: 1; display: flex; flex-direction: column; }
+        .p-title { font-size: 0.85rem; font-weight: 500; line-height: 1.3; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .p-cat { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; }
+        .p-price { font-size: 1rem; font-weight: 700; color: var(--primary); margin-top: auto; }
+
+        /* Loading Sentinel */
+        .sentinel { height: 50px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-secondary); text-decoration: none; font-size: 0.75rem; background: none; border: none; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item span { font-size: 1.3rem; }
+
+        /* Modals */
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; opacity: 0; transition: opacity 0.3s; }
+        .modal.open { display: flex; opacity: 1; }
+        .modal-content { background: var(--surface); width: 100%; max-height: 90vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s; }
+        .modal.open .modal-content { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h2 { font-size: 1.2rem; }
+        .close-btn { background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer; }
+
+        /* Settings Items */
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
+        .setting-label { font-size: 0.95rem; }
+        
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* Info Sections */
+        .info-section { margin-bottom: 20px; }
+        .info-section h3 { font-size: 1rem; color: var(--primary); margin-bottom: 8px; }
+        .info-section p, .info-section li { font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary); margin-bottom: 8px; }
+        .contact-box { display: flex; align-items: center; gap: 10px; background: var(--bg); padding: 12px; border-radius: 8px; margin-top: 8px; }
+        .contact-box a { color: var(--primary); text-decoration: none; font-weight: 600; flex: 1; word-break: break-all; }
+        .copy-btn { background: var(--surface); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; color: var(--text); white-space: nowrap; }
+        .copy-btn:active { background: var(--border); }
+
+        .lang-select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-top: 8px; }
+
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-area">
+            <img src="https://i.hizliresim.com/nmjqsjmi.png" alt="Productora Logo">
+            <h1>Productora</h1>
+        </div>
+        <button class="icon-btn" onclick="openModal('settingsModal')">⚙️</button>
+    </div>
+
+    <!-- Main View -->
+    <div id="homeView" class="view active">
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Ürün veya kategori ara..." oninput="handleSearch()">
+                <select id="sortSelect" onchange="handleSort()">
+                    <option value="default">Sırala</option>
+                    <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+                    <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+                    <option value="name-asc">İsim: A-Z</option>
+                    <option value="name-desc">İsim: Z-A</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="categories" id="categoryTabs">
+            <button class="cat-btn active" onclick="setCategory('all')" data-key="cat_all">Tüm Kategoriler</button>
+            <button class="cat-btn" onclick="setCategory('eu_local')" data-key="cat_eu">EU Local Stock</button>
+            <button class="cat-btn" onclick="setCategory('special_30k')" data-key="cat_special">Special 30K</button>
+            <button class="cat-btn" onclick="setCategory('up_to_50')" data-key="cat_50off">Up to 50% Off</button>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+        <div class="sentinel" id="sentinel">Veriler yükleniyor...</div>
+    </div>
+
+    <!-- Info View -->
+    <div id="infoView" class="view" style="padding: 16px;">
+        <h2 style="margin-bottom: 20px; color: var(--primary);">Uygulama Bilgisi</h2>
+        
+        <div class="info-section">
+            <h3 data-key="info_purpose">Uygulama Amacı</h3>
+            <p>Productora, size en iyi affiliate marketing (satış ortaklığı) fırsatlarını, özel indirimleri ve yerel stok ürünlerini tek bir modern arayüzde sunar.</p>
+        </div>
+
+        <div class="info-section">
+            <h3 data-key="info_rate">Uygulamayı Değerlendir</h3>
+            <p>Bizi desteklemek için lütfen Play Store'da 5 yıldız verin!</p>
+            <button class="cat-btn" style="width:100%; text-align:center; background: var(--primary); color: white;" onclick="window.open('market://details?id=com.DaaStudio.Productora', '_blank')">⭐ Play Store'da Oy Ver</button>
+        </div>
+
+        <div class="info-section">
+            <h3 data-key="info_contact">İletişim</h3>
+            <div class="contact-box">
+                <a href="mailto:daastudio42@gmail.com">daastudio42@gmail.com</a>
+                <button class="copy-btn" onclick="copyEmail()" id="copyBtn">Kopyala</button>
+            </div>
+        </div>
+
+        <div class="info-section" style="background: rgba(255,106,0,0.1); padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary);">
+            <h3 style="margin-top:0;">⚠️ Önemli</h3>
+            <p style="margin-bottom:0;">Keep the app always up to date. Deals and links are regularly updated. Make sure you are using the latest version.</p>
+        </div>
+
+        <div class="info-section">
+            <h3>Privacy Policy</h3>
+            <p>Daa Studio built the Productora app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p>
+            <p><strong>Information Collection:</strong> The app uses third-party services (Google Play Services, AdMob, Firebase) that may collect information. We do not share your info except as described.</p>
+            <p><strong>Log Data & Cookies:</strong> We may collect Log Data on errors. Third-party code may use cookies.</p>
+            <p><strong>Security:</strong> We strive to use commercially acceptable means to protect data, but no method is 100% secure. Makers are not responsible for liability/damages.</p>
+            <p><strong>Children's Privacy:</strong> Services do not address anyone under 13.</p>
+            <p><em>Effective: 2021-11-01. Contact: daastudio42@gmail.com</em></p>
+        </div>
+
+        <div class="info-section">
+            <h3>Terms & Conditions</h3>
+            <p>By downloading or using the app, these terms apply. Makers are not responsible for liability. You may not copy, modify, or extract source code.</p>
+            <p>Daa Studio reserves the right to make changes or charge for services. The app stores personal data to provide Service; keep your device secure (no jailbreak/root).</p>
+            <p>Certain functions require internet. We accept no liability for loss due to relying on app functionality. You promise to always accept updates.</p>
+            <p><em>Effective: 2021-11-01. Contact: daastudio42@gmail.com</em></p>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchView('home')">
+            <span>🏠</span>
+            <span data-key="nav_home">Ana Sayfa</span>
+        </button>
+        <button class="nav-item" onclick="switchView('info')">
+            <span>ℹ️</span>
+            <span data-key="nav_info">Bilgi</span>
+        </button>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal" onclick="if(event.target===this) closeModal('settingsModal')">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-key="settings_title">Ayarlar</h2>
+                <button class="close-btn" onclick="closeModal('settingsModal')">&times;</button>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label" data-key="theme_label">Koyu Tema</span>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <span class="setting-label" data-key="bridge_label">Open in App / Media</span>
+                <label class="switch">
+                    <input type="checkbox" id="bridgeToggle" onchange="toggleBridge()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
+                <span class="setting-label" data-key="lang_label">Dil / Language</span>
+                <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                    <option value="tr">🇹🇷 Türkçe</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="de">🇩🇪 Deutsch</option>
+                    <option value="fr">🇫🇷 Français</option>
+                    <option value="it">🇮🇹 Italiano</option>
+                    <option value="pt">🇵🇹 Português</option>
+                    <option value="ja">🇯🇵 日本語</option>
+                    <option value="ko">🇰🇷 한국어</option>
+                    <option value="zh">🇨🇳 中文</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. GITHUB AYARLARI (BURAYI DÜZENLEYİN)
+        // ==========================================
+        // GitHub kullanıcı adınızı ve depo adınızı buraya yazın.
+        // Örnek: "https://raw.githubusercontent.com/ahmet123/urunler/main/hot_products/"
+        const GITHUB_USER = "KULLANICI_ADI"; 
+        const GITHUB_REPO = "DEPO_ADI";
+        const GITHUB_BRANCH = "main"; // Genellikle 'main' veya 'master' olur
+        
+        const GITHUB_RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/hot_products/`;
+        
+        const FILES = {
+            up_to_50: "up_to_50_off.csv",
+            // Not: Eğer dosya uzantısı gerçekten .do ise burayı "eu_special_30k.do" olarak değiştirin.
+            special_30k: "eu_special_30k.csv", 
+            eu_local: "eu_local_stock.csv"
+        };
+
+        // ==========================================
+        // 2. VERİ YÖNETİMİ VE CSV AYRIŞTIRMA
+        // ==========================================
+        let allProducts = [];
+
+        async function fetchAndParseCSV(filename, sourceTag) {
+            try {
+                const response = await fetch(GITHUB_RAW_BASE + filename);
+                if (!response.ok) throw new Error(`HTTP Hata: ${response.status}`);
+                const text = await response.text();
+                const lines = text.split('\n');
+                const products = [];
+                
+                for (let line of lines) {
+                    line = line.trim();
+                    // Geçerli bir affiliate linki içermeyen satırları atla
+                    if (!line || !line.includes('https://offer.alibaba.com')) continue;
+                    
+                    const lastCommaIndex = line.lastIndexOf(',https://offer.alibaba.com');
+                    if (lastCommaIndex === -1) continue;
+                    
+                    const link = line.substring(lastCommaIndex + 1).trim();
+                    const beforeLink = line.substring(0, lastCommaIndex);
+                    const parts = beforeLink.split(',');
+                    
+                    // Bozuk satırları atlamak için minimum uzunluk kontrolü
+                    if (parts.length < 10) continue; 
+                    
+                    // CSV yapısına göre sondan geriye doğru indis hesaplama
+                    const title = parts[parts.length - 14]?.trim() || "Unknown Product";
+                    const priceStr = parts[parts.length - 12]?.trim() || "0 USD";
+                    const image = parts[parts.length - 11]?.trim() || "https://via.placeholder.com/300";
+                    const category = parts[parts.length - 9]?.trim() || "General";
+                    
+                    const priceMatch = priceStr.match(/([\d\.]+)/);
+                    const price = priceMatch ? parseFloat(priceMatch[1]) : 0;
+                    
+                    products.push({
+                        id: Math.random().toString(36).substr(2, 9),
+                        title,
+                        price,
+                        priceStr,
+                        image,
+                        category,
+                        link,
+                        source: sourceTag
+                    });
+                }
+                return products;
+            } catch (error) {
+                console.error(`${filename} yüklenirken hata:`, error);
+                return [];
+            }
+        }
+
+        async function loadAllData() {
+            const sentinel = document.getElementById('sentinel');
+            sentinel.textContent = "Ürünler yükleniyor, lütfen bekleyin...";
+            
+            const [upTo50, special30k, euLocal] = await Promise.all([
+                fetchAndParseCSV(FILES.up_to_50, 'up_to_50'),
+                fetchAndParseCSV(FILES.special_30k, 'special_30k'),
+                fetchAndParseCSV(FILES.eu_local, 'eu_local')
+            ]);
+            
+            allProducts = [...upTo50, ...special30k, ...euLocal];
+            
+            // Kullanıcı her girdiğinde farklı sıra görmesi için karıştır
+            shuffleArray(allProducts);
+            
+            sentinel.textContent = "Daha fazla yükleniyor...";
+            renderProducts();
+            setupInfiniteScroll();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // ==========================================
+        // 3. DURUM YÖNETİMİ (STATE)
+        // ==========================================
+        let state = {
+            currentCategory: 'all',
+            searchQuery: '',
+            sortBy: 'default',
+            displayedCount: 0,
+            batchSize: 20,
+            isLoading: false,
+            language: 'tr',
+            theme: 'light'
+        };
+
+        // ==========================================
+        // 4. KODULAR JS BRIDGE
+        // ==========================================
+        function toggleBridge() {
+            const isChecked = document.getElementById('bridgeToggle').checked;
+            const message = isChecked ? "webview_acik" : "webview_kapali";
+            
+            // Normal tarayıcıda hata vermemesi için kontrol
+            if (typeof window.AppInventor !== 'undefined') {
+                window.AppInventor.setWebViewString(message);
+            } else {
+                console.log(`[Kodular Bridge Sim] ${message}`);
+            }
+        }
+
+        // ==========================================
+        // 5. UI FONKSİYONLARI
+        // ==========================================
+        function init() {
+            loadAllData();
+            
+            // Tema kontrolü
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.getElementById('themeToggle').checked = true;
+                toggleTheme();
+            }
+        }
+
+        function setCategory(cat) {
+            state.currentCategory = cat;
+            state.displayedCount = 0;
+            document.getElementById('productGrid').innerHTML = '';
+            
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            renderProducts();
+        }
+
+        function handleSearch() {
+            state.searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            state.displayedCount = 0;
+            document.getElementById('productGrid').innerHTML = '';
+            renderProducts();
+        }
+
+        function handleSort() {
+            state.sortBy = document.getElementById('sortSelect').value;
+            state.displayedCount = 0;
+            document.getElementById('productGrid').innerHTML = '';
+            renderProducts();
+        }
+
+        function getFilteredProducts() {
+            let filtered = allProducts;
+
+            // Kategori filtresi (Birbirine karıştırmaz)
+            if (state.currentCategory !== 'all') {
+                filtered = filtered.filter(p => p.source === state.currentCategory);
+            }
+
+            // Arama filtresi
+            if (state.searchQuery) {
+                filtered = filtered.filter(p => 
+                    p.title.toLowerCase().includes(state.searchQuery) || 
+                    p.category.toLowerCase().includes(state.searchQuery)
+                );
+            }
+
+            // Sıralama
+            if (state.sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+            else if (state.sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+            else if (state.sortBy === 'name-asc') filtered.sort((a, b) => a.title.localeCompare(b.title));
+            else if (state.sortBy === 'name-desc') filtered.sort((a, b) => b.title.localeCompare(a.title));
+
+            return filtered;
+        }
+
+        function renderProducts() {
+            if (state.isLoading) return;
+            state.isLoading = true;
+
+            const filtered = getFilteredProducts();
+            const nextBatch = filtered.slice(state.displayedCount, state.displayedCount + state.batchSize);
+            
+            const grid = document.getElementById('productGrid');
+            
+            nextBatch.forEach(product => {
+                const card = document.createElement('a');
+                card.className = 'product-card';
+                card.href = product.link;
+                card.target = '_blank'; // Kodular'da harici tarayıcıda açılmasını sağlar
+                
+                card.innerHTML = `
+                    <div class="img-container">
+                        <div class="img-loading"></div>
+                        <img src="${product.image}" alt="${product.title}" loading="lazy" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
+                    </div>
+                    <div class="p-info">
+                        <div class="p-cat">${product.category}</div>
+                        <div class="p-title">${product.title}</div>
+                        <div class="p-price">${product.priceStr}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            state.displayedCount += nextBatch.length;
+            state.isLoading = false;
+
+            const sentinel = document.getElementById('sentinel');
+            if (state.displayedCount >= filtered.length) {
+                sentinel.textContent = filtered.length > 0 ? 'Tüm ürünler yüklendi.' : 'Ürün bulunamadı.';
+            } else {
+                sentinel.textContent = 'Daha fazla yükleniyor...';
+            }
+        }
+
+        function setupInfiniteScroll() {
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !state.isLoading) {
+                    const filtered = getFilteredProducts();
+                    if (state.displayedCount < filtered.length) {
+                        renderProducts();
+                    }
+                }
+            }, { rootMargin: '100px' });
+            
+            observer.observe(document.getElementById('sentinel'));
+        }
+
+        // ==========================================
+        // 6. MODAL VE AYARLAR
+        // ==========================================
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+        function toggleTheme() {
+            const isDark = document.getElementById('themeToggle').checked;
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        }
+
+        function switchView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            if (viewName === 'home') {
+                document.getElementById('homeView').classList.add('active');
+                document.querySelectorAll('.nav-item')[0].classList.add('active');
+            } else {
+                document.getElementById('infoView').classList.add('active');
+                document.querySelectorAll('.nav-item')[1].classList.add('active');
+            }
+        }
+
+        function copyEmail() {
+            navigator.clipboard.writeText('daastudio42@gmail.com').then(() => {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Kopyalandı!';
+                setTimeout(() => { btn.textContent = originalText; }, 2000);
+            });
+        }
+
+        // ==========================================
+        // 7. ÇOKLU DİL DESTEĞİ
+        // ==========================================
+        const translations = {
+            tr: { cat_all: "Tüm Kategoriler", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Ayarlar", theme_label: "Koyu Tema", bridge_label: "Open in App / Media", lang_label: "Dil", nav_home: "Ana Sayfa", nav_info: "Bilgi", info_purpose: "Uygulama Amacı", info_rate: "Uygulamayı Değerlendir", info_contact: "İletişim" },
+            en: { cat_all: "All Categories", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Settings", theme_label: "Dark Theme", bridge_label: "Open in App / Media", lang_label: "Language", nav_home: "Home", nav_info: "Info", info_purpose: "App Purpose", info_rate: "Rate the App", info_contact: "Contact" },
+            es: { cat_all: "Todas las Categorías", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Ajustes", theme_label: "Tema Oscuro", bridge_label: "Abrir en App / Medio", lang_label: "Idioma", nav_home: "Inicio", nav_info: "Info", info_purpose: "Propósito", info_rate: "Calificar", info_contact: "Contacto" },
+            de: { cat_all: "Alle Kategorien", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Einstellungen", theme_label: "Dunkler Modus", bridge_label: "In App / Medium öffnen", lang_label: "Sprache", nav_home: "Startseite", nav_info: "Info", info_purpose: "Zweck", info_rate: "Bewerten", info_contact: "Kontakt" },
+            fr: { cat_all: "Toutes les Catégories", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Paramètres", theme_label: "Thème Sombre", bridge_label: "Ouvrir dans App / Média", lang_label: "Langue", nav_home: "Accueil", nav_info: "Info", info_purpose: "Objectif", info_rate: "Évaluer", info_contact: "Contact" },
+            it: { cat_all: "Tutte le Categorie", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Impostazioni", theme_label: "Tema Scuro", bridge_label: "Apri in App / Media", lang_label: "Lingua", nav_home: "Home", nav_info: "Info", info_purpose: "Scopo", info_rate: "Valuta", info_contact: "Contatto" },
+            pt: { cat_all: "Todas as Categorias", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Configurações", theme_label: "Tema Escuro", bridge_label: "Abrir no App / Mídia", lang_label: "Idioma", nav_home: "Início", nav_info: "Info", info_purpose: "Propósito", info_rate: "Avaliar", info_contact: "Contato" },
+            ja: { cat_all: "すべてのカテゴリ", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "設定", theme_label: "ダークテーマ", bridge_label: "アプリ/メディアで開く", lang_label: "言語", nav_home: "ホーム", nav_info: "情報", info_purpose: "目的", info_rate: "評価する", info_contact: "連絡先" },
+            ko: { cat_all: "모든 카테고리", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "설정", theme_label: "다크 테마", bridge_label: "앱/미디어에서 열기", lang_label: "언어", nav_home: "홈", nav_info: "정보", info_purpose: "목적", info_rate: "평가하기", info_contact: "연락처" },
+            zh: { cat_all: "所有类别", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "设置", theme_label: "深色主题", bridge_label: "在应用/媒体中打开", lang_label: "语言", nav_home: "首页", nav_info: "信息", info_purpose: "应用目的", info_rate: "评分", info_contact: "联系" }
+        };
+
+        function changeLanguage(lang) {
+            state.language = lang;
+            const t = translations[lang];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (t[key]) el.textContent = t[key];
+            });
+        }
+
+        // Başlat
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
