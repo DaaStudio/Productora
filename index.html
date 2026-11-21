@@ -9,11 +9,13 @@
   --bg:#0f1220;--bg2:#171a2e;--card:#1e2238;--card2:#252a45;
   --text:#eef1ff;--muted:#9aa3c7;--accent:#ff5a5f;--accent2:#ffb400;
   --border:rgba(255,255,255,.08);--shadow:0 8px 30px rgba(0,0,0,.35);
+  --sub-bg:#252a45;--sub-border:rgba(255,255,255,.12);
 }
 body.light{
   --bg:#f4f6fb;--bg2:#ffffff;--card:#ffffff;--card2:#eef1f8;
   --text:#141824;--muted:#5d6684;--border:rgba(0,0,0,.08);
   --shadow:0 8px 24px rgba(0,0,0,.08);
+  --sub-bg:#e2e7f3;--sub-border:rgba(0,0,0,.12);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--text);transition:background .25s,color .25s}
@@ -64,19 +66,25 @@ body.light .catpill .cnt{background:rgba(0,0,0,.06)}
 }
 .catpill.active .cnt{background:rgba(0,0,0,.2);color:#fff}
 
-/* SUBCATEGORY DROPDOWN */
+/* SUBCATEGORY DROPDOWN — FIXED LIGHT THEME */
 .subwrap{
   padding:0 14px 10px;
   display:flex;align-items:center;gap:10px;flex-wrap:wrap;
 }
-.subwrap.hidden{display:none}
 .subsel{
   flex:1;min-width:180px;
   display:flex;align-items:center;justify-content:space-between;
   padding:12px 14px;border-radius:12px;
-  background:var(--card);border:1px solid var(--border);
+  background:var(--sub-bg);
+  border:1px solid var(--sub-border);
   font-size:13px;font-weight:600;cursor:pointer;color:var(--text);
   transition:.15s;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+body.light .subsel{
+  background:#dde3f0;
+  border-color:rgba(0,0,0,.15);
+  box-shadow:0 2px 6px rgba(0,0,0,.06);
 }
 .subsel:active{transform:scale(.98)}
 .subsel .label{
@@ -84,15 +92,15 @@ body.light .catpill .cnt{background:rgba(0,0,0,.06)}
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .subsel .cnt{
-  background:rgba(255,255,255,.1);font-size:11px;
+  background:rgba(255,255,255,.12);font-size:11px;
   padding:2px 8px;border-radius:999px;font-weight:700;color:var(--muted);
   margin-left:8px;
 }
-body.light .subsel .cnt{background:rgba(0,0,0,.06)}
+body.light .subsel .cnt{background:rgba(0,0,0,.1);color:#3a4560}
 .subsel .arrow{color:var(--muted);font-size:12px;margin-left:8px;transition:.2s}
+body.light .subsel .arrow{color:#3a4560}
 .subsel.open .arrow{transform:rotate(180deg)}
 
-/* BACK BUTTON */
 .back-btn{
   display:none;
   padding:8px 14px;border-radius:12px;
@@ -208,7 +216,7 @@ input:checked + .slider:before{transform:translateX(22px)}
 .mail-row{display:flex;align-items:center;gap:8px;margin-top:8px}
 .mail-row a{flex:1;font-size:13px}
 .copy-btn{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:12px;cursor:pointer;flex:0 0 auto}
-.rate-btn{display:block;text-align:center;padding:14px;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:14px;margin-top:8px;cursor:pointer}
+.rate-btn{display:block;text-align:center;padding:14px;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:14px;margin-top:8px;cursor:pointer;border:none;width:100%;font-family:inherit}
 .scroll-content{max-height:65vh;overflow-y:auto;padding-right:4px}
 .scroll-content::-webkit-scrollbar{width:4px}
 .scroll-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
@@ -244,10 +252,8 @@ input:checked + .slider:before{transform:translateX(22px)}
   </div>
 </header>
 
-<!-- MAIN CATEGORY PILLS -->
 <div class="catbar" id="catbar"></div>
 
-<!-- SUBCATEGORY SELECTOR + BACK -->
 <div class="subwrap" id="subwrap">
   <button class="back-btn" id="backBtn">
     <span>←</span><span id="backText">Back</span>
@@ -261,7 +267,6 @@ input:checked + .slider:before{transform:translateX(22px)}
   </div>
 </div>
 
-<!-- SECTION TITLE -->
 <div class="section-title" id="sectionTitle">
   <span id="sectionTitleText">Products</span>
   <span class="count-pill" id="sectionCount">0</span>
@@ -272,7 +277,6 @@ input:checked + .slider:before{transform:translateX(22px)}
 
 <button id="scrollTop">↑</button>
 
-<!-- SUBCATEGORY SHEET -->
 <div class="subsheet-overlay" id="subsheetOverlay"></div>
 <div class="subsheet" id="subsheet">
   <h4>
@@ -282,7 +286,6 @@ input:checked + .slider:before{transform:translateX(22px)}
   <div id="subsheetList"></div>
 </div>
 
-<!-- SORT SHEET -->
 <div class="sheet-overlay" id="sortOverlay"></div>
 <div class="sheet" id="sortSheet">
   <h4 id="sortTitle">Sort By</h4>
@@ -348,7 +351,7 @@ input:checked + .slider:before{transform:translateX(22px)}
     <div class="info-section">
       <h4 id="rateTitle">Rate the App</h4>
       <p id="rateText"></p>
-      <div class="rate-btn" id="rateBtn">⭐ <span id="rateBtnText">Rate Productora on Google Play</span></div>
+      <button class="rate-btn" id="rateBtn">⭐ <span id="rateBtnText">Rate Productora on Google Play</span></button>
     </div>
     <div class="info-section">
       <h4 id="contactTitle">Contact</h4>
@@ -406,7 +409,7 @@ const CONFIG = {
     up_to_50_off:     'up_to_50_off.csv'
   },
   PAGE_SIZE: 20,
-  PLAY_URL: 'https://play.google.com/store/apps/details?id=com.DaaStudio.Productora',
+  PLAY_URL: 'https://play.google.com/store/apps/details?id=com.DaaStudio.BudgetBuddyShop',
   EMAIL: 'daastudio42@gmail.com'
 };
 
@@ -415,22 +418,12 @@ const CONFIG = {
 ============================================================ */
 const I18N = {
   en:{
-    search:"Search products or categories...",
-    all:"All Categories", allSub:"All",
-    buy:"View Deal",
-    sortBy:"Sort By",
-    sortDefault:"Default / Random",
-    sortPriceAsc:"Price: Low to High",
-    sortPriceDesc:"Price: High to Low",
-    sortNameAz:"Name: A → Z",
-    sortNameZa:"Name: Z → A",
-    sortDiscount:"Biggest Discount",
-    settingsTitle:"Settings",
-    langLabel:"Language", langSub:"Choose your preferred language",
-    themeLabel:"Theme", themeSub:"Dark / Light mode",
-    bridgeLabel:"Open In Media / App",
-    bridgeOn:"Open in app", bridgeOff:"Open in media",
-    infoTitle:"Info",
+    search:"Search products or categories...", all:"All Categories", allSub:"All", buy:"View Deal",
+    sortBy:"Sort By", sortDefault:"Default / Random", sortPriceAsc:"Price: Low to High",
+    sortPriceDesc:"Price: High to Low", sortNameAz:"Name: A → Z", sortNameZa:"Name: Z → A", sortDiscount:"Biggest Discount",
+    settingsTitle:"Settings", langLabel:"Language", langSub:"Choose your preferred language",
+    themeLabel:"Theme", themeSub:"Dark / Light mode", bridgeLabel:"Open In Media / App",
+    bridgeOn:"Open in app", bridgeOff:"Open in media", infoTitle:"Info",
     purposeTitle:"App Purpose", purposeText:"Productora is a product discovery application that aggregates affiliate product listings from multiple sources, helping users find the best deals, discounts and offers across categories. We do not sell products directly. All purchases are made through third-party affiliate links.",
     rateTitle:"Rate the App", rateText:"If you enjoy Productora, please support us with a 5-star rating on Google Play.", rateBtnText:"Rate Productora on Google Play",
     contactTitle:"Contact", contactText:"Questions or suggestions? Reach us at:",
@@ -439,28 +432,17 @@ const I18N = {
     privacyTitle:"Privacy Policy", termsTitle:"Terms & Conditions",
     copy:"Copy", copied:"Email copied!", bridgeNotAvailable:"Bridge not available (browser mode)",
     noProducts:"No products found.", noLink:"Link not available", linkMissing:"This product has no purchase link.",
-    cat_all:"All Categories", cat_eu_local_stock:"EU Local Stock",
-    cat_eu_special_30k:"Special Offer 30K", cat_up_to_50_off:"Up to 50% Off",
-    subcategories:"Subcategories", products:"Products",
-    back:"Back", chooseCategory:"Choose a category"
+    cat_all:"All Categories", cat_eu_local_stock:"EU Local Stock", cat_eu_special_30k:"Special Offer 30K", cat_up_to_50_off:"Up to 50% Off",
+    subcategories:"Subcategories", products:"Products", back:"Back", chooseCategory:"Choose a category",
+    langChanged:"Language changed. Reloading...", bridgeChanged:"Opening mode changed. Reloading..."
   },
   tr:{
-    search:"Ürün veya kategori ara...",
-    all:"Tüm Kategoriler", allSub:"Tümü",
-    buy:"Fırsatı Gör",
-    sortBy:"Sırala",
-    sortDefault:"Varsayılan / Rastgele",
-    sortPriceAsc:"Fiyat: Düşük → Yüksek",
-    sortPriceDesc:"Fiyat: Yüksek → Düşük",
-    sortNameAz:"İsim: A → Z",
-    sortNameZa:"İsim: Z → A",
-    sortDiscount:"En Yüksek İndirim",
-    settingsTitle:"Ayarlar",
-    langLabel:"Dil", langSub:"Tercih ettiğiniz dili seçin",
-    themeLabel:"Tema", themeSub:"Koyu / Açık mod",
-    bridgeLabel:"Medyada / Uygulamada Aç",
-    bridgeOn:"Uygulamada aç", bridgeOff:"Medyada aç",
-    infoTitle:"Bilgi",
+    search:"Ürün veya kategori ara...", all:"Tüm Kategoriler", allSub:"Tümü", buy:"Fırsatı Gör",
+    sortBy:"Sırala", sortDefault:"Varsayılan / Rastgele", sortPriceAsc:"Fiyat: Düşük → Yüksek",
+    sortPriceDesc:"Fiyat: Yüksek → Düşük", sortNameAz:"İsim: A → Z", sortNameZa:"İsim: Z → A", sortDiscount:"En Yüksek İndirim",
+    settingsTitle:"Ayarlar", langLabel:"Dil", langSub:"Tercih ettiğiniz dili seçin",
+    themeLabel:"Tema", themeSub:"Koyu / Açık mod", bridgeLabel:"Medyada / Uygulamada Aç",
+    bridgeOn:"Uygulamada aç", bridgeOff:"Medyada aç", infoTitle:"Bilgi",
     purposeTitle:"Uygulama Amacı", purposeText:"Productora, birden fazla kaynaktan gelen satış ortaklığı ürün listelerini bir araya getiren ve kullanıcıların kategorilere göre en iyi fırsatları, indirimleri ve teklifleri bulmasına yardımcı olan bir ürün keşif uygulamasıdır. Ürünleri doğrudan satmıyoruz. Tüm satın alımlar üçüncü taraf satış ortaklığı bağlantıları üzerinden yapılır.",
     rateTitle:"Uygulamayı Puanla", rateText:"Productora hoşunuza gittiyse, Google Play'de 5 yıldız vererek bizi destekleyin.", rateBtnText:"Productora'yı Google Play'de Puanla",
     contactTitle:"İletişim", contactText:"Sorularınız veya önerileriniz mi var? Bize ulaşın:",
@@ -469,28 +451,17 @@ const I18N = {
     privacyTitle:"Gizlilik Politikası", termsTitle:"Şartlar ve Koşullar",
     copy:"Kopyala", copied:"E-posta kopyalandı!", bridgeNotAvailable:"Köprü kullanılamıyor (tarayıcı modu)",
     noProducts:"Ürün bulunamadı.", noLink:"Bağlantı mevcut değil", linkMissing:"Bu ürünün satın alma bağlantısı yok.",
-    cat_all:"Tüm Kategoriler", cat_eu_local_stock:"AB Yerel Stok",
-    cat_eu_special_30k:"Özel Teklif 30K", cat_up_to_50_off:"%50'ye Varan İndirim",
-    subcategories:"Alt Kategoriler", products:"Ürünler",
-    back:"Geri", chooseCategory:"Bir kategori seç"
+    cat_all:"Tüm Kategoriler", cat_eu_local_stock:"AB Yerel Stok", cat_eu_special_30k:"Özel Teklif 30K", cat_up_to_50_off:"%50'ye Varan İndirim",
+    subcategories:"Alt Kategoriler", products:"Ürünler", back:"Geri", chooseCategory:"Bir kategori seç",
+    langChanged:"Dil değiştirildi. Yeniden yükleniyor...", bridgeChanged:"Açılış modu değiştirildi. Yeniden yükleniyor..."
   },
   es:{
-    search:"Buscar productos o categorías...",
-    all:"Todas las categorías", allSub:"Todas",
-    buy:"Ver oferta",
-    sortBy:"Ordenar por",
-    sortDefault:"Predeterminado / Aleatorio",
-    sortPriceAsc:"Precio: Menor a Mayor",
-    sortPriceDesc:"Precio: Mayor a Menor",
-    sortNameAz:"Nombre: A → Z",
-    sortNameZa:"Nombre: Z → A",
-    sortDiscount:"Mayor Descuento",
-    settingsTitle:"Ajustes",
-    langLabel:"Idioma", langSub:"Elige tu idioma preferido",
-    themeLabel:"Tema", themeSub:"Modo oscuro / claro",
-    bridgeLabel:"Abrir en Media / App",
-    bridgeOn:"Abrir en app", bridgeOff:"Abrir en media",
-    infoTitle:"Información",
+    search:"Buscar productos o categorías...", all:"Todas las categorías", allSub:"Todas", buy:"Ver oferta",
+    sortBy:"Ordenar por", sortDefault:"Predeterminado / Aleatorio", sortPriceAsc:"Precio: Menor a Mayor",
+    sortPriceDesc:"Precio: Mayor a Menor", sortNameAz:"Nombre: A → Z", sortNameZa:"Nombre: Z → A", sortDiscount:"Mayor Descuento",
+    settingsTitle:"Ajustes", langLabel:"Idioma", langSub:"Elige tu idioma preferido",
+    themeLabel:"Tema", themeSub:"Modo oscuro / claro", bridgeLabel:"Abrir en Media / App",
+    bridgeOn:"Abrir en app", bridgeOff:"Abrir en media", infoTitle:"Información",
     purposeTitle:"Propósito de la app", purposeText:"Productora es una aplicación de descubrimiento de productos que agrega listados de productos de afiliación de múltiples fuentes, ayudando a los usuarios a encontrar las mejores ofertas, descuentos y promociones por categorías. No vendemos productos directamente. Todas las compras se realizan a través de enlaces de afiliación de terceros.",
     rateTitle:"Califica la app", rateText:"Si disfrutas Productora, apóyanos con una calificación de 5 estrellas en Google Play.", rateBtnText:"Calificar Productora en Google Play",
     contactTitle:"Contacto", contactText:"¿Preguntas o sugerencias? Contáctanos:",
@@ -499,28 +470,17 @@ const I18N = {
     privacyTitle:"Política de Privacidad", termsTitle:"Términos y Condiciones",
     copy:"Copiar", copied:"¡Correo copiado!", bridgeNotAvailable:"Puente no disponible (modo navegador)",
     noProducts:"No se encontraron productos.", noLink:"Enlace no disponible", linkMissing:"Este producto no tiene enlace de compra.",
-    cat_all:"Todas las categorías", cat_eu_local_stock:"Stock Local UE",
-    cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Hasta 50% de Descuento",
-    subcategories:"Subcategorías", products:"Productos",
-    back:"Atrás", chooseCategory:"Elige una categoría"
+    cat_all:"Todas las categorías", cat_eu_local_stock:"Stock Local UE", cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Hasta 50% de Descuento",
+    subcategories:"Subcategorías", products:"Productos", back:"Atrás", chooseCategory:"Elige una categoría",
+    langChanged:"Idioma cambiado. Recargando...", bridgeChanged:"Modo de apertura cambiado. Recargando..."
   },
   de:{
-    search:"Produkte oder Kategorien suchen...",
-    all:"Alle Kategorien", allSub:"Alle",
-    buy:"Angebot ansehen",
-    sortBy:"Sortieren nach",
-    sortDefault:"Standard / Zufällig",
-    sortPriceAsc:"Preis: Niedrig → Hoch",
-    sortPriceDesc:"Preis: Hoch → Niedrig",
-    sortNameAz:"Name: A → Z",
-    sortNameZa:"Name: Z → A",
-    sortDiscount:"Größter Rabatt",
-    settingsTitle:"Einstellungen",
-    langLabel:"Sprache", langSub:"Wählen Sie Ihre bevorzugte Sprache",
-    themeLabel:"Design", themeSub:"Dunkel / Hell",
-    bridgeLabel:"In Media / App öffnen",
-    bridgeOn:"In App öffnen", bridgeOff:"In Media öffnen",
-    infoTitle:"Info",
+    search:"Produkte oder Kategorien suchen...", all:"Alle Kategorien", allSub:"Alle", buy:"Angebot ansehen",
+    sortBy:"Sortieren nach", sortDefault:"Standard / Zufällig", sortPriceAsc:"Preis: Niedrig → Hoch",
+    sortPriceDesc:"Preis: Hoch → Niedrig", sortNameAz:"Name: A → Z", sortNameZa:"Name: Z → A", sortDiscount:"Größter Rabatt",
+    settingsTitle:"Einstellungen", langLabel:"Sprache", langSub:"Wählen Sie Ihre bevorzugte Sprache",
+    themeLabel:"Design", themeSub:"Dunkel / Hell", bridgeLabel:"In Media / App öffnen",
+    bridgeOn:"In App öffnen", bridgeOff:"In Media öffnen", infoTitle:"Info",
     purposeTitle:"App-Zweck", purposeText:"Productora ist eine Produktentdeckungs-App, die Affiliate-Produktlistings aus mehreren Quellen zusammenführt und Nutzern hilft, die besten Angebote, Rabatte und Aktionen nach Kategorien zu finden. Wir verkaufen keine Produkte direkt. Alle Käufe erfolgen über Affiliate-Links Dritter.",
     rateTitle:"App bewerten", rateText:"Wenn Ihnen Productora gefällt, unterstützen Sie uns mit einer 5-Sterne-Bewertung bei Google Play.", rateBtnText:"Productora bei Google Play bewerten",
     contactTitle:"Kontakt", contactText:"Fragen oder Vorschläge? Erreichen Sie uns unter:",
@@ -529,28 +489,17 @@ const I18N = {
     privacyTitle:"Datenschutzrichtlinie", termsTitle:"AGB",
     copy:"Kopieren", copied:"E-Mail kopiert!", bridgeNotAvailable:"Brücke nicht verfügbar (Browser-Modus)",
     noProducts:"Keine Produkte gefunden.", noLink:"Kein Link verfügbar", linkMissing:"Dieses Produkt hat keinen Kauflink.",
-    cat_all:"Alle Kategorien", cat_eu_local_stock:"EU-Lagerbestand",
-    cat_eu_special_30k:"Sonderangebot 30K", cat_up_to_50_off:"Bis zu 50% Rabatt",
-    subcategories:"Unterkategorien", products:"Produkte",
-    back:"Zurück", chooseCategory:"Wählen Sie eine Kategorie"
+    cat_all:"Alle Kategorien", cat_eu_local_stock:"EU-Lagerbestand", cat_eu_special_30k:"Sonderangebot 30K", cat_up_to_50_off:"Bis zu 50% Rabatt",
+    subcategories:"Unterkategorien", products:"Produkte", back:"Zurück", chooseCategory:"Wählen Sie eine Kategorie",
+    langChanged:"Sprache geändert. Wird neu geladen...", bridgeChanged:"Öffnungsmodus geändert. Wird neu geladen..."
   },
   fr:{
-    search:"Rechercher des produits ou catégories...",
-    all:"Toutes les catégories", allSub:"Tout",
-    buy:"Voir l'offre",
-    sortBy:"Trier par",
-    sortDefault:"Par défaut / Aléatoire",
-    sortPriceAsc:"Prix : Croissant",
-    sortPriceDesc:"Prix : Décroissant",
-    sortNameAz:"Nom : A → Z",
-    sortNameZa:"Nom : Z → A",
-    sortDiscount:"Meilleure remise",
-    settingsTitle:"Paramètres",
-    langLabel:"Langue", langSub:"Choisissez votre langue préférée",
-    themeLabel:"Thème", themeSub:"Mode sombre / clair",
-    bridgeLabel:"Ouvrir en Media / App",
-    bridgeOn:"Ouvrir dans l'app", bridgeOff:"Ouvrir en media",
-    infoTitle:"Info",
+    search:"Rechercher des produits ou catégories...", all:"Toutes les catégories", allSub:"Tout", buy:"Voir l'offre",
+    sortBy:"Trier par", sortDefault:"Par défaut / Aléatoire", sortPriceAsc:"Prix : Croissant",
+    sortPriceDesc:"Prix : Décroissant", sortNameAz:"Nom : A → Z", sortNameZa:"Nom : Z → A", sortDiscount:"Meilleure remise",
+    settingsTitle:"Paramètres", langLabel:"Langue", langSub:"Choisissez votre langue préférée",
+    themeLabel:"Thème", themeSub:"Mode sombre / clair", bridgeLabel:"Ouvrir en Media / App",
+    bridgeOn:"Ouvrir dans l'app", bridgeOff:"Ouvrir en media", infoTitle:"Info",
     purposeTitle:"But de l'app", purposeText:"Productora est une application de découverte de produits qui regroupe des annonces de produits d'affiliation de plusieurs sources, aidant les utilisateurs à trouver les meilleures offres, remises et promotions par catégories. Nous ne vendons pas de produits directement. Tous les achats sont effectués via des liens d'affiliation tiers.",
     rateTitle:"Noter l'app", rateText:"Si vous aimez Productora, soutenez-nous avec une note de 5 étoiles sur Google Play.", rateBtnText:"Noter Productora sur Google Play",
     contactTitle:"Contact", contactText:"Des questions ou suggestions ? Contactez-nous :",
@@ -559,28 +508,17 @@ const I18N = {
     privacyTitle:"Politique de confidentialité", termsTitle:"Conditions générales",
     copy:"Copier", copied:"E-mail copié !", bridgeNotAvailable:"Pont non disponible (mode navigateur)",
     noProducts:"Aucun produit trouvé.", noLink:"Aucun lien disponible", linkMissing:"Ce produit n'a pas de lien d'achat.",
-    cat_all:"Toutes les catégories", cat_eu_local_stock:"Stock local UE",
-    cat_eu_special_30k:"Offre spéciale 30K", cat_up_to_50_off:"Jusqu'à 50% de réduction",
-    subcategories:"Sous-catégories", products:"Produits",
-    back:"Retour", chooseCategory:"Choisissez une catégorie"
+    cat_all:"Toutes les catégories", cat_eu_local_stock:"Stock local UE", cat_eu_special_30k:"Offre spéciale 30K", cat_up_to_50_off:"Jusqu'à 50% de réduction",
+    subcategories:"Sous-catégories", products:"Produits", back:"Retour", chooseCategory:"Choisissez une catégorie",
+    langChanged:"Langue modifiée. Rechargement...", bridgeChanged:"Mode d'ouverture modifié. Rechargement..."
   },
   it:{
-    search:"Cerca prodotti o categorie...",
-    all:"Tutte le categorie", allSub:"Tutte",
-    buy:"Vedi offerta",
-    sortBy:"Ordina per",
-    sortDefault:"Predefinito / Casuale",
-    sortPriceAsc:"Prezzo: Basso → Alto",
-    sortPriceDesc:"Prezzo: Alto → Basso",
-    sortNameAz:"Nome: A → Z",
-    sortNameZa:"Nome: Z → A",
-    sortDiscount:"Sconto maggiore",
-    settingsTitle:"Impostazioni",
-    langLabel:"Lingua", langSub:"Scegli la tua lingua preferita",
-    themeLabel:"Tema", themeSub:"Modalità scura / chiara",
-    bridgeLabel:"Apri in Media / App",
-    bridgeOn:"Apri nell'app", bridgeOff:"Apri in media",
-    infoTitle:"Info",
+    search:"Cerca prodotti o categorie...", all:"Tutte le categorie", allSub:"Tutte", buy:"Vedi offerta",
+    sortBy:"Ordina per", sortDefault:"Predefinito / Casuale", sortPriceAsc:"Prezzo: Basso → Alto",
+    sortPriceDesc:"Prezzo: Alto → Basso", sortNameAz:"Nome: A → Z", sortNameZa:"Nome: Z → A", sortDiscount:"Sconto maggiore",
+    settingsTitle:"Impostazioni", langLabel:"Lingua", langSub:"Scegli la tua lingua preferita",
+    themeLabel:"Tema", themeSub:"Modalità scura / chiara", bridgeLabel:"Apri in Media / App",
+    bridgeOn:"Apri nell'app", bridgeOff:"Apri in media", infoTitle:"Info",
     purposeTitle:"Scopo dell'app", purposeText:"Productora è un'app di scoperta prodotti che aggrega annunci di prodotti di affiliazione da più fonti, aiutando gli utenti a trovare le migliori offerte, sconti e promozioni per categoria. Non vendiamo prodotti direttamente. Tutti gli acquisti avvengono tramite link di affiliazione di terze parti.",
     rateTitle:"Valuta l'app", rateText:"Se ti piace Productora, supportaci con una valutazione a 5 stelle su Google Play.", rateBtnText:"Valuta Productora su Google Play",
     contactTitle:"Contatto", contactText:"Domande o suggerimenti? Contattaci:",
@@ -589,28 +527,17 @@ const I18N = {
     privacyTitle:"Informativa sulla privacy", termsTitle:"Termini e condizioni",
     copy:"Copia", copied:"Email copiata!", bridgeNotAvailable:"Ponte non disponibile (modalità browser)",
     noProducts:"Nessun prodotto trovato.", noLink:"Nessun link disponibile", linkMissing:"Questo prodotto non ha un link di acquisto.",
-    cat_all:"Tutte le categorie", cat_eu_local_stock:"Stock locale UE",
-    cat_eu_special_30k:"Offerta speciale 30K", cat_up_to_50_off:"Fino al 50% di sconto",
-    subcategories:"Sottocategorie", products:"Prodotti",
-    back:"Indietro", chooseCategory:"Scegli una categoria"
+    cat_all:"Tutte le categorie", cat_eu_local_stock:"Stock locale UE", cat_eu_special_30k:"Offerta speciale 30K", cat_up_to_50_off:"Fino al 50% di sconto",
+    subcategories:"Sottocategorie", products:"Prodotti", back:"Indietro", chooseCategory:"Scegli una categoria",
+    langChanged:"Lingua cambiata. Ricaricamento...", bridgeChanged:"Modalità di apertura cambiata. Ricaricamento..."
   },
   pt:{
-    search:"Pesquisar produtos ou categorias...",
-    all:"Todas as categorias", allSub:"Todas",
-    buy:"Ver oferta",
-    sortBy:"Ordenar por",
-    sortDefault:"Padrão / Aleatório",
-    sortPriceAsc:"Preço: Menor → Maior",
-    sortPriceDesc:"Preço: Maior → Menor",
-    sortNameAz:"Nome: A → Z",
-    sortNameZa:"Nome: Z → A",
-    sortDiscount:"Maior desconto",
-    settingsTitle:"Configurações",
-    langLabel:"Idioma", langSub:"Escolha seu idioma preferido",
-    themeLabel:"Tema", themeSub:"Modo escuro / claro",
-    bridgeLabel:"Abrir em Media / App",
-    bridgeOn:"Abrir no app", bridgeOff:"Abrir em media",
-    infoTitle:"Informação",
+    search:"Pesquisar produtos ou categorias...", all:"Todas as categorias", allSub:"Todas", buy:"Ver oferta",
+    sortBy:"Ordenar por", sortDefault:"Padrão / Aleatório", sortPriceAsc:"Preço: Menor → Maior",
+    sortPriceDesc:"Preço: Maior → Menor", sortNameAz:"Nome: A → Z", sortNameZa:"Nome: Z → A", sortDiscount:"Maior desconto",
+    settingsTitle:"Configurações", langLabel:"Idioma", langSub:"Escolha seu idioma preferido",
+    themeLabel:"Tema", themeSub:"Modo escuro / claro", bridgeLabel:"Abrir em Media / App",
+    bridgeOn:"Abrir no app", bridgeOff:"Abrir em media", infoTitle:"Informação",
     purposeTitle:"Propósito do app", purposeText:"Productora é um aplicativo de descoberta de produtos que agrega listagens de produtos de afiliados de várias fontes, ajudando os usuários a encontrar as melhores ofertas, descontos e promoções por categoria. Não vendemos produtos diretamente. Todas as compras são feitas através de links de afiliados de terceiros.",
     rateTitle:"Avalie o app", rateText:"Se você gosta do Productora, apoie-nos com uma avaliação de 5 estrelas no Google Play.", rateBtnText:"Avaliar Productora no Google Play",
     contactTitle:"Contato", contactText:"Dúvidas ou sugestões? Fale conosco:",
@@ -619,28 +546,17 @@ const I18N = {
     privacyTitle:"Política de Privacidade", termsTitle:"Termos e Condições",
     copy:"Copiar", copied:"E-mail copiado!", bridgeNotAvailable:"Ponte não disponível (modo navegador)",
     noProducts:"Nenhum produto encontrado.", noLink:"Nenhum link disponível", linkMissing:"Este produto não tem link de compra.",
-    cat_all:"Todas as categorias", cat_eu_local_stock:"Estoque Local UE",
-    cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Até 50% de Desconto",
-    subcategories:"Subcategorias", products:"Produtos",
-    back:"Voltar", chooseCategory:"Escolha uma categoria"
+    cat_all:"Todas as categorias", cat_eu_local_stock:"Estoque Local UE", cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Até 50% de Desconto",
+    subcategories:"Subcategorias", products:"Produtos", back:"Voltar", chooseCategory:"Escolha uma categoria",
+    langChanged:"Idioma alterado. Recarregando...", bridgeChanged:"Modo de abertura alterado. Recarregando..."
   },
   ja:{
-    search:"商品やカテゴリを検索...",
-    all:"すべてのカテゴリ", allSub:"すべて",
-    buy:"詳細を見る",
-    sortBy:"並び替え",
-    sortDefault:"デフォルト / ランダム",
-    sortPriceAsc:"価格：安い順",
-    sortPriceDesc:"価格：高い順",
-    sortNameAz:"名前：A → Z",
-    sortNameZa:"名前：Z → A",
-    sortDiscount:"最大割引",
-    settingsTitle:"設定",
-    langLabel:"言語", langSub:"希望の言語を選択",
-    themeLabel:"テーマ", themeSub:"ダーク / ライトモード",
-    bridgeLabel:"メディア / アプリで開く",
-    bridgeOn:"アプリで開く", bridgeOff:"メディアで開く",
-    infoTitle:"情報",
+    search:"商品やカテゴリを検索...", all:"すべてのカテゴリ", allSub:"すべて", buy:"詳細を見る",
+    sortBy:"並び替え", sortDefault:"デフォルト / ランダム", sortPriceAsc:"価格：安い順",
+    sortPriceDesc:"価格：高い順", sortNameAz:"名前：A → Z", sortNameZa:"名前：Z → A", sortDiscount:"最大割引",
+    settingsTitle:"設定", langLabel:"言語", langSub:"希望の言語を選択",
+    themeLabel:"テーマ", themeSub:"ダーク / ライトモード", bridgeLabel:"メディア / アプリで開く",
+    bridgeOn:"アプリで開く", bridgeOff:"メディアで開く", infoTitle:"情報",
     purposeTitle:"アプリの目的", purposeText:"Productoraは、複数のソースからのアフィリエイト商品リストを集約し、ユーザーがカテゴリ別に最適な取引、割引、オファーを見つけるのを支援する商品発見アプリです。当社は商品を直接販売していません。すべての購入は第三者のアフィリエイトリンクを通じて行われます。",
     rateTitle:"アプリを評価", rateText:"Productoraを気に入っていただけたら、Google Playで5つ星の評価でサポートしてください。", rateBtnText:"Google PlayでProductoraを評価",
     contactTitle:"お問い合わせ", contactText:"ご質問やご提案がありますか？お問い合わせください：",
@@ -649,28 +565,17 @@ const I18N = {
     privacyTitle:"プライバシーポリシー", termsTitle:"利用規約",
     copy:"コピー", copied:"メールをコピーしました！", bridgeNotAvailable:"ブリッジが利用できません（ブラウザモード）",
     noProducts:"商品が見つかりません。", noLink:"リンクがありません", linkMissing:"この商品には購入リンクがありません。",
-    cat_all:"すべてのカテゴリ", cat_eu_local_stock:"EU現地在庫",
-    cat_eu_special_30k:"特別オファー30K", cat_up_to_50_off:"最大50%オフ",
-    subcategories:"サブカテゴリ", products:"商品",
-    back:"戻る", chooseCategory:"カテゴリを選択"
+    cat_all:"すべてのカテゴリ", cat_eu_local_stock:"EU現地在庫", cat_eu_special_30k:"特別オファー30K", cat_up_to_50_off:"最大50%オフ",
+    subcategories:"サブカテゴリ", products:"商品", back:"戻る", chooseCategory:"カテゴリを選択",
+    langChanged:"言語が変更されました。再読み込み中...", bridgeChanged:"開くモードが変更されました。再読み込み中..."
   },
   ko:{
-    search:"제품 또는 카테고리 검색...",
-    all:"모든 카테고리", allSub:"전체",
-    buy:"거래 보기",
-    sortBy:"정렬 기준",
-    sortDefault:"기본 / 무작위",
-    sortPriceAsc:"가격: 낮은 순",
-    sortPriceDesc:"가격: 높은 순",
-    sortNameAz:"이름: A → Z",
-    sortNameZa:"이름: Z → A",
-    sortDiscount:"최대 할인",
-    settingsTitle:"설정",
-    langLabel:"언어", langSub:"선호하는 언어를 선택하세요",
-    themeLabel:"테마", themeSub:"다크 / 라이트 모드",
-    bridgeLabel:"미디어 / 앱에서 열기",
-    bridgeOn:"앱에서 열기", bridgeOff:"미디어에서 열기",
-    infoTitle:"정보",
+    search:"제품 또는 카테고리 검색...", all:"모든 카테고리", allSub:"전체", buy:"거래 보기",
+    sortBy:"정렬 기준", sortDefault:"기본 / 무작위", sortPriceAsc:"가격: 낮은 순",
+    sortPriceDesc:"가격: 높은 순", sortNameAz:"이름: A → Z", sortNameZa:"이름: Z → A", sortDiscount:"최대 할인",
+    settingsTitle:"설정", langLabel:"언어", langSub:"선호하는 언어를 선택하세요",
+    themeLabel:"테마", themeSub:"다크 / 라이트 모드", bridgeLabel:"미디어 / 앱에서 열기",
+    bridgeOn:"앱에서 열기", bridgeOff:"미디어에서 열기", infoTitle:"정보",
     purposeTitle:"앱 목적", purposeText:"Productora는 여러 소스의 제휴 제품 목록을 집계하여 사용자가 카테고리별로 최고의 거래, 할인 및 혜택을 찾을 수 있도록 돕는 제품 발견 앱입니다. 당사는 제품을 직접 판매하지 않습니다. 모든 구매는 제3자 제휴 링크를 통해 이루어집니다.",
     rateTitle:"앱 평가", rateText:"Productora가 마음에 드셨다면 Google Play에서 별 5개로 평가해 주세요.", rateBtnText:"Google Play에서 Productora 평가",
     contactTitle:"연락처", contactText:"질문이나 제안이 있으신가요? 연락주세요:",
@@ -679,28 +584,17 @@ const I18N = {
     privacyTitle:"개인정보 처리방침", termsTitle:"이용약관",
     copy:"복사", copied:"이메일이 복사되었습니다!", bridgeNotAvailable:"브리지를 사용할 수 없습니다 (브라우저 모드)",
     noProducts:"제품을 찾을 수 없습니다.", noLink:"사용 가능한 링크가 없습니다", linkMissing:"이 제품에는 구매 링크가 없습니다.",
-    cat_all:"모든 카테고리", cat_eu_local_stock:"EU 현지 재고",
-    cat_eu_special_30k:"특별 혜택 30K", cat_up_to_50_off:"최대 50% 할인",
-    subcategories:"하위 카테고리", products:"제품",
-    back:"뒤로", chooseCategory:"카테고리 선택"
+    cat_all:"모든 카테고리", cat_eu_local_stock:"EU 현지 재고", cat_eu_special_30k:"특별 혜택 30K", cat_up_to_50_off:"최대 50% 할인",
+    subcategories:"하위 카테고리", products:"제품", back:"뒤로", chooseCategory:"카테고리 선택",
+    langChanged:"언어가 변경되었습니다. 다시 로드 중...", bridgeChanged:"열기 모드가 변경되었습니다. 다시 로드 중..."
   },
   zh:{
-    search:"搜索产品或类别...",
-    all:"所有类别", allSub:"全部",
-    buy:"查看优惠",
-    sortBy:"排序方式",
-    sortDefault:"默认 / 随机",
-    sortPriceAsc:"价格：从低到高",
-    sortPriceDesc:"价格：从高到低",
-    sortNameAz:"名称：A → Z",
-    sortNameZa:"名称：Z → A",
-    sortDiscount:"最大折扣",
-    settingsTitle:"设置",
-    langLabel:"语言", langSub:"选择您的首选语言",
-    themeLabel:"主题", themeSub:"深色 / 浅色模式",
-    bridgeLabel:"在媒体/应用中打开",
-    bridgeOn:"在应用中打开", bridgeOff:"在媒体中打开",
-    infoTitle:"信息",
+    search:"搜索产品或类别...", all:"所有类别", allSub:"全部", buy:"查看优惠",
+    sortBy:"排序方式", sortDefault:"默认 / 随机", sortPriceAsc:"价格：从低到高",
+    sortPriceDesc:"价格：从高到低", sortNameAz:"名称：A → Z", sortNameZa:"名称：Z → A", sortDiscount:"最大折扣",
+    settingsTitle:"设置", langLabel:"语言", langSub:"选择您的首选语言",
+    themeLabel:"主题", themeSub:"深色 / 浅色模式", bridgeLabel:"在媒体/应用中打开",
+    bridgeOn:"在应用中打开", bridgeOff:"在媒体中打开", infoTitle:"信息",
     purposeTitle:"应用目的", purposeText:"Productora 是一款产品发现应用，汇集来自多个来源的联盟产品列表，帮助用户按类别找到最佳优惠、折扣和报价。我们不直接销售产品。所有购买均通过第三方联盟链接进行。",
     rateTitle:"评价应用", rateText:"如果您喜欢 Productora，请在 Google Play 上给我们 5 星好评支持我们。", rateBtnText:"在 Google Play 上评价 Productora",
     contactTitle:"联系", contactText:"有问题或建议？联系我们：",
@@ -709,10 +603,9 @@ const I18N = {
     privacyTitle:"隐私政策", termsTitle:"条款和条件",
     copy:"复制", copied:"邮件已复制！", bridgeNotAvailable:"桥接不可用（浏览器模式）",
     noProducts:"未找到产品。", noLink:"无可用链接", linkMissing:"此产品没有购买链接。",
-    cat_all:"所有类别", cat_eu_local_stock:"欧盟本地库存",
-    cat_eu_special_30k:"特别优惠 30K", cat_up_to_50_off:"高达 50% 折扣",
-    subcategories:"子类别", products:"产品",
-    back:"返回", chooseCategory:"选择类别"
+    cat_all:"所有类别", cat_eu_local_stock:"欧盟本地库存", cat_eu_special_30k:"特别优惠 30K", cat_up_to_50_off:"高达 50% 折扣",
+    subcategories:"子类别", products:"产品", back:"返回", chooseCategory:"选择类别",
+    langChanged:"语言已更改。正在重新加载...", bridgeChanged:"打开模式已更改。正在重新加载..."
   }
 };
 
@@ -720,15 +613,9 @@ const I18N = {
    STATE
 ============================================================ */
 const state = {
-  allProducts: [],
-  filtered: [],
-  activeCat: 'all',
-  activeSub: '',
-  search: '',
-  sort: 'default',
-  page: 0,
-  shuffledSeed: null,
-  isLoading: false
+  allProducts: [], filtered: [],
+  activeCat: 'all', activeSub: '', search: '',
+  sort: 'default', page: 0, shuffledSeed: null, isLoading: false
 };
 
 let currentLang = localStorage.getItem('pr_lang') || 'en';
@@ -747,110 +634,84 @@ function applyTheme(mode){
 }
 applyTheme(localStorage.getItem('pr_theme') || 'dark');
 
+/* ============================================================
+   LANGUAGE — saves + reloads page
+============================================================ */
 function applyLang(lang){
-  currentLang = lang;
+  // Save everything to sessionStorage so we can restore after reload
+  const scrollY = window.scrollY;
+  sessionStorage.setItem('pr_activeCat', state.activeCat);
+  sessionStorage.setItem('pr_activeSub', state.activeSub);
+  sessionStorage.setItem('pr_sort', state.sort);
+  sessionStorage.setItem('pr_scrollY', scrollY);
+  sessionStorage.setItem('pr_restoreLang', '1');
+
   localStorage.setItem('pr_lang', lang);
-  document.getElementById('langSelect').value = lang;
-
-  document.getElementById('searchInput').placeholder = t('search');
-  document.getElementById('sortBtn').textContent = '⇅';
-  document.getElementById('sortTitle').textContent = t('sortBy');
-  document.getElementById('sortDefault').textContent = t('sortDefault');
-  document.getElementById('sortPriceAsc').textContent = t('sortPriceAsc');
-  document.getElementById('sortPriceDesc').textContent = t('sortPriceDesc');
-  document.getElementById('sortNameAz').textContent = t('sortNameAz');
-  document.getElementById('sortNameZa').textContent = t('sortNameZa');
-  document.getElementById('sortDiscount').textContent = t('sortDiscount');
-  document.getElementById('settingsTitle').textContent = '⚙️ ' + t('settingsTitle');
-  document.getElementById('langLabel').textContent = '🌐 ' + t('langLabel');
-  document.getElementById('langSub').textContent = t('langSub');
-  document.getElementById('themeLabel').textContent = '🎨 ' + t('themeLabel');
-  document.getElementById('themeSub').textContent = t('themeSub');
-  document.getElementById('bridgeLabel').textContent = '📱 ' + t('bridgeLabel');
-  document.getElementById('bridgeStatus').textContent =
-    document.getElementById('bridgeSwitch').checked ? t('bridgeOn') : t('bridgeOff');
-
-  document.getElementById('infoTitle').textContent = 'ℹ️ ' + t('infoTitle');
-  document.getElementById('purposeTitle').textContent = t('purposeTitle');
-  document.getElementById('purposeText').textContent = t('purposeText');
-  document.getElementById('rateTitle').textContent = t('rateTitle');
-  document.getElementById('rateText').textContent = t('rateText');
-  document.getElementById('rateBtnText').textContent = t('rateBtnText');
-  document.getElementById('contactTitle').textContent = t('contactTitle');
-  document.getElementById('contactText').textContent = t('contactText');
-  document.getElementById('importantTitle').textContent = t('importantTitle');
-  document.getElementById('importantText').textContent = t('importantText');
-  document.getElementById('legalTitle').textContent = t('legalTitle');
-  document.getElementById('privacyBtnText').textContent = t('privacyBtnText');
-  document.getElementById('termsBtnText').textContent = t('termsBtnText');
-  document.getElementById('privacyTitle').textContent = t('privacyTitle');
-  document.getElementById('termsTitle').textContent = t('termsTitle');
-  document.getElementById('copyMail').textContent = t('copy');
-  document.getElementById('backText').textContent = t('back');
-  document.getElementById('subsheetTitle').textContent = t('subcategories');
-
-  document.getElementById('privacyBody').innerHTML = buildPrivacyHTML();
-  document.getElementById('termsBody').innerHTML = buildTermsHTML();
-
-  buildCatBar();
-  updateSubSel();
-  updateSectionTitle();
-}
-
-function buildPrivacyHTML(){
-  return `
-    <div class="info-section">
-      <p>Daa Studio built the Productora app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p>
-      <p>This page informs visitors regarding our policies with the collection, use, and disclosure of Personal Information.</p>
-      <p>If you choose to use our Service, you agree to the collection and use of information in relation to this policy. We will not use or share your information with anyone except as described in this Privacy Policy.</p>
-      <p><strong>Information Collection and Use</strong><br>For a better experience, we may require you to provide certain personally identifiable information. The information we request is retained on your device and is not collected by us in any way. The app uses third-party services that may collect information used to identify you: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p>
-      <p><strong>Log Data</strong><br>Whenever you use our Service, in case of an error we collect data and information (through third-party products) called Log Data. This may include your IP address, device name, OS version, app configuration, time and date of use, and other statistics.</p>
-      <p><strong>Cookies</strong><br>The app may use third-party code and libraries that use cookies to collect information and improve services. You can accept or refuse these cookies.</p>
-      <p><strong>Service Providers</strong><br>We may employ third-party companies to facilitate our Service, provide it on our behalf, perform related services, or assist in analyzing usage. They have access to Personal Information to perform tasks on our behalf and are obligated not to disclose or use it for other purposes.</p>
-      <p><strong>Security</strong><br>Productora app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. We value your trust and strive to use commercially acceptable means to protect your Personal Information, but no method of transmission or storage is 100% secure.</p>
-      <p><strong>Links to Other Sites</strong><br>This Service may contain links to other sites. If you click a third-party link, you will be directed to that site. We strongly advise you to review their Privacy Policy.</p>
-      <p><strong>Children's Privacy</strong><br>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p>
-      <p><strong>Changes to This Privacy Policy</strong><br>We may update our Privacy Policy from time to time. You are advised to review this page periodically. This policy is effective as of 2021-11-01.</p>
-      <p><strong>Contact Us</strong><br>If you have questions or suggestions, contact us at daastudio42@gmail.com.</p>
-    </div>`;
-}
-function buildTermsHTML(){
-  return `
-    <div class="info-section">
-      <p>By downloading or using the app, these terms automatically apply to you. Productora app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. You may not copy, modify, or extract the source code of the app, or translate it into other languages, or make derivative versions. All trademarks, copyright, database rights and other intellectual property rights related to the app belong to Daa Studio.</p>
-      <p>Daa Studio is committed to ensuring the app is useful and efficient. We reserve the right to make changes or charge for services at any time. We will never charge you without clearly explaining what you are paying for.</p>
-      <p>The app stores and processes personal data you have provided in order to provide our Service. It's your responsibility to keep your phone and app access secure. We recommend not jailbreaking or rooting your phone.</p>
-      <p>The app uses third-party services that declare their own Terms and Conditions: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p>
-      <p>Certain functions require an active internet connection. Daa Studio cannot take responsibility if the app does not work at full functionality due to lack of Wi-Fi or data allowance.</p>
-      <p>Daa Studio accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.</p>
-      <p>We may update the app. You promise to always accept updates when offered. We may also stop providing the app and terminate use at any time.</p>
-      <p><strong>Changes to These Terms</strong><br>We may update our Terms from time to time. You are advised to review this page periodically. These terms are effective as of 2021-11-01.</p>
-      <p><strong>Contact Us</strong><br>If you have questions, contact us at daastudio42@gmail.com.</p>
-    </div>`;
+  showToast(t('langChanged'));
+  setTimeout(() => location.reload(), 500);
 }
 
 /* ============================================================
-   BRIDGE
+   BRIDGE — Kodular WebView
 ============================================================ */
 const bridgeSwitch = document.getElementById('bridgeSwitch');
 const bridgeStatus = document.getElementById('bridgeStatus');
+
+// Kodular için uygun string gönderir; ayrıca window.name fallback
 function sendToApp(msg){
   try{
     if(window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
       window.AppInventor.setWebViewString(msg);
       return true;
     }
+    // Kodular alternate
+    if(window.Kodular && typeof window.Kodular.setWebViewString === 'function'){
+      window.Kodular.setWebViewString(msg);
+      return true;
+    }
+    // Android WebView bridge name
+    if(window.Android && typeof window.Android.setWebViewString === 'function'){
+      window.Android.setWebViewString(msg);
+      return true;
+    }
+    if(window.AndroidBridge && typeof window.AndroidBridge.setWebViewString === 'function'){
+      window.AndroidBridge.setWebViewString(msg);
+      return true;
+    }
   }catch(e){}
   return false;
 }
+
 function setBridgeUI(on){ bridgeStatus.textContent = on ? t('bridgeOn') : t('bridgeOff'); }
+
 bridgeSwitch.addEventListener('change', e => {
   const on = e.target.checked;
+  const msg = on ? 'webview_acik' : 'webview_kapali';
   localStorage.setItem('pr_bridge', on ? '1' : '0');
+
+  // Send to Android WebView
+  sendToApp(msg);
+
+  // Also try via window.location for WebView deep-link style
+  try{
+    // Some WebViews intercept navigation
+    if(window.location.hash !== msg){
+      // Do nothing if browser mode
+    }
+  }catch(_){}
+
+  // Save state and reload so open in app/media takes effect immediately
+  const scrollY = window.scrollY;
+  sessionStorage.setItem('pr_activeCat', state.activeCat);
+  sessionStorage.setItem('pr_activeSub', state.activeSub);
+  sessionStorage.setItem('pr_sort', state.sort);
+  sessionStorage.setItem('pr_scrollY', scrollY);
+
   setBridgeUI(on);
-  const sent = sendToApp(on ? 'webview_acik' : 'webview_kapali');
-  if(!sent && !window.AppInventor) showToast(t('bridgeNotAvailable'));
+  showToast(t('bridgeChanged'));
+  setTimeout(() => location.reload(), 400);
 });
+
 (function restoreBridge(){
   const saved = localStorage.getItem('pr_bridge')==='1';
   bridgeSwitch.checked = saved;
@@ -950,16 +811,9 @@ function normalizeProduct(raw, catKey){
 
   return {
     id: (catKey + '::' + (raw.id || link || title || Math.random())).slice(0,300),
-    title: title || 'Untitled product',
-    image: img,
-    price: p,
-    oldPrice: op,
-    discount: d,
-    currency: cur,
-    link: link,
-    category: cat,
-    catKey: catKey,
-    _rand: Math.random()
+    title: title || 'Untitled product', image: img,
+    price: p, oldPrice: op, discount: d, currency: cur, link: link,
+    category: cat, catKey: catKey, _rand: Math.random()
   };
 }
 
@@ -973,10 +827,7 @@ async function loadAll(){
       const text = await res.text();
       const rows = parseCSV(text);
       return rows.map(r => normalizeProduct(r, key));
-    }catch(err){
-      console.warn('Failed to load', file, err);
-      return [];
-    }
+    }catch(err){ console.warn('Failed to load', file, err); return []; }
   });
   const results = await Promise.all(promises);
   let all = [];
@@ -1014,11 +865,7 @@ function buildCatBar(){
       : state.allProducts.filter(p=>p.catKey===c.key).length;
     const el = document.createElement('div');
     el.className = 'catpill' + (state.activeCat===c.key?' active':'');
-    el.innerHTML = `
-      <span class="icon">${c.icon}</span>
-      <span>${t(c.labelKey)}</span>
-      <span class="cnt">${count}</span>
-    `;
+    el.innerHTML = `<span class="icon">${c.icon}</span><span>${t(c.labelKey)}</span><span class="cnt">${count}</span>`;
     el.onclick = () => {
       if(state.activeCat === c.key) return;
       state.activeCat = c.key;
@@ -1031,7 +878,6 @@ function buildCatBar(){
     };
     wrap.appendChild(el);
   });
-  // back button visibility: only when not 'all'
   const backBtn = document.getElementById('backBtn');
   if(state.activeCat !== 'all') backBtn.classList.add('show');
   else backBtn.classList.remove('show');
@@ -1050,17 +896,14 @@ document.getElementById('backBtn').addEventListener('click', () => {
 });
 
 /* ============================================================
-   SUBCATEGORY SELECTOR
+   SUBCATEGORY
 ============================================================ */
 function getSubcats(){
   const pool = state.activeCat==='all'
     ? state.allProducts
     : state.allProducts.filter(p=>p.catKey===state.activeCat);
   const map = {};
-  pool.forEach(p => {
-    if(!p.category) return;
-    map[p.category] = (map[p.category]||0) + 1;
-  });
+  pool.forEach(p => { if(!p.category) return; map[p.category] = (map[p.category]||0) + 1; });
   return {map, poolCount: pool.length, cats: Object.keys(map).sort()};
 }
 
@@ -1071,7 +914,6 @@ function updateSubSel(){
   const {map, poolCount, cats} = getSubcats();
 
   if(cats.length === 0){
-    // no subcategories: hide dropdown
     sel.style.opacity = '0.5';
     sel.style.pointerEvents = 'none';
     text.textContent = t('allSub');
@@ -1091,28 +933,21 @@ function updateSubSel(){
   }
 }
 
-document.getElementById('subsel').addEventListener('click', () => {
-  openSubsheet();
-});
+document.getElementById('subsel').addEventListener('click', openSubsheet);
 
 function openSubsheet(){
   const sheet = document.getElementById('subsheet');
   const overlay = document.getElementById('subsheetOverlay');
   const list = document.getElementById('subsheetList');
   const {map, poolCount, cats} = getSubcats();
-
   list.innerHTML = '';
 
-  // All option
   const allOpt = document.createElement('div');
   allOpt.className = 'subopt' + (state.activeSub===''?' active':'');
   allOpt.innerHTML = `<span>${t('allSub')}</span><span class="cnt">${poolCount}</span>`;
   allOpt.onclick = () => {
-    state.activeSub = '';
-    state.page = 0;
-    closeSubsheet();
-    updateSubSel();
-    applyFilter();
+    state.activeSub = ''; state.page = 0;
+    closeSubsheet(); updateSubSel(); applyFilter();
   };
   list.appendChild(allOpt);
 
@@ -1122,11 +957,8 @@ function openSubsheet(){
     const display = c.charAt(0).toUpperCase() + c.slice(1);
     opt.innerHTML = `<span>${display}</span><span class="cnt">${map[c]}</span>`;
     opt.onclick = () => {
-      state.activeSub = c;
-      state.page = 0;
-      closeSubsheet();
-      updateSubSel();
-      applyFilter();
+      state.activeSub = c; state.page = 0;
+      closeSubsheet(); updateSubSel(); applyFilter();
     };
     list.appendChild(opt);
   });
@@ -1135,13 +967,11 @@ function openSubsheet(){
   sheet.classList.add('show');
   document.getElementById('subsel').classList.add('open');
 }
-
 function closeSubsheet(){
   document.getElementById('subsheetOverlay').classList.remove('show');
   document.getElementById('subsheet').classList.remove('show');
   document.getElementById('subsel').classList.remove('open');
 }
-
 document.getElementById('closeSubsheet').addEventListener('click', closeSubsheet);
 document.getElementById('subsheetOverlay').addEventListener('click', closeSubsheet);
 
@@ -1157,7 +987,7 @@ function updateSectionTitle(){
 }
 
 /* ============================================================
-   FILTER + SORT
+   FILTER
 ============================================================ */
 function shuffleWithSeed(arr, seed){
   const a = arr.slice();
@@ -1175,10 +1005,7 @@ function applyFilter(){
   if(state.activeSub) list = list.filter(p => p.category === state.activeSub);
   if(state.search){
     const q = state.search.toLowerCase();
-    list = list.filter(p =>
-      p.title.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q)
-    );
+    list = list.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
   }
   switch(state.sort){
     case 'price_asc':  list.sort((a,b)=>a.price-b.price); break;
@@ -1197,7 +1024,7 @@ function applyFilter(){
 }
 
 /* ============================================================
-   RENDER PRODUCTS
+   RENDER
 ============================================================ */
 const grid = document.getElementById('grid');
 const sentinel = document.getElementById('sentinel');
@@ -1212,19 +1039,40 @@ function renderPage(){
   state.page++;
 }
 
+/* ============================================================
+   OPEN PRODUCT — respects bridge mode
+============================================================ */
 function openProduct(p){
   if(!p.link || p.link.trim()===''){
     showToast(t('linkMissing'));
     return;
   }
-  // Preserve scroll position and current filter state
-  const scrollY = window.scrollY;
-  sessionStorage.setItem('pr_scrollY', scrollY);
+  // Save state for scroll restore
+  sessionStorage.setItem('pr_scrollY', window.scrollY);
   sessionStorage.setItem('pr_activeCat', state.activeCat);
   sessionStorage.setItem('pr_activeSub', state.activeSub);
   sessionStorage.setItem('pr_sort', state.sort);
 
-  window.open(p.link, '_blank', 'noopener,noreferrer');
+  const inApp = localStorage.getItem('pr_bridge') === '1';
+
+  if(inApp){
+    // Uygulamada aç — WebView içinde navigate et, dış tarayıcı açma
+    // Bazı WebView'lerde window.open çalışmayabilir, bu yüzden
+    // location.href kullanıyoruz (WebView bunu yakalar)
+    try{
+      // Önce AppInventor'a bilgi ver (bazı uygulamalar bunu dinler)
+      sendToApp('open_in_app:' + p.link);
+      // Fallback: doğrudan git
+      setTimeout(() => {
+        window.location.href = p.link;
+      }, 100);
+    }catch(e){
+      window.location.href = p.link;
+    }
+  } else {
+    // Medyada aç — dış tarayıcı
+    window.open(p.link, '_blank', 'noopener,noreferrer');
+  }
 }
 
 function makeCard(p){
@@ -1243,7 +1091,6 @@ function makeCard(p){
     b.textContent = '-' + Math.round(p.discount) + '%';
     imgwrap.appendChild(b);
   }
-
   if(p.image){
     const img = document.createElement('img');
     img.loading = 'lazy';
@@ -1290,10 +1137,7 @@ function makeCard(p){
   const buy = document.createElement('button');
   buy.className = 'buy-btn';
   buy.textContent = t('buy');
-  buy.onclick = (e) => {
-    e.stopPropagation();
-    openProduct(p);
-  };
+  buy.onclick = (e) => { e.stopPropagation(); openProduct(p); };
   body.appendChild(buy);
 
   card.appendChild(imgwrap);
@@ -1319,7 +1163,6 @@ function updateEmpty(){
   }
 }
 
-/* INFINITE SCROLL */
 let io;
 function initObserver(){
   if(io) io.disconnect();
@@ -1335,9 +1178,7 @@ function initObserver(){
 initObserver();
 
 /* ============================================================
-   RESTORE STATE ON PAGE LOAD
-   - Aynı gün içinde sayfa yeniden açılırsa aynı kategori ve scroll korunur
-   - Üründen geri gelince scroll konumu ve filtre korunur
+   RESTORE STATE ON LOAD (after lang/bridge reload)
 ============================================================ */
 function restoreState(){
   try{
@@ -1349,13 +1190,11 @@ function restoreState(){
       state.activeCat = savedCat || 'all';
       state.activeSub = savedSub || '';
       state.sort = savedSort || 'default';
-      // mark active sort option
       document.querySelectorAll('.sheet-option').forEach(x=>x.classList.remove('active'));
       const opt = document.querySelector(`.sheet-option[data-sort="${state.sort}"]`);
       if(opt) opt.classList.add('active');
-      // restore scroll after render
       if(savedScroll){
-        setTimeout(() => window.scrollTo(0, parseInt(savedScroll)||0), 300);
+        setTimeout(() => window.scrollTo(0, parseInt(savedScroll)||0), 400);
       }
     }
   }catch(e){}
@@ -1409,10 +1248,7 @@ const infoModal = document.getElementById('infoModal');
 const privacyModal = document.getElementById('privacyModal');
 const termsModal = document.getElementById('termsModal');
 
-function openModal(m){
-  modalOverlay.classList.add('show');
-  m.classList.add('show');
-}
+function openModal(m){ modalOverlay.classList.add('show'); m.classList.add('show'); }
 function closeAllModals(){
   modalOverlay.classList.remove('show');
   [settingsModal, infoModal, privacyModal, termsModal].forEach(m=>m.classList.remove('show'));
@@ -1431,9 +1267,21 @@ document.getElementById('termsBtn').addEventListener('click', () => {
   openModal(termsModal);
 });
 
+/* ============================================================
+   RATE BUTTON — FIXED with correct URL + Kodular intent
+============================================================ */
 document.getElementById('rateBtn').addEventListener('click', () => {
-  const opened = sendToApp('rate_app');
-  if(!opened) window.open(CONFIG.PLAY_URL, '_blank', 'noopener');
+  // Try Kodular bridge first for rate action
+  const sent = sendToApp('rate_app');
+  if(!sent){
+    // Fallback: open Play Store directly
+    window.open(CONFIG.PLAY_URL, '_blank', 'noopener,noreferrer');
+  } else {
+    // Also open as backup so user always gets there
+    setTimeout(() => {
+      window.open(CONFIG.PLAY_URL, '_blank', 'noopener,noreferrer');
+    }, 800);
+  }
 });
 
 document.getElementById('copyMail').addEventListener('click', async () => {
@@ -1466,12 +1314,92 @@ function showToast(msg){
   toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
 }
 
-document.getElementById('langSelect').addEventListener('change', e => applyLang(e.target.value));
+/* LANG SELECT */
+document.getElementById('langSelect').addEventListener('change', e => {
+  applyLang(e.target.value);
+});
+
+/* ============================================================
+   UI TEXT HELPER — all language-dependent text
+============================================================ */
+function applyAllUIText(){
+  document.getElementById('searchInput').placeholder = t('search');
+  document.getElementById('sortBtn').textContent = '⇅';
+  document.getElementById('sortTitle').textContent = t('sortBy');
+  document.getElementById('sortDefault').textContent = t('sortDefault');
+  document.getElementById('sortPriceAsc').textContent = t('sortPriceAsc');
+  document.getElementById('sortPriceDesc').textContent = t('sortPriceDesc');
+  document.getElementById('sortNameAz').textContent = t('sortNameAz');
+  document.getElementById('sortNameZa').textContent = t('sortNameZa');
+  document.getElementById('sortDiscount').textContent = t('sortDiscount');
+  document.getElementById('settingsTitle').textContent = '⚙️ ' + t('settingsTitle');
+  document.getElementById('langLabel').textContent = '🌐 ' + t('langLabel');
+  document.getElementById('langSub').textContent = t('langSub');
+  document.getElementById('themeLabel').textContent = '🎨 ' + t('themeLabel');
+  document.getElementById('themeSub').textContent = t('themeSub');
+  document.getElementById('bridgeLabel').textContent = '📱 ' + t('bridgeLabel');
+  document.getElementById('bridgeStatus').textContent =
+    document.getElementById('bridgeSwitch').checked ? t('bridgeOn') : t('bridgeOff');
+  document.getElementById('infoTitle').textContent = 'ℹ️ ' + t('infoTitle');
+  document.getElementById('purposeTitle').textContent = t('purposeTitle');
+  document.getElementById('purposeText').textContent = t('purposeText');
+  document.getElementById('rateTitle').textContent = t('rateTitle');
+  document.getElementById('rateText').textContent = t('rateText');
+  document.getElementById('rateBtnText').textContent = t('rateBtnText');
+  document.getElementById('contactTitle').textContent = t('contactTitle');
+  document.getElementById('contactText').textContent = t('contactText');
+  document.getElementById('importantTitle').textContent = t('importantTitle');
+  document.getElementById('importantText').textContent = t('importantText');
+  document.getElementById('legalTitle').textContent = t('legalTitle');
+  document.getElementById('privacyBtnText').textContent = t('privacyBtnText');
+  document.getElementById('termsBtnText').textContent = t('termsBtnText');
+  document.getElementById('privacyTitle').textContent = t('privacyTitle');
+  document.getElementById('termsTitle').textContent = t('termsTitle');
+  document.getElementById('copyMail').textContent = t('copy');
+  document.getElementById('backText').textContent = t('back');
+  document.getElementById('subsheetTitle').textContent = t('subcategories');
+  document.getElementById('privacyBody').innerHTML = buildPrivacyHTML();
+  document.getElementById('termsBody').innerHTML = buildTermsHTML();
+  document.getElementById('langSelect').value = currentLang;
+}
+
+function buildPrivacyHTML(){
+  return `
+    <div class="info-section">
+      <p>Daa Studio built the Productora app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p>
+      <p>This page informs visitors regarding our policies with the collection, use, and disclosure of Personal Information.</p>
+      <p>If you choose to use our Service, you agree to the collection and use of information in relation to this policy. We will not use or share your information with anyone except as described in this Privacy Policy.</p>
+      <p><strong>Information Collection and Use</strong><br>For a better experience, we may require you to provide certain personally identifiable information. The information we request is retained on your device and is not collected by us in any way. The app uses third-party services that may collect information used to identify you: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p>
+      <p><strong>Log Data</strong><br>Whenever you use our Service, in case of an error we collect data and information (through third-party products) called Log Data. This may include your IP address, device name, OS version, app configuration, time and date of use, and other statistics.</p>
+      <p><strong>Cookies</strong><br>The app may use third-party code and libraries that use cookies to collect information and improve services. You can accept or refuse these cookies.</p>
+      <p><strong>Service Providers</strong><br>We may employ third-party companies to facilitate our Service, provide it on our behalf, perform related services, or assist in analyzing usage. They have access to Personal Information to perform tasks on our behalf and are obligated not to disclose or use it for other purposes.</p>
+      <p><strong>Security</strong><br>Productora app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. We value your trust and strive to use commercially acceptable means to protect your Personal Information, but no method of transmission or storage is 100% secure.</p>
+      <p><strong>Links to Other Sites</strong><br>This Service may contain links to other sites. If you click a third-party link, you will be directed to that site. We strongly advise you to review their Privacy Policy.</p>
+      <p><strong>Children's Privacy</strong><br>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p>
+      <p><strong>Changes to This Privacy Policy</strong><br>We may update our Privacy Policy from time to time. You are advised to review this page periodically. This policy is effective as of 2021-11-01.</p>
+      <p><strong>Contact Us</strong><br>If you have questions or suggestions, contact us at daastudio42@gmail.com.</p>
+    </div>`;
+}
+function buildTermsHTML(){
+  return `
+    <div class="info-section">
+      <p>By downloading or using the app, these terms automatically apply to you. Productora app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. You may not copy, modify, or extract the source code of the app, or translate it into other languages, or make derivative versions. All trademarks, copyright, database rights and other intellectual property rights related to the app belong to Daa Studio.</p>
+      <p>Daa Studio is committed to ensuring the app is useful and efficient. We reserve the right to make changes or charge for services at any time. We will never charge you without clearly explaining what you are paying for.</p>
+      <p>The app stores and processes personal data you have provided in order to provide our Service. It's your responsibility to keep your phone and app access secure. We recommend not jailbreaking or rooting your phone.</p>
+      <p>The app uses third-party services that declare their own Terms and Conditions: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p>
+      <p>Certain functions require an active internet connection. Daa Studio cannot take responsibility if the app does not work at full functionality due to lack of Wi-Fi or data allowance.</p>
+      <p>Daa Studio accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.</p>
+      <p>We may update the app. You promise to always accept updates when offered. We may also stop providing the app and terminate use at any time.</p>
+      <p><strong>Changes to These Terms</strong><br>We may update our Terms from time to time. You are advised to review this page periodically. These terms are effective as of 2021-11-01.</p>
+      <p><strong>Contact Us</strong><br>If you have questions, contact us at daastudio42@gmail.com.</p>
+    </div>`;
+}
 
 /* ============================================================
    INIT
 ============================================================ */
-applyLang(currentLang);
+currentLang = localStorage.getItem('pr_lang') || 'en';
+applyAllUIText();
 restoreState();
 loadAll();
 </script>
