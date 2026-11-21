@@ -6,25 +6,13 @@
 <title>Productora</title>
 <style>
 :root{
-  --bg:#0f1220;
-  --bg2:#171a2e;
-  --card:#1e2238;
-  --card2:#252a45;
-  --text:#eef1ff;
-  --muted:#9aa3c7;
-  --accent:#ff5a5f;
-  --accent2:#ffb400;
-  --border:rgba(255,255,255,.08);
-  --shadow:0 8px 30px rgba(0,0,0,.35);
+  --bg:#0f1220;--bg2:#171a2e;--card:#1e2238;--card2:#252a45;
+  --text:#eef1ff;--muted:#9aa3c7;--accent:#ff5a5f;--accent2:#ffb400;
+  --border:rgba(255,255,255,.08);--shadow:0 8px 30px rgba(0,0,0,.35);
 }
 body.light{
-  --bg:#f4f6fb;
-  --bg2:#ffffff;
-  --card:#ffffff;
-  --card2:#eef1f8;
-  --text:#141824;
-  --muted:#5d6684;
-  --border:rgba(0,0,0,.08);
+  --bg:#f4f6fb;--bg2:#ffffff;--card:#ffffff;--card2:#eef1f8;
+  --text:#141824;--muted:#5d6684;--border:rgba(0,0,0,.08);
   --shadow:0 8px 24px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -36,163 +24,82 @@ img{display:block;max-width:100%}
 header{
   position:sticky;top:0;z-index:100;
   background:linear-gradient(180deg,var(--bg2),var(--bg));
-  border-bottom:1px solid var(--border);
-  padding:10px 14px;
-  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);padding:10px 14px;backdrop-filter:blur(8px);
 }
 .topbar{display:flex;align-items:center;gap:10px}
 .logo{width:36px;height:36px;border-radius:10px;object-fit:cover;background:var(--card)}
 .brand{font-weight:800;font-size:18px;letter-spacing:.5px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;flex:1}
-.icon-btn{
-  width:40px;height:40px;border-radius:12px;border:1px solid var(--border);
-  background:var(--card);color:var(--text);display:grid;place-items:center;
-  cursor:pointer;font-size:18px;transition:.2s;
-}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);display:grid;place-items:center;cursor:pointer;font-size:18px;transition:.2s}
 .icon-btn:active{transform:scale(.94)}
-.settings-btn{font-size:20px}
 
 .searchbar{margin-top:10px;display:flex;gap:8px;align-items:center}
-.searchbar input{
-  flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
-  background:var(--card);color:var(--text);font-size:14px;outline:none;
-}
+.searchbar input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:14px;outline:none}
 .searchbar input::placeholder{color:var(--muted)}
-.sort-btn{
-  padding:0 12px;height:44px;border-radius:12px;border:1px solid var(--border);
-  background:var(--card);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap;
-}
+.sort-btn{padding:0 12px;height:44px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap}
 .sort-btn:active{transform:scale(.96)}
 
-.sheet-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
-  opacity:0;pointer-events:none;transition:opacity .2s;
-}
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
 .sheet-overlay.show{opacity:1;pointer-events:auto}
-.sheet{
-  position:fixed;left:0;right:0;bottom:0;background:var(--bg2);
-  border-radius:20px 20px 0 0;padding:16px;z-index:201;
-  transform:translateY(100%);transition:transform .25s;
-}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-radius:20px 20px 0 0;padding:16px;z-index:201;transform:translateY(100%);transition:transform .25s}
 .sheet.show{transform:translateY(0)}
 .sheet h4{margin:0 0 12px;font-size:15px}
-.sheet-option{
-  padding:14px;border-radius:12px;background:var(--card);margin-bottom:8px;
-  font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
-}
+.sheet-option{padding:14px;border-radius:12px;background:var(--card);margin-bottom:8px;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .sheet-option.active{background:var(--accent);color:#fff}
 
-.tabs{
-  display:flex;gap:8px;overflow-x:auto;padding:12px 14px 4px;scrollbar-width:none;
-}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 14px 4px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{
-  flex:0 0 auto;padding:10px 16px;border-radius:999px;background:var(--card);
-  border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;
-  white-space:nowrap;color:var(--muted);transition:.2s;display:flex;align-items:center;gap:6px;
-}
-.tab .badge{
-  background:rgba(255,255,255,.15);color:inherit;font-size:11px;padding:2px 7px;border-radius:999px;font-weight:700;
-}
+.tab{flex:0 0 auto;padding:10px 16px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--muted);transition:.2s;display:flex;align-items:center;gap:6px}
+.tab .badge{background:rgba(255,255,255,.15);color:inherit;font-size:11px;padding:2px 7px;border-radius:999px;font-weight:700}
 .tab.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
 .tab.active .badge{background:rgba(0,0,0,.2);color:#fff}
 
-.subchips{
-  display:flex;gap:8px;overflow-x:auto;padding:8px 14px 4px;scrollbar-width:none;
-}
+.subchips{display:flex;gap:8px;overflow-x:auto;padding:8px 14px 4px;scrollbar-width:none;flex-wrap:nowrap}
 .subchips::-webkit-scrollbar{display:none}
-.chip{
-  flex:0 0 auto;padding:8px 14px;border-radius:999px;background:var(--card2);
-  border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--muted);
-  display:flex;align-items:center;gap:6px;
-}
-.chip .badge{
-  background:rgba(255,255,255,.12);font-size:10px;padding:1px 6px;border-radius:999px;font-weight:700;
-}
+.chip{flex:0 0 auto;padding:8px 14px;border-radius:999px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--muted);display:flex;align-items:center;gap:6px;transition:.2s}
+.chip .badge{background:rgba(255,255,255,.12);font-size:10px;padding:1px 6px;border-radius:999px;font-weight:700}
 .chip.active{background:var(--accent);color:#fff;border-color:transparent}
 .chip.active .badge{background:rgba(0,0,0,.2)}
 
-.grid{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:14px;
-}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:14px}
 @media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
 
-.card{
-  background:var(--card);border-radius:16px;overflow:hidden;
-  border:1px solid var(--border);box-shadow:var(--shadow);
-  display:flex;flex-direction:column;transition:transform .15s;
-}
+.card{background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .15s;cursor:pointer}
 .card:active{transform:scale(.98)}
-.card .imgwrap{
-  position:relative;width:100%;aspect-ratio:1/1;background:var(--card2);
-  display:grid;place-items:center;overflow:hidden;
-}
+.card .imgwrap{position:relative;width:100%;aspect-ratio:1/1;background:var(--card2);display:grid;place-items:center;overflow:hidden}
 .card .imgwrap img{width:100%;height:100%;object-fit:cover}
-.spinner{
-  width:32px;height:32px;border-radius:50%;
-  border:3px solid rgba(255,255,255,.15);border-top-color:var(--accent);
-  animation:spin 1s linear infinite;
-}
+.spinner{width:32px;height:32px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:var(--accent);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.discount-badge{
-  position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;
-  font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;
-}
+.discount-badge{position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
 .card-body{padding:10px;display:flex;flex-direction:column;gap:6px;flex:1}
-.card-title{
-  font-size:13px;font-weight:600;line-height:1.3;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  min-height:34px;
-}
+.card-title{font-size:13px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:34px}
 .price-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .price{color:var(--accent2);font-weight:800;font-size:15px}
 .old-price{color:var(--muted);font-size:12px;text-decoration:line-through}
 .cat-tag{font-size:11px;color:var(--muted);margin-top:auto}
-.buy-btn{
-  margin-top:6px;padding:9px;border-radius:10px;text-align:center;font-size:12px;font-weight:700;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;
-}
+.buy-btn{margin-top:6px;padding:9px;border-radius:10px;text-align:center;font-size:12px;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border:none;cursor:pointer}
 
 #sentinel{height:60px;display:grid;place-items:center}
 #sentinel .spinner{width:26px;height:26px}
 
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;
-  opacity:0;pointer-events:none;transition:opacity .25s;
-}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.show{opacity:1;pointer-events:auto}
-.modal{
-  position:fixed;left:0;right:0;bottom:0;top:8%;background:var(--bg2);
-  border-radius:24px 24px 0 0;z-index:301;padding:20px;
-  transform:translateY(100%);transition:transform .3s;overflow-y:auto;
-}
+.modal{position:fixed;left:0;right:0;bottom:0;top:8%;background:var(--bg2);border-radius:24px 24px 0 0;z-index:301;padding:20px;transform:translateY(100%);transition:transform .3s;overflow-y:auto}
 .modal.show{transform:translateY(0)}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .modal-head h3{margin:0;font-size:18px}
 .close-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--card);color:var(--text);font-size:18px;cursor:pointer}
 
-.set-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px;background:var(--card);border-radius:14px;margin-bottom:10px;
-}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--card);border-radius:14px;margin-bottom:10px}
 .set-row .label{font-size:14px;font-weight:600}
 .set-row .sub{font-size:11px;color:var(--muted);margin-top:2px}
 
-select.lang-select{
-  background:var(--card2);color:var(--text);border:1px solid var(--border);
-  border-radius:10px;padding:8px 10px;font-size:13px;outline:none;
-}
+select.lang-select{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:13px;outline:none}
 
 .switch{position:relative;display:inline-block;width:52px;height:30px;flex:0 0 auto}
 .switch input{opacity:0;width:0;height:0}
-.slider{
-  position:absolute;cursor:pointer;inset:0;background:var(--card2);
-  border:1px solid var(--border);border-radius:999px;transition:.25s;
-}
-.slider:before{
-  position:absolute;content:"";height:22px;width:22px;left:3px;top:3px;
-  background:#fff;border-radius:50%;transition:.25s;box-shadow:0 2px 6px rgba(0,0,0,.3);
-}
+.slider{position:absolute;cursor:pointer;inset:0;background:var(--card2);border:1px solid var(--border);border-radius:999px;transition:.25s}
+.slider:before{position:absolute;content:"";height:22px;width:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 input:checked + .slider{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent}
 input:checked + .slider:before{transform:translateX(22px)}
 
@@ -203,65 +110,36 @@ input:checked + .slider:before{transform:translateX(22px)}
 .info-section a{color:var(--accent2);word-break:break-all}
 .mail-row{display:flex;align-items:center;gap:8px;margin-top:8px}
 .mail-row a{flex:1;font-size:13px}
-.copy-btn{
-  padding:8px 12px;border-radius:10px;border:1px solid var(--border);
-  background:var(--card2);color:var(--text);font-size:12px;cursor:pointer;flex:0 0 auto;
-}
-.rate-btn{
-  display:block;text-align:center;padding:14px;border-radius:12px;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;
-  font-weight:700;font-size:14px;margin-top:8px;cursor:pointer;
-}
+.copy-btn{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:12px;cursor:pointer;flex:0 0 auto}
+.rate-btn{display:block;text-align:center;padding:14px;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:14px;margin-top:8px;cursor:pointer}
 .scroll-content{max-height:65vh;overflow-y:auto;padding-right:4px}
 .scroll-content::-webkit-scrollbar{width:4px}
 .scroll-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-.legal-btn{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px;background:var(--card);border-radius:14px;margin-bottom:10px;
-  font-size:14px;font-weight:600;cursor:pointer;
-}
+.legal-btn{display:flex;justify-content:space-between;align-items:center;padding:16px;background:var(--card);border-radius:14px;margin-bottom:10px;font-size:14px;font-weight:600;cursor:pointer}
 .legal-btn span.arrow{color:var(--muted);font-size:18px}
 
-.toast{
-  position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:var(--card);color:var(--text);padding:12px 20px;border-radius:12px;
-  font-size:13px;box-shadow:var(--shadow);border:1px solid var(--border);
-  opacity:0;pointer-events:none;transition:.3s;z-index:400;white-space:nowrap;
-}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);color:var(--text);padding:12px 20px;border-radius:12px;font-size:13px;box-shadow:var(--shadow);border:1px solid var(--border);opacity:0;pointer-events:none;transition:.3s;z-index:400;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.empty{
-  text-align:center;padding:60px 20px;color:var(--muted);font-size:14px;
-  grid-column:1/-1;
-}
-
-#scrollTop{
-  position:fixed;right:16px;bottom:90px;width:44px;height:44px;border-radius:50%;
-  background:var(--accent);color:#fff;border:none;font-size:20px;cursor:pointer;
-  box-shadow:var(--shadow);display:none;z-index:150;
-}
+.empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px;grid-column:1/-1}
+#scrollTop{position:fixed;right:16px;bottom:90px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:var(--shadow);display:none;z-index:150}
 #scrollTop.show{display:block}
-
-.loading-overlay{
-  position:fixed;inset:0;background:var(--bg);z-index:500;
-  display:grid;place-items:center;transition:opacity .3s;
-}
+.loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:grid;place-items:center;transition:opacity .3s}
 .loading-overlay.hide{opacity:0;pointer-events:none}
 .loading-overlay .spinner{width:50px;height:50px;border-width:4px}
 </style>
 </head>
 <body>
 
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="spinner"></div>
-</div>
+<div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div></div>
 
 <header>
   <div class="topbar">
     <img src="https://i.hizliresim.com/nmjqsjmi.png" alt="Productora" class="logo" onerror="this.style.display='none'">
     <div class="brand">Productora</div>
-    <button class="icon-btn settings-btn" id="settingsBtn" title="Settings">⚙️</button>
+    <button class="icon-btn" id="infoBtnHeader" title="Info">ℹ️</button>
+    <button class="icon-btn" id="settingsBtn" title="Settings">⚙️</button>
   </div>
   <div class="searchbar">
     <input type="text" id="searchInput" placeholder="Search products or categories...">
@@ -289,13 +167,11 @@ input:checked + .slider:before{transform:translateX(22px)}
 
 <div class="modal-overlay" id="modalOverlay"></div>
 
-<!-- SETTINGS MODAL -->
 <div class="modal" id="settingsModal">
   <div class="modal-head">
     <h3 id="settingsTitle">⚙️ Settings</h3>
     <button class="close-btn" data-close="all">✕</button>
   </div>
-
   <div class="set-row">
     <div>
       <div class="label" id="langLabel">🌐 Language</div>
@@ -314,31 +190,22 @@ input:checked + .slider:before{transform:translateX(22px)}
       <option value="zh">🇨🇳 中文</option>
     </select>
   </div>
-
   <div class="set-row">
     <div>
       <div class="label" id="themeLabel">🎨 Theme</div>
       <div class="sub" id="themeSub">Dark / Light mode</div>
     </div>
-    <label class="switch">
-      <input type="checkbox" id="themeSwitch">
-      <span class="slider"></span>
-    </label>
+    <label class="switch"><input type="checkbox" id="themeSwitch"><span class="slider"></span></label>
   </div>
-
   <div class="set-row">
     <div>
       <div class="label" id="bridgeLabel">📱 Open In Media / App</div>
       <div class="sub" id="bridgeStatus">Open in media</div>
     </div>
-    <label class="switch">
-      <input type="checkbox" id="bridgeSwitch">
-      <span class="slider"></span>
-    </label>
+    <label class="switch"><input type="checkbox" id="bridgeSwitch"><span class="slider"></span></label>
   </div>
 </div>
 
-<!-- INFO MODAL (ayrı sayfa gibi) -->
 <div class="modal" id="infoModal">
   <div class="modal-head">
     <h3 id="infoTitle">ℹ️ Info</h3>
@@ -349,13 +216,11 @@ input:checked + .slider:before{transform:translateX(22px)}
       <h4 id="purposeTitle">App Purpose</h4>
       <p id="purposeText"></p>
     </div>
-
     <div class="info-section">
       <h4 id="rateTitle">Rate the App</h4>
       <p id="rateText"></p>
       <div class="rate-btn" id="rateBtn">⭐ <span id="rateBtnText">Rate Productora on Google Play</span></div>
     </div>
-
     <div class="info-section">
       <h4 id="contactTitle">Contact</h4>
       <p id="contactText"></p>
@@ -364,12 +229,10 @@ input:checked + .slider:before{transform:translateX(22px)}
         <button class="copy-btn" id="copyMail">Copy</button>
       </div>
     </div>
-
     <div class="info-section">
       <h4 id="importantTitle">Important</h4>
       <p id="importantText"></p>
     </div>
-
     <div class="info-section">
       <h4 id="legalTitle">Legal</h4>
       <div class="legal-btn" id="privacyBtn">
@@ -384,7 +247,6 @@ input:checked + .slider:before{transform:translateX(22px)}
   </div>
 </div>
 
-<!-- PRIVACY MODAL -->
 <div class="modal" id="privacyModal">
   <div class="modal-head">
     <h3 id="privacyTitle">Privacy Policy</h3>
@@ -393,7 +255,6 @@ input:checked + .slider:before{transform:translateX(22px)}
   <div class="scroll-content" id="privacyBody"></div>
 </div>
 
-<!-- TERMS MODAL -->
 <div class="modal" id="termsModal">
   <div class="modal-head">
     <h3 id="termsTitle">Terms &amp; Conditions</h3>
@@ -421,7 +282,7 @@ const CONFIG = {
 };
 
 /* ============================================================
-   i18n — FULL TRANSLATIONS
+   i18n
 ============================================================ */
 const I18N = {
   en:{
@@ -448,7 +309,7 @@ const I18N = {
     legalTitle:"Legal", privacyBtnText:"Privacy Policy", termsBtnText:"Terms & Conditions",
     privacyTitle:"Privacy Policy", termsTitle:"Terms & Conditions",
     copy:"Copy", copied:"Email copied!", bridgeNotAvailable:"Bridge not available (browser mode)",
-    noProducts:"No products found.", noLink:"No link available",
+    noProducts:"No products found.", noLink:"Link not available", linkMissing:"This product has no purchase link.",
     cat_all:"All Categories", cat_eu_local_stock:"EU Local Stock",
     cat_eu_special_30k:"Special Offer 30K", cat_up_to_50_off:"Up to 50% Off"
   },
@@ -476,7 +337,7 @@ const I18N = {
     legalTitle:"Yasal", privacyBtnText:"Gizlilik Politikası", termsBtnText:"Şartlar ve Koşullar",
     privacyTitle:"Gizlilik Politikası", termsTitle:"Şartlar ve Koşullar",
     copy:"Kopyala", copied:"E-posta kopyalandı!", bridgeNotAvailable:"Köprü kullanılamıyor (tarayıcı modu)",
-    noProducts:"Ürün bulunamadı.", noLink:"Bağlantı mevcut değil",
+    noProducts:"Ürün bulunamadı.", noLink:"Bağlantı mevcut değil", linkMissing:"Bu ürünün satın alma bağlantısı yok.",
     cat_all:"Tüm Kategoriler", cat_eu_local_stock:"AB Yerel Stok",
     cat_eu_special_30k:"Özel Teklif 30K", cat_up_to_50_off:"%50'ye Varan İndirim"
   },
@@ -504,7 +365,7 @@ const I18N = {
     legalTitle:"Legal", privacyBtnText:"Política de Privacidad", termsBtnText:"Términos y Condiciones",
     privacyTitle:"Política de Privacidad", termsTitle:"Términos y Condiciones",
     copy:"Copiar", copied:"¡Correo copiado!", bridgeNotAvailable:"Puente no disponible (modo navegador)",
-    noProducts:"No se encontraron productos.", noLink:"Enlace no disponible",
+    noProducts:"No se encontraron productos.", noLink:"Enlace no disponible", linkMissing:"Este producto no tiene enlace de compra.",
     cat_all:"Todas las categorías", cat_eu_local_stock:"Stock Local UE",
     cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Hasta 50% de Descuento"
   },
@@ -532,7 +393,7 @@ const I18N = {
     legalTitle:"Rechtliches", privacyBtnText:"Datenschutzrichtlinie", termsBtnText:"Allgemeine Geschäftsbedingungen",
     privacyTitle:"Datenschutzrichtlinie", termsTitle:"AGB",
     copy:"Kopieren", copied:"E-Mail kopiert!", bridgeNotAvailable:"Brücke nicht verfügbar (Browser-Modus)",
-    noProducts:"Keine Produkte gefunden.", noLink:"Kein Link verfügbar",
+    noProducts:"Keine Produkte gefunden.", noLink:"Kein Link verfügbar", linkMissing:"Dieses Produkt hat keinen Kauflink.",
     cat_all:"Alle Kategorien", cat_eu_local_stock:"EU-Lagerbestand",
     cat_eu_special_30k:"Sonderangebot 30K", cat_up_to_50_off:"Bis zu 50% Rabatt"
   },
@@ -560,7 +421,7 @@ const I18N = {
     legalTitle:"Mentions légales", privacyBtnText:"Politique de confidentialité", termsBtnText:"Conditions générales",
     privacyTitle:"Politique de confidentialité", termsTitle:"Conditions générales",
     copy:"Copier", copied:"E-mail copié !", bridgeNotAvailable:"Pont non disponible (mode navigateur)",
-    noProducts:"Aucun produit trouvé.", noLink:"Aucun lien disponible",
+    noProducts:"Aucun produit trouvé.", noLink:"Aucun lien disponible", linkMissing:"Ce produit n'a pas de lien d'achat.",
     cat_all:"Toutes les catégories", cat_eu_local_stock:"Stock local UE",
     cat_eu_special_30k:"Offre spéciale 30K", cat_up_to_50_off:"Jusqu'à 50% de réduction"
   },
@@ -588,7 +449,7 @@ const I18N = {
     legalTitle:"Legale", privacyBtnText:"Informativa sulla privacy", termsBtnText:"Termini e condizioni",
     privacyTitle:"Informativa sulla privacy", termsTitle:"Termini e condizioni",
     copy:"Copia", copied:"Email copiata!", bridgeNotAvailable:"Ponte non disponibile (modalità browser)",
-    noProducts:"Nessun prodotto trovato.", noLink:"Nessun link disponibile",
+    noProducts:"Nessun prodotto trovato.", noLink:"Nessun link disponibile", linkMissing:"Questo prodotto non ha un link di acquisto.",
     cat_all:"Tutte le categorie", cat_eu_local_stock:"Stock locale UE",
     cat_eu_special_30k:"Offerta speciale 30K", cat_up_to_50_off:"Fino al 50% di sconto"
   },
@@ -616,7 +477,7 @@ const I18N = {
     legalTitle:"Legal", privacyBtnText:"Política de Privacidade", termsBtnText:"Termos e Condições",
     privacyTitle:"Política de Privacidade", termsTitle:"Termos e Condições",
     copy:"Copiar", copied:"E-mail copiado!", bridgeNotAvailable:"Ponte não disponível (modo navegador)",
-    noProducts:"Nenhum produto encontrado.", noLink:"Nenhum link disponível",
+    noProducts:"Nenhum produto encontrado.", noLink:"Nenhum link disponível", linkMissing:"Este produto não tem link de compra.",
     cat_all:"Todas as categorias", cat_eu_local_stock:"Estoque Local UE",
     cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Até 50% de Desconto"
   },
@@ -644,7 +505,7 @@ const I18N = {
     legalTitle:"法的情報", privacyBtnText:"プライバシーポリシー", termsBtnText:"利用規約",
     privacyTitle:"プライバシーポリシー", termsTitle:"利用規約",
     copy:"コピー", copied:"メールをコピーしました！", bridgeNotAvailable:"ブリッジが利用できません（ブラウザモード）",
-    noProducts:"商品が見つかりません。", noLink:"リンクがありません",
+    noProducts:"商品が見つかりません。", noLink:"リンクがありません", linkMissing:"この商品には購入リンクがありません。",
     cat_all:"すべてのカテゴリ", cat_eu_local_stock:"EU現地在庫",
     cat_eu_special_30k:"特別オファー30K", cat_up_to_50_off:"最大50%オフ"
   },
@@ -672,7 +533,7 @@ const I18N = {
     legalTitle:"법적 정보", privacyBtnText:"개인정보 처리방침", termsBtnText:"이용약관",
     privacyTitle:"개인정보 처리방침", termsTitle:"이용약관",
     copy:"복사", copied:"이메일이 복사되었습니다!", bridgeNotAvailable:"브리지를 사용할 수 없습니다 (브라우저 모드)",
-    noProducts:"제품을 찾을 수 없습니다.", noLink:"사용 가능한 링크가 없습니다",
+    noProducts:"제품을 찾을 수 없습니다.", noLink:"사용 가능한 링크가 없습니다", linkMissing:"이 제품에는 구매 링크가 없습니다.",
     cat_all:"모든 카테고리", cat_eu_local_stock:"EU 현지 재고",
     cat_eu_special_30k:"특별 혜택 30K", cat_up_to_50_off:"최대 50% 할인"
   },
@@ -700,7 +561,7 @@ const I18N = {
     legalTitle:"法律", privacyBtnText:"隐私政策", termsBtnText:"条款和条件",
     privacyTitle:"隐私政策", termsTitle:"条款和条件",
     copy:"复制", copied:"邮件已复制！", bridgeNotAvailable:"桥接不可用（浏览器模式）",
-    noProducts:"未找到产品。", noLink:"无可用链接",
+    noProducts:"未找到产品。", noLink:"无可用链接", linkMissing:"此产品没有购买链接。",
     cat_all:"所有类别", cat_eu_local_stock:"欧盟本地库存",
     cat_eu_special_30k:"特别优惠 30K", cat_up_to_50_off:"高达 50% 折扣"
   }
@@ -724,21 +585,15 @@ const state = {
 let currentLang = localStorage.getItem('pr_lang') || 'en';
 function t(key){return (I18N[currentLang]&&I18N[currentLang][key])||I18N.en[key]||key;}
 
-/* ============================================================
-   THEME
-============================================================ */
+/* THEME */
 function applyTheme(mode){
   document.body.classList.toggle('light', mode==='light');
   document.getElementById('themeSwitch').checked = (mode==='light');
   localStorage.setItem('pr_theme', mode);
 }
-(function initTheme(){
-  applyTheme(localStorage.getItem('pr_theme') || 'dark');
-})();
+applyTheme(localStorage.getItem('pr_theme') || 'dark');
 
-/* ============================================================
-   APPLY LANGUAGE — ALL UI
-============================================================ */
+/* APPLY LANGUAGE */
 function applyLang(lang){
   currentLang = lang;
   localStorage.setItem('pr_lang', lang);
@@ -753,7 +608,6 @@ function applyLang(lang){
   document.getElementById('sortNameAz').textContent = t('sortNameAz');
   document.getElementById('sortNameZa').textContent = t('sortNameZa');
   document.getElementById('sortDiscount').textContent = t('sortDiscount');
-
   document.getElementById('settingsTitle').textContent = '⚙️ ' + t('settingsTitle');
   document.getElementById('langLabel').textContent = '🌐 ' + t('langLabel');
   document.getElementById('langSub').textContent = t('langSub');
@@ -788,9 +642,7 @@ function applyLang(lang){
   applyFilter();
 }
 
-/* ============================================================
-   LEGAL CONTENT
-============================================================ */
+/* LEGAL HTML */
 function buildPrivacyHTML(){
   return `
     <div class="info-section">
@@ -806,8 +658,7 @@ function buildPrivacyHTML(){
       <p><strong>Children's Privacy</strong><br>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p>
       <p><strong>Changes to This Privacy Policy</strong><br>We may update our Privacy Policy from time to time. You are advised to review this page periodically. This policy is effective as of 2021-11-01.</p>
       <p><strong>Contact Us</strong><br>If you have questions or suggestions, contact us at daastudio42@gmail.com.</p>
-    </div>
-  `;
+    </div>`;
 }
 function buildTermsHTML(){
   return `
@@ -821,16 +672,12 @@ function buildTermsHTML(){
       <p>We may update the app. You promise to always accept updates when offered. We may also stop providing the app and terminate use at any time.</p>
       <p><strong>Changes to These Terms</strong><br>We may update our Terms from time to time. You are advised to review this page periodically. These terms are effective as of 2021-11-01.</p>
       <p><strong>Contact Us</strong><br>If you have questions, contact us at daastudio42@gmail.com.</p>
-    </div>
-  `;
+    </div>`;
 }
 
-/* ============================================================
-   ANDROID BRIDGE
-============================================================ */
+/* BRIDGE */
 const bridgeSwitch = document.getElementById('bridgeSwitch');
 const bridgeStatus = document.getElementById('bridgeStatus');
-
 function sendToApp(msg){
   try{
     if(window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
@@ -854,9 +701,7 @@ bridgeSwitch.addEventListener('change', e => {
   setBridgeUI(saved);
 })();
 
-/* ============================================================
-   CSV PARSER
-============================================================ */
+/* CSV PARSER */
 function parseCSV(text){
   text = text.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n');
   const delimiter = detectDelimiter(text);
@@ -900,9 +745,7 @@ function detectDelimiter(text){
   return best;
 }
 
-/* ============================================================
-   NORMALIZE PRODUCT
-============================================================ */
+/* NORMALIZE */
 function pick(obj, keys){
   for(const k of keys){
     if(obj[k]!==undefined && String(obj[k]).trim()!=='') return String(obj[k]).trim();
@@ -914,7 +757,7 @@ function normalizeProduct(raw, catKey){
   const img   = pick(raw, ['image_url','image','img','picture','image_link','product_image','resim']);
   const price = pick(raw, ['price','sale_price','discounted_price','current_price','fiyat']);
   const oldP  = pick(raw, ['original_price','old_price','regular_price','list_price','eski_fiyat']);
-  const link  = pick(raw, ['affiliate_link','link','url','product_url','tracking_link','buy_url']);
+  const link  = pick(raw, ['affiliate_link','link','url','product_url','tracking_link','buy_url','promotion_link','click_url','deeplink','product_link']);
   const cat   = pick(raw, ['category','categories','product_category','kategori']);
   const disc  = pick(raw, ['discount','discount_percent','indirim','discount_rate']);
   const cur   = pick(raw, ['currency','currency_code']) || '€';
@@ -943,9 +786,7 @@ function normalizeProduct(raw, catKey){
   };
 }
 
-/* ============================================================
-   LOAD DATA
-============================================================ */
+/* LOAD */
 async function loadAll(){
   state.isLoading = true;
   const promises = Object.entries(CONFIG.FILES).map(async ([key, file]) => {
@@ -978,12 +819,8 @@ async function loadAll(){
   applyFilter();
 }
 
-/* ============================================================
-   RENDER — TABS with counts
-============================================================ */
-function catLabel(cat){
-  return t('cat_' + cat) || cat;
-}
+/* TABS */
+function catLabel(cat){ return t('cat_' + cat) || cat; }
 function buildTabs(){
   const wrap = document.getElementById('tabs');
   wrap.innerHTML = '';
@@ -1013,9 +850,7 @@ function buildTabs(){
   });
 }
 
-/* ============================================================
-   RENDER — SUBCHIPS with counts
-============================================================ */
+/* SUBCHIPS */
 function buildSubchips(){
   const wrap = document.getElementById('subchips');
   const pool = state.activeCat==='all'
@@ -1031,7 +866,6 @@ function buildSubchips(){
   if(cats.length===0){ wrap.style.display='none'; return; }
   wrap.style.display='flex';
 
-  // All chip
   const allChip = document.createElement('div');
   allChip.className = 'chip' + (state.activeSub===''?' active':'');
   allChip.innerHTML = `<span>${t('allSub')}</span><span class="badge">${pool.length}</span>`;
@@ -1057,9 +891,7 @@ function buildSubchips(){
   });
 }
 
-/* ============================================================
-   FILTER + SORT
-============================================================ */
+/* FILTER */
 function shuffleWithSeed(arr, seed){
   const a = arr.slice();
   a.sort((x,y) => hashStr(x.id + seed) - hashStr(y.id + seed));
@@ -1096,9 +928,7 @@ function applyFilter(){
   updateEmpty();
 }
 
-/* ============================================================
-   RENDER — CARDS
-============================================================ */
+/* RENDER */
 const grid = document.getElementById('grid');
 const sentinel = document.getElementById('sentinel');
 
@@ -1112,13 +942,20 @@ function renderPage(){
   state.page++;
 }
 
+function openProduct(p){
+  if(!p.link || p.link.trim()===''){
+    showToast(t('linkMissing'));
+    return;
+  }
+  window.open(p.link, '_blank', 'noopener,noreferrer');
+}
+
 function makeCard(p){
   const card = document.createElement('div');
   card.className = 'card';
 
   const imgwrap = document.createElement('div');
   imgwrap.className = 'imgwrap';
-
   const spinner = document.createElement('div');
   spinner.className = 'spinner';
   imgwrap.appendChild(spinner);
@@ -1173,19 +1010,18 @@ function makeCard(p){
     body.appendChild(ct);
   }
 
-  const buy = document.createElement('a');
+  const buy = document.createElement('button');
   buy.className = 'buy-btn';
   buy.textContent = t('buy');
-  buy.href = p.link || '#';
-  buy.target = '_blank';
-  buy.rel = 'noopener nofollow sponsored';
   buy.onclick = (e) => {
-    if(!p.link){ e.preventDefault(); showToast(t('noLink')); }
+    e.stopPropagation();
+    openProduct(p);
   };
   body.appendChild(buy);
 
   card.appendChild(imgwrap);
   card.appendChild(body);
+  card.onclick = () => openProduct(p);
   return card;
 }
 function fmtPrice(n, cur){
@@ -1204,9 +1040,7 @@ function updateEmpty(){
   }
 }
 
-/* ============================================================
-   INFINITE SCROLL
-============================================================ */
+/* INFINITE SCROLL */
 let io;
 function initObserver(){
   if(io) io.disconnect();
@@ -1221,9 +1055,7 @@ function initObserver(){
 }
 initObserver();
 
-/* ============================================================
-   EVENT WIRING
-============================================================ */
+/* SEARCH */
 let searchTimer;
 document.getElementById('searchInput').addEventListener('input', e => {
   clearTimeout(searchTimer);
@@ -1235,6 +1067,7 @@ document.getElementById('searchInput').addEventListener('input', e => {
   }, 250);
 });
 
+/* SORT */
 const sortOverlay = document.getElementById('sortOverlay');
 const sortSheet = document.getElementById('sortSheet');
 document.getElementById('sortBtn').addEventListener('click', () => {
@@ -1257,13 +1090,12 @@ document.querySelectorAll('.sheet-option').forEach(opt => {
 });
 document.querySelector('.sheet-option[data-sort="default"]').classList.add('active');
 
+/* THEME */
 document.getElementById('themeSwitch').addEventListener('change', e => {
   applyTheme(e.target.checked ? 'light' : 'dark');
 });
 
-/* ============================================================
-   MODALS
-============================================================ */
+/* MODALS */
 const modalOverlay = document.getElementById('modalOverlay');
 const settingsModal = document.getElementById('settingsModal');
 const infoModal = document.getElementById('infoModal');
@@ -1279,27 +1111,10 @@ function closeAllModals(){
   [settingsModal, infoModal, privacyModal, termsModal].forEach(m=>m.classList.remove('show'));
 }
 document.getElementById('settingsBtn').addEventListener('click', () => openModal(settingsModal));
+document.getElementById('infoBtnHeader').addEventListener('click', () => openModal(infoModal));
 document.querySelectorAll('[data-close="all"]').forEach(btn => btn.addEventListener('click', closeAllModals));
 modalOverlay.addEventListener('click', closeAllModals);
 
-/* INFO — ayrı sayfa gibi açılır */
-document.getElementById('infoBtn') && document.getElementById('infoBtn').addEventListener('click', ()=>{});
-/* Info artık ayrı bir buton: settings içinde değil, header'da sağa ekleyeceğiz */
-
-/* Info'yu ayrı bir ikon olarak ekleyelim */
-(function addInfoButton(){
-  const topbar = document.querySelector('.topbar');
-  const settingsBtn = document.getElementById('settingsBtn');
-  const infoBtn = document.createElement('button');
-  infoBtn.className = 'icon-btn';
-  infoBtn.id = 'infoBtnHeader';
-  infoBtn.textContent = 'ℹ️';
-  infoBtn.title = 'Info';
-  infoBtn.addEventListener('click', () => openModal(infoModal));
-  topbar.insertBefore(infoBtn, settingsBtn);
-})();
-
-/* Privacy & Terms buttons */
 document.getElementById('privacyBtn').addEventListener('click', () => {
   infoModal.classList.remove('show');
   openModal(privacyModal);
@@ -1309,13 +1124,11 @@ document.getElementById('termsBtn').addEventListener('click', () => {
   openModal(termsModal);
 });
 
-/* rate */
 document.getElementById('rateBtn').addEventListener('click', () => {
   const opened = sendToApp('rate_app');
   if(!opened) window.open(CONFIG.PLAY_URL, '_blank', 'noopener');
 });
 
-/* copy */
 document.getElementById('copyMail').addEventListener('click', async () => {
   try{
     await navigator.clipboard.writeText(CONFIG.EMAIL);
@@ -1331,14 +1144,14 @@ document.getElementById('copyMail').addEventListener('click', async () => {
   }
 });
 
-/* scroll top */
+/* SCROLL TOP */
 const scrollTopBtn = document.getElementById('scrollTop');
 window.addEventListener('scroll', () => {
   scrollTopBtn.classList.toggle('show', window.scrollY > 600);
 });
 scrollTopBtn.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 
-/* toast */
+/* TOAST */
 let toastTimer;
 function showToast(msg){
   const el = document.getElementById('toast');
@@ -1348,12 +1161,10 @@ function showToast(msg){
   toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
 }
 
-/* lang select */
+/* LANG */
 document.getElementById('langSelect').addEventListener('change', e => applyLang(e.target.value));
 
-/* ============================================================
-   INIT
-============================================================ */
+/* INIT */
 applyLang(currentLang);
 loadAll();
 </script>
