@@ -1,522 +1,1008 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Productora</title>
-    <style>
-        :root {
-            --primary: #FF6A00;
-            --primary-dark: #E65100;
-            --bg: #F5F7FA;
-            --surface: #FFFFFF;
-            --text: #1A1A1A;
-            --text-secondary: #666666;
-            --border: #E0E0E0;
-            --shadow: 0 4px 12px rgba(0,0,0,0.08);
-            --radius: 12px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Productora</title>
+<style>
+:root{
+  --bg:#0f1220;
+  --bg2:#171a2e;
+  --card:#1e2238;
+  --card2:#252a45;
+  --text:#eef1ff;
+  --muted:#9aa3c7;
+  --accent:#ff5a5f;
+  --accent2:#ffb400;
+  --border:rgba(255,255,255,.08);
+  --shadow:0 8px 30px rgba(0,0,0,.35);
+}
+body.light{
+  --bg:#f4f6fb;
+  --bg2:#ffffff;
+  --card:#ffffff;
+  --card2:#eef1f8;
+  --text:#141824;
+  --muted:#5d6684;
+  --border:rgba(0,0,0,.08);
+  --shadow:0 8px 24px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--text);transition:background .25s,color .25s}
+body{padding-bottom:80px}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
 
-        [data-theme="dark"] {
-            --bg: #121212;
-            --surface: #1E1E1E;
-            --text: #E0E0E0;
-            --text-secondary: #AAAAAA;
-            --border: #333333;
-            --shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:100;
+  background:linear-gradient(180deg,var(--bg2),var(--bg));
+  border-bottom:1px solid var(--border);
+  padding:10px 14px;
+  backdrop-filter:blur(8px);
+}
+.topbar{display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:10px;object-fit:cover;background:var(--card)}
+.brand{font-weight:800;font-size:18px;letter-spacing:.5px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;flex:1}
+.icon-btn{
+  width:40px;height:40px;border-radius:12px;border:1px solid var(--border);
+  background:var(--card);color:var(--text);display:grid;place-items:center;
+  cursor:pointer;font-size:18px;transition:.2s;
+}
+.icon-btn:active{transform:scale(.94)}
+.settings-btn{font-size:20px}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; padding-bottom: 80px; }
-        
-        .header { position: sticky; top: 0; z-index: 100; background: var(--surface); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow); }
-        .logo-area { display: flex; align-items: center; gap: 10px; }
-        .logo-area img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
-        .logo-area h1 { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
-        .icon-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text); padding: 8px; border-radius: 50%; }
-        .icon-btn:active { background: var(--border); }
+/* SEARCH */
+.searchbar{
+  margin-top:10px;display:flex;gap:8px;align-items:center;
+}
+.searchbar input{
+  flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+  background:var(--card);color:var(--text);font-size:14px;outline:none;
+}
+.searchbar input::placeholder{color:var(--muted)}
+.sort-btn{
+  padding:0 12px;height:44px;border-radius:12px;border:1px solid var(--border);
+  background:var(--card);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap;
+}
+.sort-btn:active{transform:scale(.96)}
 
-        .controls { padding: 12px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
-        .search-box { display: flex; gap: 8px; margin-bottom: 12px; }
-        .search-box input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.95rem; outline: none; }
-        .search-box select { padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+/* SORT SHEET */
+.sheet-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.sheet-overlay.show{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;background:var(--bg2);
+  border-radius:20px 20px 0 0;padding:16px;z-index:201;
+  transform:translateY(100%);transition:transform .25s;
+}
+.sheet.show{transform:translateY(0)}
+.sheet h4{margin:0 0 12px;font-size:15px}
+.sheet-option{
+  padding:14px;border-radius:12px;background:var(--card);margin-bottom:8px;
+  font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+}
+.sheet-option.active{background:var(--accent);color:#fff}
 
-        .categories { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 12px; background: var(--surface); scrollbar-width: none; }
-        .categories::-webkit-scrollbar { display: none; }
-        .cat-btn { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+/* TABS / CATEGORIES */
+.tabs{
+  display:flex;gap:8px;overflow-x:auto;padding:12px 14px 4px;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;padding:10px 16px;border-radius:999px;background:var(--card);
+  border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;
+  white-space:nowrap;color:var(--muted);transition:.2s;
+}
+.tab.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
 
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
-        @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
-        
-        .product-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; text-decoration: none; color: var(--text); position: relative; }
-        .img-container { position: relative; width: 100%; padding-top: 100%; background: var(--bg); overflow: hidden; }
-        .img-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
-        .img-container img.loaded { opacity: 1; }
-        .img-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-        
-        .p-info { padding: 10px; flex: 1; display: flex; flex-direction: column; }
-        .p-title { font-size: 0.85rem; font-weight: 500; line-height: 1.3; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .p-cat { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; }
-        .p-price { font-size: 1rem; font-weight: 700; color: var(--primary); margin-top: auto; }
+/* SUBCATEGORY CHIPS */
+.subchips{
+  display:flex;gap:8px;overflow-x:auto;padding:8px 14px 4px;scrollbar-width:none;
+}
+.subchips::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;padding:8px 14px;border-radius:999px;background:var(--card2);
+  border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--muted);
+}
+.chip.active{background:var(--accent);color:#fff;border-color:transparent}
 
-        .sentinel { height: 50px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.9rem; }
+/* GRID */
+.grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:14px;
+}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-secondary); text-decoration: none; font-size: 0.75rem; background: none; border: none; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item span { font-size: 1.3rem; }
+.card{
+  background:var(--card);border-radius:16px;overflow:hidden;
+  border:1px solid var(--border);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;transition:transform .15s;
+}
+.card:active{transform:scale(.98)}
+.card .imgwrap{
+  position:relative;width:100%;aspect-ratio:1/1;background:var(--card2);
+  display:grid;place-items:center;overflow:hidden;
+}
+.card .imgwrap img{width:100%;height:100%;object-fit:cover}
+.spinner{
+  width:32px;height:32px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.15);border-top-color:var(--accent);
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.discount-badge{
+  position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;
+  font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;
+}
+.card-body{padding:10px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card-title{
+  font-size:13px;font-weight:600;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  min-height:34px;
+}
+.price-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.price{color:var(--accent2);font-weight:800;font-size:15px}
+.old-price{color:var(--muted);font-size:12px;text-decoration:line-through}
+.cat-tag{font-size:11px;color:var(--muted);margin-top:auto}
+.buy-btn{
+  margin-top:6px;padding:9px;border-radius:10px;text-align:center;font-size:12px;font-weight:700;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;
+}
 
-        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; opacity: 0; transition: opacity 0.3s; }
-        .modal.open { display: flex; opacity: 1; }
-        .modal-content { background: var(--surface); width: 100%; max-height: 90vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s; }
-        .modal.open .modal-content { transform: translateY(0); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-header h2 { font-size: 1.2rem; }
-        .close-btn { background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer; }
+/* LOADER SENTINEL */
+#sentinel{height:60px;display:grid;place-items:center}
+#sentinel .spinner{width:26px;height:26px}
 
-        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
-        .setting-label { font-size: 0.95rem; }
-        
-        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(22px); }
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal{
+  position:fixed;left:0;right:0;bottom:0;top:8%;background:var(--bg2);
+  border-radius:24px 24px 0 0;z-index:301;padding:20px;
+  transform:translateY(100%);transition:transform .3s;overflow-y:auto;
+}
+.modal.show{transform:translateY(0)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-head h3{margin:0;font-size:18px}
+.close-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--card);color:var(--text);font-size:18px;cursor:pointer}
 
-        .info-section { margin-bottom: 20px; }
-        .info-section h3 { font-size: 1rem; color: var(--primary); margin-bottom: 8px; }
-        .info-section p, .info-section li { font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary); margin-bottom: 8px; }
-        .contact-box { display: flex; align-items: center; gap: 10px; background: var(--bg); padding: 12px; border-radius: 8px; margin-top: 8px; }
-        .contact-box a { color: var(--primary); text-decoration: none; font-weight: 600; flex: 1; word-break: break-all; }
-        .copy-btn { background: var(--surface); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; color: var(--text); white-space: nowrap; }
-        .copy-btn:active { background: var(--border); }
+/* SETTINGS ROWS */
+.set-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px;background:var(--card);border-radius:14px;margin-bottom:10px;
+}
+.set-row .label{font-size:14px;font-weight:600}
+.set-row .sub{font-size:11px;color:var(--muted);margin-top:2px}
 
-        .lang-select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-top: 8px; }
+select.lang-select{
+  background:var(--card2);color:var(--text);border:1px solid var(--border);
+  border-radius:10px;padding:8px 10px;font-size:13px;outline:none;
+}
 
-        .view { display: none; }
-        .view.active { display: block; }
-    </style>
+/* TOGGLE */
+.switch{position:relative;display:inline-block;width:52px;height:30px;flex:0 0 auto}
+.switch input{opacity:0;width:0;height:0}
+.slider{
+  position:absolute;cursor:pointer;inset:0;background:var(--card2);
+  border:1px solid var(--border);border-radius:999px;transition:.25s;
+}
+.slider:before{
+  position:absolute;content:"";height:22px;width:22px;left:3px;top:3px;
+  background:#fff;border-radius:50%;transition:.25s;box-shadow:0 2px 6px rgba(0,0,0,.3);
+}
+input:checked + .slider{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent}
+input:checked + .slider:before{transform:translateX(22px)}
+
+/* INFO CONTENT */
+.info-section{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px}
+.info-section h4{margin:0 0 8px;font-size:15px;color:var(--accent2)}
+.info-section p{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 8px}
+.info-section p:last-child{margin-bottom:0}
+.info-section a{color:var(--accent2);word-break:break-all}
+.mail-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.mail-row a{flex:1;font-size:13px}
+.copy-btn{
+  padding:8px 12px;border-radius:10px;border:1px solid var(--border);
+  background:var(--card2);color:var(--text);font-size:12px;cursor:pointer;flex:0 0 auto;
+}
+.rate-btn{
+  display:block;text-align:center;padding:14px;border-radius:12px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;
+  font-weight:700;font-size:14px;margin-top:8px;cursor:pointer;
+}
+.scroll-content{max-height:60vh;overflow-y:auto;padding-right:4px}
+.scroll-content::-webkit-scrollbar{width:4px}
+.scroll-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--card);color:var(--text);padding:12px 20px;border-radius:12px;
+  font-size:13px;box-shadow:var(--shadow);border:1px solid var(--border);
+  opacity:0;pointer-events:none;transition:.3s;z-index:400;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* EMPTY */
+.empty{
+  text-align:center;padding:60px 20px;color:var(--muted);font-size:14px;
+}
+
+/* SCROLL TOP */
+#scrollTop{
+  position:fixed;right:16px;bottom:90px;width:44px;height:44px;border-radius:50%;
+  background:var(--accent);color:#fff;border:none;font-size:20px;cursor:pointer;
+  box-shadow:var(--shadow);display:none;z-index:150;
+}
+#scrollTop.show{display:block}
+
+/* LANG FLAG */
+.flag{font-size:18px;margin-right:6px}
+</style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo-area">
-            <img src="https://i.hizliresim.com/nmjqsjmi.png" alt="Productora Logo">
-            <h1>Productora</h1>
-        </div>
-        <button class="icon-btn" onclick="openModal('settingsModal')">⚙️</button>
+<header>
+  <div class="topbar">
+    <img src="https://i.hizliresim.com/nmjqsjmi.png" alt="Productora" class="logo" onerror="this.style.display='none'">
+    <div class="brand">Productora</div>
+    <button class="icon-btn" id="themeBtn" title="Theme">🌙</button>
+    <button class="icon-btn settings-btn" id="settingsBtn" title="Settings">⚙️</button>
+  </div>
+  <div class="searchbar">
+    <input type="text" id="searchInput" placeholder="Search products or categories...">
+    <button class="sort-btn" id="sortBtn">Sort ⇅</button>
+  </div>
+</header>
+
+<!-- CATEGORIES -->
+<div class="tabs" id="tabs">
+  <div class="tab active" data-cat="all">🛍️ All Categories</div>
+  <div class="tab" data-cat="eu_local_stock">🇪🇺 EU Local Stock</div>
+  <div class="tab" data-cat="eu_special_30k">⭐ Special Offer 30K</div>
+  <div class="tab" data-cat="up_to_50_off">🔥 Up to 50% Off</div>
+</div>
+
+<!-- SUBCATEGORY CHIPS -->
+<div class="subchips" id="subchips"></div>
+
+<!-- PRODUCTS -->
+<div class="grid" id="grid"></div>
+<div id="sentinel"></div>
+
+<button id="scrollTop">↑</button>
+
+<!-- SORT SHEET -->
+<div class="sheet-overlay" id="sortOverlay"></div>
+<div class="sheet" id="sortSheet">
+  <h4>Sort By</h4>
+  <div class="sheet-option" data-sort="default">Default / Random</div>
+  <div class="sheet-option" data-sort="price_asc">Price: Low to High</div>
+  <div class="sheet-option" data-sort="price_desc">Price: High to Low</div>
+  <div class="sheet-option" data-sort="name_az">Name: A → Z</div>
+  <div class="sheet-option" data-sort="name_za">Name: Z → A</div>
+  <div class="sheet-option" data-sort="discount">Biggest Discount</div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="modalOverlay"></div>
+<div class="modal" id="settingsModal">
+  <div class="modal-head">
+    <h3>⚙️ Settings</h3>
+    <button class="close-btn" id="closeSettings">✕</button>
+  </div>
+
+  <div class="set-row">
+    <div>
+      <div class="label">🌐 Language</div>
+      <div class="sub">Choose your preferred language</div>
+    </div>
+    <select class="lang-select" id="langSelect">
+      <option value="en">🇬🇧 English</option>
+      <option value="tr">🇹🇷 Türkçe</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="it">🇮🇹 Italiano</option>
+      <option value="pt">🇵🇹 Português</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+
+  <div class="set-row">
+    <div>
+      <div class="label">🎨 Theme</div>
+      <div class="sub">Dark / Light mode</div>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="themeSwitch">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="set-row">
+    <div>
+      <div class="label">📱 Open In Media / App</div>
+      <div class="sub" id="bridgeStatus">Open in media</div>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="bridgeSwitch">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="set-row" id="infoRow">
+    <div>
+      <div class="label">ℹ️ Info</div>
+      <div class="sub">About, contact & legal</div>
+    </div>
+    <button class="icon-btn" id="infoBtn">›</button>
+  </div>
+</div>
+
+<!-- INFO MODAL -->
+<div class="modal" id="infoModal">
+  <div class="modal-head">
+    <h3>ℹ️ Info</h3>
+    <button class="close-btn" id="closeInfo">✕</button>
+  </div>
+  <div class="scroll-content">
+    <div class="info-section">
+      <h4>App Purpose</h4>
+      <p>Productora is a product discovery application that aggregates affiliate product listings from multiple sources, helping users find the best deals, discounts and offers across categories. We do not sell products directly. All purchases are made through third-party affiliate links.</p>
     </div>
 
-    <div id="homeView" class="view active">
-        <div class="controls">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Ürün veya kategori ara..." oninput="handleSearch()">
-                <select id="sortSelect" onchange="handleSort()">
-                    <option value="default">Sırala</option>
-                    <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
-                    <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
-                    <option value="name-asc">İsim: A-Z</option>
-                    <option value="name-desc">İsim: Z-A</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="categories" id="categoryTabs">
-            <button class="cat-btn active" onclick="setCategory('all')" data-key="cat_all">Tüm Kategoriler</button>
-            <button class="cat-btn" onclick="setCategory('eu_local')" data-key="cat_eu">EU Local Stock</button>
-            <button class="cat-btn" onclick="setCategory('special_30k')" data-key="cat_special">Special 30K</button>
-            <button class="cat-btn" onclick="setCategory('up_to_50')" data-key="cat_50off">Up to 50% Off</button>
-        </div>
-
-        <div class="product-grid" id="productGrid"></div>
-        <div class="sentinel" id="sentinel">Veriler yükleniyor...</div>
+    <div class="info-section">
+      <h4>Rate the App</h4>
+      <p>If you enjoy Productora, please support us with a 5-star rating on Google Play.</p>
+      <div class="rate-btn" id="rateBtn">⭐ Rate Productora on Google Play</div>
     </div>
 
-    <div id="infoView" class="view" style="padding: 16px;">
-        <h2 style="margin-bottom: 20px; color: var(--primary);">Uygulama Bilgisi</h2>
-        
-        <div class="info-section">
-            <h3 data-key="info_purpose">Uygulama Amacı</h3>
-            <p>Productora, size en iyi affiliate marketing (satış ortaklığı) fırsatlarını, özel indirimleri ve yerel stok ürünlerini tek bir modern arayüzde sunar.</p>
-        </div>
-
-        <div class="info-section">
-            <h3 data-key="info_rate">Uygulamayı Değerlendir</h3>
-            <p>Bizi desteklemek için lütfen Play Store'da 5 yıldız verin!</p>
-            <button class="cat-btn" style="width:100%; text-align:center; background: var(--primary); color: white;" onclick="window.open('market://details?id=com.DaaStudio.Productora', '_blank')">⭐ Play Store'da Oy Ver</button>
-        </div>
-
-        <div class="info-section">
-            <h3 data-key="info_contact">İletişim</h3>
-            <div class="contact-box">
-                <a href="mailto:daastudio42@gmail.com">daastudio42@gmail.com</a>
-                <button class="copy-btn" onclick="copyEmail()" id="copyBtn">Kopyala</button>
-            </div>
-        </div>
-
-        <div class="info-section" style="background: rgba(255,106,0,0.1); padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary);">
-            <h3 style="margin-top:0;">⚠️ Önemli</h3>
-            <p style="margin-bottom:0;">Keep the app always up to date. Deals and links are regularly updated. Make sure you are using the latest version.</p>
-        </div>
-
-        <div class="info-section">
-            <h3>Privacy Policy</h3>
-            <p>Daa Studio built the Productora app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p>
-            <p><strong>Information Collection:</strong> The app uses third-party services (Google Play Services, AdMob, Firebase) that may collect information. We do not share your info except as described.</p>
-            <p><strong>Log Data & Cookies:</strong> We may collect Log Data on errors. Third-party code may use cookies.</p>
-            <p><strong>Security:</strong> We strive to use commercially acceptable means to protect data, but no method is 100% secure. Makers are not responsible for liability/damages.</p>
-            <p><strong>Children's Privacy:</strong> Services do not address anyone under 13.</p>
-            <p><em>Effective: 2021-11-01. Contact: daastudio42@gmail.com</em></p>
-        </div>
-
-        <div class="info-section">
-            <h3>Terms & Conditions</h3>
-            <p>By downloading or using the app, these terms apply. Makers are not responsible for liability. You may not copy, modify, or extract source code.</p>
-            <p>Daa Studio reserves the right to make changes or charge for services. The app stores personal data to provide Service; keep your device secure (no jailbreak/root).</p>
-            <p>Certain functions require internet. We accept no liability for loss due to relying on app functionality. You promise to always accept updates.</p>
-            <p><em>Effective: 2021-11-01. Contact: daastudio42@gmail.com</em></p>
-        </div>
+    <div class="info-section">
+      <h4>Contact</h4>
+      <p>Questions or suggestions? Reach us at:</p>
+      <div class="mail-row">
+        <a href="mailto:daastudio42@gmail.com">daastudio42@gmail.com</a>
+        <button class="copy-btn" id="copyMail">Copy</button>
+      </div>
     </div>
 
-    <div class="bottom-nav">
-        <button class="nav-item active" onclick="switchView('home')">
-            <span>🏠</span>
-            <span data-key="nav_home">Ana Sayfa</span>
-        </button>
-        <button class="nav-item" onclick="switchView('info')">
-            <span>ℹ️</span>
-            <span data-key="nav_info">Bilgi</span>
-        </button>
+    <div class="info-section">
+      <h4>Important</h4>
+      <p>Keep the app always up to date. Deals and links are regularly updated. Make sure you are using the latest version.</p>
     </div>
 
-    <div id="settingsModal" class="modal" onclick="if(event.target===this) closeModal('settingsModal')">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 data-key="settings_title">Ayarlar</h2>
-                <button class="close-btn" onclick="closeModal('settingsModal')">&times;</button>
-            </div>
-            
-            <div class="setting-item">
-                <span class="setting-label" data-key="theme_label">Koyu Tema</span>
-                <label class="switch">
-                    <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
-                    <span class="slider"></span>
-                </label>
-            </div>
+    <div class="info-section">
+      <h4>Legal</h4>
+      <p><strong>Privacy Policy</strong></p>
+      <p>Daa Studio built the Productora app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p>
+      <p>This page informs visitors regarding our policies with the collection, use, and disclosure of Personal Information.</p>
+      <p>If you choose to use our Service, you agree to the collection and use of information in relation to this policy. We will not use or share your information with anyone except as described in this Privacy Policy.</p>
+      <p><strong>Information Collection and Use</strong><br>For a better experience, we may require you to provide certain personally identifiable information. The information we request is retained on your device and is not collected by us in any way. The app uses third-party services that may collect information used to identify you: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p>
+      <p><strong>Log Data</strong><br>Whenever you use our Service, in case of an error we collect data and information (through third-party products) called Log Data. This may include your IP address, device name, OS version, app configuration, time and date of use, and other statistics.</p>
+      <p><strong>Cookies</strong><br>The app may use third-party code and libraries that use cookies to collect information and improve services. You can accept or refuse these cookies.</p>
+      <p><strong>Service Providers</strong><br>We may employ third-party companies to facilitate our Service, provide it on our behalf, perform related services, or assist in analyzing usage. They have access to Personal Information to perform tasks on our behalf and are obligated not to disclose or use it for other purposes.</p>
+      <p><strong>Security</strong><br>Productora app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. We value your trust and strive to use commercially acceptable means to protect your Personal Information, but no method of transmission or storage is 100% secure.</p>
+      <p><strong>Links to Other Sites</strong><br>This Service may contain links to other sites. If you click a third-party link, you will be directed to that site. We strongly advise you to review their Privacy Policy.</p>
+      <p><strong>Children's Privacy</strong><br>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p>
+      <p><strong>Changes to This Privacy Policy</strong><br>We may update our Privacy Policy from time to time. You are advised to review this page periodically. This policy is effective as of 2021-11-01.</p>
+      <p><strong>Contact Us</strong><br>If you have questions or suggestions, contact us at daastudio42@gmail.com.</p>
 
-            <div class="setting-item">
-                <span class="setting-label" data-key="bridge_label">Open in App / Media</span>
-                <label class="switch">
-                    <input type="checkbox" id="bridgeToggle" onchange="toggleBridge()">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
-                <span class="setting-label" data-key="lang_label">Dil / Language</span>
-                <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
-                    <option value="tr">🇹🇷 Türkçe</option>
-                    <option value="en">🇬🇧 English</option>
-                    <option value="es">🇪🇸 Español</option>
-                    <option value="de">🇩🇪 Deutsch</option>
-                    <option value="fr">🇫🇷 Français</option>
-                    <option value="it">🇮🇹 Italiano</option>
-                    <option value="pt">🇵🇹 Português</option>
-                    <option value="ja">🇯🇵 日本語</option>
-                    <option value="ko">🇰🇷 한국어</option>
-                    <option value="zh">🇨🇳 中文</option>
-                </select>
-            </div>
-        </div>
+      <p style="margin-top:16px"><strong>Terms &amp; Conditions</strong></p>
+      <p>By downloading or using the app, these terms automatically apply to you. Productora app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. You may not copy, modify, or extract the source code of the app, or translate it into other languages, or make derivative versions. All trademarks, copyright, database rights and other intellectual property rights related to the app belong to Daa Studio.</p>
+      <p>Daa Studio is committed to ensuring the app is useful and efficient. We reserve the right to make changes or charge for services at any time. We will never charge you without clearly explaining what you are paying for.</p>
+      <p>The app stores and processes personal data you have provided in order to provide our Service. It's your responsibility to keep your phone and app access secure. We recommend not jailbreaking or rooting your phone.</p>
+      <p>The app uses third-party services that declare their own Terms and Conditions: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p>
+      <p>Certain functions require an active internet connection. Daa Studio cannot take responsibility if the app does not work at full functionality due to lack of Wi-Fi or data allowance.</p>
+      <p>Daa Studio accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.</p>
+      <p>We may update the app. You promise to always accept updates when offered. We may also stop providing the app and terminate use at any time.</p>
+      <p><strong>Changes to These Terms</strong><br>We may update our Terms from time to time. You are advised to review this page periodically. These terms are effective as of 2021-11-01.</p>
+      <p><strong>Contact Us</strong><br>If you have questions, contact us at daastudio42@gmail.com.</p>
     </div>
+  </div>
+</div>
 
-    <script>
-        // ==========================================
-        // 1. DOSYA YOLLARI (Göreceli / Relative)
-        // ==========================================
-        // index.html ile aynı klasörde veya alt klasörde olduğu için doğrudan yol yazıyoruz.
-        // NOT: Eğer dosya uzantısı gerçekten .do ise aşağıdaki 'eu_special_30k.csv' yerine 'eu_special_30k.do' yazın.
-        const FILES = {
-            up_to_50: "hot_products/up_to_50_off.csv",
-            special_30k: "hot_products/eu_special_30k.csv", 
-            eu_local: "hot_products/eu_local_stock.csv"
-        };
+<div class="toast" id="toast"></div>
 
-        // ==========================================
-        // 2. VERİ YÖNETİMİ VE CSV AYRIŞTIRMA
-        // ==========================================
-        let allProducts = [];
+<script>
+/* ============================================================
+   CONFIG
+============================================================ */
+const CONFIG = {
+  // GitHub raw CSV URLs — change <user>/<repo>/<branch> to yours
+  BASE: 'hot_products/',
+  FILES: {
+    eu_local_stock:   'eu_local_stock.csv',
+    eu_special_30k:   'eu_special_30k.do',
+    up_to_50_off:     'up_to_50_off.csv'
+  },
+  PAGE_SIZE: 20,
+  PLAY_URL: 'https://play.google.com/store/apps/details?id=com.DaaStudio.Productora',
+  EMAIL: 'daastudio42@gmail.com'
+};
 
-        async function fetchAndParseCSV(filename, sourceTag) {
-            try {
-                const response = await fetch(filename);
-                if (!response.ok) throw new Error(`HTTP Hata: ${response.status}`);
-                const text = await response.text();
-                const lines = text.split('\n');
-                const products = [];
-                
-                for (let line of lines) {
-                    line = line.trim();
-                    if (!line) continue;
-                    
-                    // Link her zaman satırın sonunda ",https://" ile başlar
-                    const linkStartIndex = line.lastIndexOf(',https://');
-                    if (linkStartIndex === -1) continue;
-                    
-                    const link = line.substring(linkStartIndex + 1).trim();
-                    const beforeLink = line.substring(0, linkStartIndex);
-                    const parts = beforeLink.split(',');
-                    
-                    // Sağdan sola doğru Alibaba CSV yapısı:
-                    // -1: ALL, -2: Ref Fiyat, -3: Ürün ID Kodu, -4: in_stock, -5: new
-                    // -6: Kategori, -7: Resim URL, -8: Fiyat, -9: Promo, -10: Ürün Adı
-                    
-                    const category = (parts[parts.length - 6] || "General").trim();
-                    const image = (parts[parts.length - 7] || "https://via.placeholder.com/300").trim();
-                    const priceStr = (parts[parts.length - 8] || "0 USD").trim();
-                    const title = (parts[parts.length - 10] || "Unknown Product").trim();
-                    
-                    const priceMatch = priceStr.match(/([\d\.]+)/);
-                    const price = priceMatch ? parseFloat(priceMatch[1]) : 0;
-                    
-                    if (title !== "Unknown Product" && link.includes('offer.alibaba.com')) {
-                        products.push({
-                            id: Math.random().toString(36).substr(2, 9),
-                            title,
-                            price,
-                            priceStr,
-                            image,
-                            category,
-                            link,
-                            source: sourceTag
-                        });
-                    }
-                }
-                return products;
-            } catch (error) {
-                console.error(`${filename} yüklenirken hata:`, error);
-                return [];
-            }
-        }
+/* ============================================================
+   STATE
+============================================================ */
+const state = {
+  allProducts: [],        // all loaded products with _catKey
+  filtered: [],           // current filter result
+  activeCat: 'all',
+  activeSub: '',
+  search: '',
+  sort: 'default',
+  page: 0,
+  shuffledSeed: Date.now(), // randomize daily-ish
+  isLoading: false
+};
 
-        async function loadAllData() {
-            const sentinel = document.getElementById('sentinel');
-            sentinel.textContent = "Ürünler yükleniyor, lütfen bekleyin...";
-            
-            const [upTo50, special30k, euLocal] = await Promise.all([
-                fetchAndParseCSV(FILES.up_to_50, 'up_to_50'),
-                fetchAndParseCSV(FILES.special_30k, 'special_30k'),
-                fetchAndParseCSV(FILES.eu_local, 'eu_local')
-            ]);
-            
-            allProducts = [...upTo50, ...special30k, ...euLocal];
-            
-            // Kullanıcı her girdiğinde farklı sıra görmesi için karıştır
-            shuffleArray(allProducts);
-            
-            sentinel.textContent = "Daha fazla yükleniyor...";
-            renderProducts();
-            setupInfiniteScroll();
-        }
+/* ============================================================
+   i18n
+============================================================ */
+const I18N = {
+  en:{search:"Search products or categories...",all:"All Categories",buy:"View Deal"},
+  tr:{search:"Ürün veya kategori ara...",all:"Tüm Kategoriler",buy:"Fırsatı Gör"},
+  es:{search:"Buscar productos o categorías...",all:"Todas las categorías",buy:"Ver oferta"},
+  de:{search:"Produkte oder Kategorien suchen...",all:"Alle Kategorien",buy:"Angebot ansehen"},
+  fr:{search:"Rechercher des produits...",all:"Toutes les catégories",buy:"Voir l'offre"},
+  it:{search:"Cerca prodotti o categorie...",all:"Tutte le categorie",buy:"Vedi offerta"},
+  pt:{search:"Pesquisar produtos ou categorias...",all:"Todas as categorias",buy:"Ver oferta"},
+  ja:{search:"商品やカテゴリを検索...",all:"すべてのカテゴリ",buy:"詳細を見る"},
+  ko:{search:"제품 또는 카테고리 검색...",all:"모든 카테고리",buy:"거래 보기"},
+  zh:{search:"搜索产品或类别...",all:"所有类别",buy:"查看优惠"}
+};
+function t(key){return (I18N[currentLang]&&I18N[currentLang][key])||I18N.en[key]||key;}
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
+/* ============================================================
+   THEME
+============================================================ */
+function applyTheme(mode){
+  document.body.classList.toggle('light', mode==='light');
+  document.getElementById('themeBtn').textContent = mode==='light' ? '☀️' : '🌙';
+  document.getElementById('themeSwitch').checked = (mode==='light');
+  localStorage.setItem('pr_theme', mode);
+}
+(function initTheme(){
+  const saved = localStorage.getItem('pr_theme') || 'dark';
+  applyTheme(saved);
+})();
 
-        // ==========================================
-        // 3. DURUM YÖNETİMİ (STATE)
-        // ==========================================
-        let state = {
-            currentCategory: 'all',
-            searchQuery: '',
-            sortBy: 'default',
-            displayedCount: 0,
-            batchSize: 20,
-            isLoading: false,
-            language: 'tr',
-            theme: 'light'
-        };
+/* ============================================================
+   LANGUAGE
+============================================================ */
+let currentLang = localStorage.getItem('pr_lang') || 'en';
+function applyLang(lang){
+  currentLang = lang;
+  localStorage.setItem('pr_lang', lang);
+  document.getElementById('langSelect').value = lang;
+  document.getElementById('searchInput').placeholder = t('search');
+  // brand stays same
+}
+document.getElementById('langSelect').addEventListener('change', e => applyLang(e.target.value));
+applyLang(currentLang);
 
-        // ==========================================
-        // 4. KODULAR JS BRIDGE
-        // ==========================================
-        function toggleBridge() {
-            const isChecked = document.getElementById('bridgeToggle').checked;
-            const message = isChecked ? "webview_acik" : "webview_kapali";
-            
-            if (typeof window.AppInventor !== 'undefined') {
-                window.AppInventor.setWebViewString(message);
-            } else {
-                console.log(`[Kodular Bridge Sim] ${message}`);
-            }
-        }
+/* ============================================================
+   ANDROID BRIDGE (Kodular / AppInventor)
+============================================================ */
+const bridgeSwitch = document.getElementById('bridgeSwitch');
+const bridgeStatus = document.getElementById('bridgeStatus');
 
-        // ==========================================
-        // 5. UI FONKSİYONLARI
-        // ==========================================
-        function init() {
-            loadAllData();
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.getElementById('themeToggle').checked = true;
-                toggleTheme();
-            }
-        }
+function sendToApp(msg){
+  try{
+    if(window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
+      window.AppInventor.setWebViewString(msg);
+      return true;
+    }
+  }catch(e){ /* ignore */ }
+  return false;
+}
 
-        function setCategory(cat) {
-            state.currentCategory = cat;
-            state.displayedCount = 0;
-            document.getElementById('productGrid').innerHTML = '';
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            renderProducts();
-        }
+function setBridgeUI(on){
+  bridgeStatus.textContent = on ? 'Open in app' : 'Open in media';
+}
+bridgeSwitch.addEventListener('change', e => {
+  const on = e.target.checked;
+  setBridgeUI(on);
+  const sent = sendToApp(on ? 'webview_acik' : 'webview_kapali');
+  if(!sent && !(window.AppInventor)){
+    showToast('Bridge not available (browser mode)');
+  }
+});
+// restore
+(function(){
+  const saved = localStorage.getItem('pr_bridge')==='1';
+  bridgeSwitch.checked = saved;
+  setBridgeUI(saved);
+  // do NOT auto-send on load to avoid unneeded messages, but user asked state every change.
+})();
 
-        function handleSearch() {
-            state.searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            state.displayedCount = 0;
-            document.getElementById('productGrid').innerHTML = '';
-            renderProducts();
-        }
+/* ============================================================
+   CSV PARSER (robust)
+============================================================ */
+function parseCSV(text){
+  text = text.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  const delimiter = detectDelimiter(text);
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const c = text[i];
+    if(inQuotes){
+      if(c === '"'){
+        if(text[i+1] === '"'){ field += '"'; i++; }
+        else inQuotes = false;
+      } else field += c;
+    } else {
+      if(c === '"') inQuotes = true;
+      else if(c === delimiter){ row.push(field); field=''; }
+      else if(c === '\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+      else field += c;
+    }
+  }
+  if(field.length || row.length){ row.push(field); rows.push(row); }
+  // header map
+  if(!rows.length) return [];
+  const headers = rows[0].map(h=>h.trim().toLowerCase());
+  const out = [];
+  for(let i=1;i<rows.length;i++){
+    const r = rows[i];
+    if(!r || r.every(x=>String(x).trim()==='')) continue;
+    const obj = {};
+    for(let j=0;j<headers.length;j++){
+      obj[headers[j]] = (r[j]!==undefined?r[j]:'').trim();
+    }
+    out.push(obj);
+  }
+  return out;
+}
+function detectDelimiter(text){
+  const firstLine = text.split('\n')[0] || '';
+  const counts = {',':0,';':0,'\t':0,'|':0};
+  for(const ch of firstLine) if(counts[ch]!==undefined) counts[ch]++;
+  let best=','; let max=-1;
+  for(const k in counts){ if(counts[k]>max){ max=counts[k]; best=k; } }
+  return best;
+}
 
-        function handleSort() {
-            state.sortBy = document.getElementById('sortSelect').value;
-            state.displayedCount = 0;
-            document.getElementById('productGrid').innerHTML = '';
-            renderProducts();
-        }
+/* ============================================================
+   NORMALIZE PRODUCT
+============================================================ */
+function pick(obj, keys){
+  for(const k of keys){
+    if(obj[k]!==undefined && String(obj[k]).trim()!=='') return String(obj[k]).trim();
+  }
+  return '';
+}
+function normalizeProduct(raw, catKey){
+  const title = pick(raw, ['product_name','title','name','product','product_title','urun_adi']);
+  const img   = pick(raw, ['image_url','image','img','picture','image_link','product_image','resim']);
+  const price = pick(raw, ['price','sale_price','discounted_price','current_price','fiyat']);
+  const oldP  = pick(raw, ['original_price','old_price','regular_price','list_price','eski_fiyat']);
+  const link  = pick(raw, ['affiliate_link','link','url','product_url','tracking_link','buy_url']);
+  const cat   = pick(raw, ['category','categories','product_category','kategori']);
+  const disc  = pick(raw, ['discount','discount_percent','indirim','discount_rate']);
+  const cur   = pick(raw, ['currency','currency_code']) || '€';
 
-        function getFilteredProducts() {
-            let filtered = allProducts;
-            if (state.currentCategory !== 'all') {
-                filtered = filtered.filter(p => p.source === state.currentCategory);
-            }
-            if (state.searchQuery) {
-                filtered = filtered.filter(p => 
-                    p.title.toLowerCase().includes(state.searchQuery) || 
-                    p.category.toLowerCase().includes(state.searchQuery)
-                );
-            }
-            if (state.sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
-            else if (state.sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
-            else if (state.sortBy === 'name-asc') filtered.sort((a, b) => a.title.localeCompare(b.title));
-            else if (state.sortBy === 'name-desc') filtered.sort((a, b) => b.title.localeCompare(a.title));
-            return filtered;
-        }
+  const num = s => {
+    if(!s) return 0;
+    const m = String(s).replace(/[^\d.,-]/g,'').replace(',', '.');
+    const n = parseFloat(m);
+    return isFinite(n)? n : 0;
+  };
+  let p = num(price), op = num(oldP), d = num(disc);
+  if(!d && op>0 && p>0 && op>p){ d = Math.round((1 - p/op)*100); }
 
-        function renderProducts() {
-            if (state.isLoading) return;
-            state.isLoading = true;
+  return {
+    id: (catKey + '::' + (link || title || Math.random())).slice(0,300),
+    title: title || 'Untitled product',
+    image: img,
+    price: p,
+    oldPrice: op,
+    discount: d,
+    currency: cur,
+    link: link,
+    category: cat,
+    catKey: catKey,
+    _rand: Math.random()
+  };
+}
 
-            const filtered = getFilteredProducts();
-            const nextBatch = filtered.slice(state.displayedCount, state.displayedCount + state.batchSize);
-            const grid = document.getElementById('productGrid');
-            
-            nextBatch.forEach(product => {
-                const card = document.createElement('a');
-                card.className = 'product-card';
-                card.href = product.link;
-                card.target = '_blank';
-                
-                card.innerHTML = `
-                    <div class="img-container">
-                        <div class="img-loading"></div>
-                        <img src="${product.image}" alt="${product.title}" loading="lazy" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
-                    </div>
-                    <div class="p-info">
-                        <div class="p-cat">${product.category}</div>
-                        <div class="p-title">${product.title}</div>
-                        <div class="p-price">${product.priceStr}</div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
+/* ============================================================
+   LOAD DATA
+============================================================ */
+async function loadAll(){
+  state.isLoading = true;
+  const promises = Object.entries(CONFIG.FILES).map(async ([key, file]) => {
+    const url = CONFIG.BASE + file;
+    try{
+      const res = await fetch(url, {cache:'no-store'});
+      if(!res.ok) throw new Error(res.status);
+      let text = await res.text();
+      // .do may be CSV inside too
+      const rows = parseCSV(text);
+      return rows.map(r => normalizeProduct(r, key));
+    }catch(err){
+      console.warn('Failed to load', file, err);
+      return [];
+    }
+  });
+  const results = await Promise.all(promises);
+  let all = [];
+  results.forEach(arr => all = all.concat(arr));
+  // de-duplicate by link/id
+  const seen = new Set();
+  state.allProducts = all.filter(p => {
+    if(!p.link && !p.title) return false;
+    if(seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
+  state.isLoading = false;
+  buildSubchips();
+  applyFilter();
+}
 
-            state.displayedCount += nextBatch.length;
-            state.isLoading = false;
+/* ============================================================
+   RENDER
+============================================================ */
+const grid = document.getElementById('grid');
+const sentinel = document.getElementById('sentinel');
 
-            const sentinel = document.getElementById('sentinel');
-            if (state.displayedCount >= filtered.length) {
-                sentinel.textContent = filtered.length > 0 ? 'Tüm ürünler yüklendi.' : 'Ürün bulunamadı.';
-            } else {
-                sentinel.textContent = 'Daha fazla yükleniyor...';
-            }
-        }
+function buildSubchips(){
+  const wrap = document.getElementById('subchips');
+  const pool = state.activeCat==='all'
+    ? state.allProducts
+    : state.allProducts.filter(p=>p.catKey===state.activeCat);
+  const cats = [...new Set(pool.map(p=>p.category).filter(Boolean))].sort();
+  wrap.innerHTML = '';
+  if(cats.length===0){ wrap.style.display='none'; return; }
+  wrap.style.display='flex';
+  const make = (label, val) => {
+    const el = document.createElement('div');
+    el.className = 'chip' + (state.activeSub===val?' active':'');
+    el.textContent = label;
+    el.onclick = () => {
+      state.activeSub = state.activeSub===val ? '' : val;
+      state.page = 0;
+      applyFilter();
+      buildSubchips();
+    };
+    return el;
+  };
+  wrap.appendChild(make('All', ''));
+  cats.forEach(c => wrap.appendChild(make(c, c)));
+}
 
-        function setupInfiniteScroll() {
-            const observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting && !state.isLoading) {
-                    const filtered = getFilteredProducts();
-                    if (state.displayedCount < filtered.length) {
-                        renderProducts();
-                    }
-                }
-            }, { rootMargin: '100px' });
-            observer.observe(document.getElementById('sentinel'));
-        }
+function shuffleWithSeed(arr, seed){
+  // deterministic-ish using seed + id hash
+  const a = arr.slice();
+  a.sort((x,y) => {
+    const hx = hashStr(x.id + seed);
+    const hy = hashStr(y.id + seed);
+    return hx - hy;
+  });
+  return a;
+}
+function hashStr(s){
+  let h = 2166136261;
+  for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h>>>0);
+}
 
-        // ==========================================
-        // 6. MODAL VE AYARLAR
-        // ==========================================
-        function openModal(id) { document.getElementById(id).classList.add('open'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-        function toggleTheme() {
-            const isDark = document.getElementById('themeToggle').checked;
-            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        }
+function applyFilter(){
+  let list = state.allProducts.slice();
 
-        function switchView(viewName) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if (viewName === 'home') {
-                document.getElementById('homeView').classList.add('active');
-                document.querySelectorAll('.nav-item')[0].classList.add('active');
-            } else {
-                document.getElementById('infoView').classList.add('active');
-                document.querySelectorAll('.nav-item')[1].classList.add('active');
-            }
-        }
+  // category
+  if(state.activeCat !== 'all'){
+    list = list.filter(p => p.catKey === state.activeCat);
+  }
+  // subcategory
+  if(state.activeSub){
+    list = list.filter(p => p.category === state.activeSub);
+  }
+  // search
+  if(state.search){
+    const q = state.search.toLowerCase();
+    list = list.filter(p =>
+      p.title.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q)
+    );
+  }
+  // sort
+  switch(state.sort){
+    case 'price_asc':  list.sort((a,b)=>a.price-b.price); break;
+    case 'price_desc': list.sort((a,b)=>b.price-a.price); break;
+    case 'name_az':    list.sort((a,b)=>a.title.localeCompare(b.title)); break;
+    case 'name_za':    list.sort((a,b)=>b.title.localeCompare(a.title)); break;
+    case 'discount':   list.sort((a,b)=>b.discount-a.discount); break;
+    default:
+      // random-ish per session/day
+      list = shuffleWithSeed(list, state.shuffledSeed);
+  }
+  state.filtered = list;
+  state.page = 0;
+  grid.innerHTML = '';
+  renderPage();
+  updateEmpty();
+}
 
-        function copyEmail() {
-            navigator.clipboard.writeText('daastudio42@gmail.com').then(() => {
-                const btn = document.getElementById('copyBtn');
-                const originalText = btn.textContent;
-                btn.textContent = 'Kopyalandı!';
-                setTimeout(() => { btn.textContent = originalText; }, 2000);
-            });
-        }
+function renderPage(){
+  const start = state.page * CONFIG.PAGE_SIZE;
+  const slice = state.filtered.slice(start, start + CONFIG.PAGE_SIZE);
+  if(slice.length===0 && state.page===0){
+    updateEmpty();
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  slice.forEach(p => frag.appendChild(makeCard(p)));
+  grid.appendChild(frag);
+  state.page++;
+}
 
-        // ==========================================
-        // 7. ÇOKLU DİL DESTEĞİ
-        // ==========================================
-        const translations = {
-            tr: { cat_all: "Tüm Kategoriler", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Ayarlar", theme_label: "Koyu Tema", bridge_label: "Open in App / Media", lang_label: "Dil", nav_home: "Ana Sayfa", nav_info: "Bilgi", info_purpose: "Uygulama Amacı", info_rate: "Uygulamayı Değerlendir", info_contact: "İletişim" },
-            en: { cat_all: "All Categories", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Settings", theme_label: "Dark Theme", bridge_label: "Open in App / Media", lang_label: "Language", nav_home: "Home", nav_info: "Info", info_purpose: "App Purpose", info_rate: "Rate the App", info_contact: "Contact" },
-            es: { cat_all: "Todas las Categorías", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Ajustes", theme_label: "Tema Oscuro", bridge_label: "Abrir en App / Medio", lang_label: "Idioma", nav_home: "Inicio", nav_info: "Info", info_purpose: "Propósito", info_rate: "Calificar", info_contact: "Contacto" },
-            de: { cat_all: "Alle Kategorien", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Einstellungen", theme_label: "Dunkler Modus", bridge_label: "In App / Medium öffnen", lang_label: "Sprache", nav_home: "Startseite", nav_info: "Info", info_purpose: "Zweck", info_rate: "Bewerten", info_contact: "Kontakt" },
-            fr: { cat_all: "Toutes les Catégories", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Paramètres", theme_label: "Thème Sombre", bridge_label: "Ouvrir dans App / Média", lang_label: "Langue", nav_home: "Accueil", nav_info: "Info", info_purpose: "Objectif", info_rate: "Évaluer", info_contact: "Contact" },
-            it: { cat_all: "Tutte le Categorie", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Impostazioni", theme_label: "Tema Scuro", bridge_label: "Apri in App / Media", lang_label: "Lingua", nav_home: "Home", nav_info: "Info", info_purpose: "Scopo", info_rate: "Valuta", info_contact: "Contatto" },
-            pt: { cat_all: "Todas as Categorias", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "Configurações", theme_label: "Tema Escuro", bridge_label: "Abrir no App / Mídia", lang_label: "Idioma", nav_home: "Início", nav_info: "Info", info_purpose: "Propósito", info_rate: "Avaliar", info_contact: "Contato" },
-            ja: { cat_all: "すべてのカテゴリ", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "設定", theme_label: "ダークテーマ", bridge_label: "アプリ/メディアで開く", lang_label: "言語", nav_home: "ホーム", nav_info: "情報", info_purpose: "目的", info_rate: "評価する", info_contact: "連絡先" },
-            ko: { cat_all: "모든 카테고리", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "설정", theme_label: "다크 테마", bridge_label: "앱/미디어에서 열기", lang_label: "언어", nav_home: "홈", nav_info: "정보", info_purpose: "목적", info_rate: "평가하기", info_contact: "연락처" },
-            zh: { cat_all: "所有类别", cat_eu: "EU Local Stock", cat_special: "Special 30K", cat_50off: "Up to 50% Off", settings_title: "设置", theme_label: "深色主题", bridge_label: "在应用/媒体中打开", lang_label: "语言", nav_home: "首页", nav_info: "信息", info_purpose: "应用目的", info_rate: "评分", info_contact: "联系" }
-        };
+function makeCard(p){
+  const card = document.createElement('div');
+  card.className = 'card';
 
-        function changeLanguage(lang) {
-            state.language = lang;
-            const t = translations[lang];
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (t[key]) el.textContent = t[key];
-            });
-        }
+  const imgwrap = document.createElement('div');
+  imgwrap.className = 'imgwrap';
 
-        window.addEventListener('DOMContentLoaded', init);
-    </script>
+  const spinner = document.createElement('div');
+  spinner.className = 'spinner';
+  imgwrap.appendChild(spinner);
+
+  if(p.discount>0){
+    const b = document.createElement('div');
+    b.className = 'discount-badge';
+    b.textContent = '-' + Math.round(p.discount) + '%';
+    imgwrap.appendChild(b);
+  }
+
+  if(p.image){
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.alt = p.title;
+    img.onload = () => { spinner.remove(); img.style.opacity = 1; };
+    img.onerror = () => { img.remove(); /* keep spinner */ };
+    img.style.opacity = 0;
+    img.style.transition = 'opacity .3s';
+    img.src = p.image;
+    imgwrap.appendChild(img);
+  }
+
+  const body = document.createElement('div');
+  body.className = 'card-body';
+
+  const title = document.createElement('div');
+  title.className = 'card-title';
+  title.textContent = p.title;
+  body.appendChild(title);
+
+  const pr = document.createElement('div');
+  pr.className = 'price-row';
+  if(p.price>0){
+    const sp = document.createElement('span');
+    sp.className = 'price';
+    sp.textContent = fmtPrice(p.price, p.currency);
+    pr.appendChild(sp);
+  }
+  if(p.oldPrice>0 && p.oldPrice>p.price){
+    const op = document.createElement('span');
+    op.className = 'old-price';
+    op.textContent = fmtPrice(p.oldPrice, p.currency);
+    pr.appendChild(op);
+  }
+  body.appendChild(pr);
+
+  if(p.category){
+    const ct = document.createElement('div');
+    ct.className = 'cat-tag';
+    ct.textContent = p.category;
+    body.appendChild(ct);
+  }
+
+  const buy = document.createElement('a');
+  buy.className = 'buy-btn';
+  buy.textContent = t('buy');
+  buy.href = p.link || '#';
+  buy.target = '_blank';
+  buy.rel = 'noopener nofollow sponsored';
+  buy.onclick = (e) => {
+    if(!p.link){ e.preventDefault(); showToast('No link available'); }
+  };
+  body.appendChild(buy);
+
+  card.appendChild(imgwrap);
+  card.appendChild(body);
+  return card;
+}
+function fmtPrice(n, cur){
+  const sym = cur && cur.length<=3 ? cur : '€';
+  return sym + Number(n).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});
+}
+
+function updateEmpty(){
+  const existing = grid.querySelector('.empty');
+  if(existing) existing.remove();
+  if(state.filtered.length===0 && !state.isLoading){
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.textContent = 'No products found.';
+    e.style.gridColumn = '1/-1';
+    grid.appendChild(e);
+  }
+}
+
+/* ============================================================
+   INFINITE SCROLL
+============================================================ */
+let io;
+function initObserver(){
+  if(io) io.disconnect();
+  io = new IntersectionObserver(entries => {
+    if(entries[0].isIntersecting){
+      if(state.page * CONFIG.PAGE_SIZE < state.filtered.length){
+        renderPage();
+      }
+    }
+  }, {rootMargin:'300px'});
+  io.observe(sentinel);
+}
+initObserver();
+
+/* ============================================================
+   EVENT WIRING
+============================================================ */
+// tabs
+document.querySelectorAll('#tabs .tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.remove('active'));
+    tab.classList.add('active');
+    state.activeCat = tab.dataset.cat;
+    state.activeSub = '';
+    state.page = 0;
+    buildSubchips();
+    applyFilter();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+// search (debounce)
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.search = e.target.value.trim();
+    state.page = 0;
+    applyFilter();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }, 250);
+});
+
+// sort
+const sortOverlay = document.getElementById('sortOverlay');
+const sortSheet = document.getElementById('sortSheet');
+document.getElementById('sortBtn').addEventListener('click', () => {
+  sortOverlay.classList.add('show');
+  sortSheet.classList.add('show');
+});
+sortOverlay.addEventListener('click', () => {
+  sortOverlay.classList.remove('show');
+  sortSheet.classList.remove('show');
+});
+document.querySelectorAll('.sheet-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    state.sort = opt.dataset.sort;
+    document.querySelectorAll('.sheet-option').forEach(x=>x.classList.remove('active'));
+    opt.classList.add('active');
+    sortOverlay.classList.remove('show');
+    sortSheet.classList.remove('show');
+    applyFilter();
+  });
+});
+// mark default active
+document.querySelector('.sheet-option[data-sort="default"]').classList.add('active');
+
+// theme button
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const isLight = document.body.classList.contains('light');
+  applyTheme(isLight ? 'dark' : 'light');
+});
+document.getElementById('themeSwitch').addEventListener('change', e => {
+  applyTheme(e.target.checked ? 'light' : 'dark');
+});
+
+// settings modal
+const modalOverlay = document.getElementById('modalOverlay');
+const settingsModal = document.getElementById('settingsModal');
+const infoModal = document.getElementById('infoModal');
+
+function openModal(m){
+  modalOverlay.classList.add('show');
+  m.classList.add('show');
+}
+function closeModals(){
+  modalOverlay.classList.remove('show');
+  settingsModal.classList.remove('show');
+  infoModal.classList.remove('show');
+}
+document.getElementById('settingsBtn').addEventListener('click', () => openModal(settingsModal));
+document.getElementById('closeSettings').addEventListener('click', closeModals);
+document.getElementById('closeInfo').addEventListener('click', () => {
+  infoModal.classList.remove('show');
+  if(!settingsModal.classList.contains('show')) modalOverlay.classList.remove('show');
+});
+document.getElementById('infoBtn').addEventListener('click', () => {
+  settingsModal.classList.remove('show');
+  openModal(infoModal);
+});
+modalOverlay.addEventListener('click', closeModals);
+
+// rate
+document.getElementById('rateBtn').addEventListener('click', () => {
+  // try android market intent via bridge or just open play url
+  const opened = sendToApp('rate_app');
+  if(!opened){
+    window.open(CONFIG.PLAY_URL, '_blank', 'noopener');
+  }
+});
+
+// copy mail
+document.getElementById('copyMail').addEventListener('click', async () => {
+  try{
+    await navigator.clipboard.writeText(CONFIG.EMAIL);
+    showToast('Email copied!');
+  }catch(e){
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = CONFIG.EMAIL;
+    document.body.appendChild(ta);
+    ta.select();
+    try{ document.execCommand('copy'); showToast('Email copied!'); }
+    catch(_){ showToast(CONFIG.EMAIL); }
+    ta.remove();
+  }
+});
+
+// scroll top
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  if(window.scrollY > 600) scrollTopBtn.classList.add('show');
+  else scrollTopBtn.classList.remove('show');
+});
+scrollTopBtn.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+
+// toast
+let toastTimer;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
+}
+
+/* ============================================================
+   KODULAR BRIDGE — expose helper for app side (optional)
+============================================================ */
+window.Productora = {
+  setWebViewString: (s) => sendToApp(s),
+  goToProduct: (link) => {
+    if(link) window.open(link,'_blank','noopener');
+  }
+};
+
+/* ============================================================
+   INIT
+============================================================ */
+document.getElementById('searchInput').placeholder = t('search');
+loadAll();
+</script>
 </body>
 </html>
