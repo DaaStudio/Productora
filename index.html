@@ -29,7 +29,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; padding-bottom: 80px; }
         
-        /* Header */
         .header { position: sticky; top: 0; z-index: 100; background: var(--surface); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow); }
         .logo-area { display: flex; align-items: center; gap: 10px; }
         .logo-area img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
@@ -37,19 +36,16 @@
         .icon-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text); padding: 8px; border-radius: 50%; }
         .icon-btn:active { background: var(--border); }
 
-        /* Search & Filter */
         .controls { padding: 12px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
         .search-box { display: flex; gap: 8px; margin-bottom: 12px; }
         .search-box input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.95rem; outline: none; }
         .search-box select { padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
 
-        /* Categories */
         .categories { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 12px; background: var(--surface); scrollbar-width: none; }
         .categories::-webkit-scrollbar { display: none; }
         .cat-btn { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Product Grid */
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
         @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
         
@@ -65,16 +61,13 @@
         .p-cat { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; }
         .p-price { font-size: 1rem; font-weight: 700; color: var(--primary); margin-top: auto; }
 
-        /* Loading Sentinel */
         .sentinel { height: 50px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.9rem; }
 
-        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-secondary); text-decoration: none; font-size: 0.75rem; background: none; border: none; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary); }
         .nav-item span { font-size: 1.3rem; }
 
-        /* Modals */
         .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; opacity: 0; transition: opacity 0.3s; }
         .modal.open { display: flex; opacity: 1; }
         .modal-content { background: var(--surface); width: 100%; max-height: 90vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s; }
@@ -83,11 +76,9 @@
         .modal-header h2 { font-size: 1.2rem; }
         .close-btn { background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer; }
 
-        /* Settings Items */
         .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
         .setting-label { font-size: 0.95rem; }
         
-        /* Toggle Switch */
         .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -95,7 +86,6 @@
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* Info Sections */
         .info-section { margin-bottom: 20px; }
         .info-section h3 { font-size: 1rem; color: var(--primary); margin-bottom: 8px; }
         .info-section p, .info-section li { font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary); margin-bottom: 8px; }
@@ -106,14 +96,12 @@
 
         .lang-select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-top: 8px; }
 
-        /* Views */
         .view { display: none; }
         .view.active { display: block; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <div class="header">
         <div class="logo-area">
             <img src="https://i.hizliresim.com/nmjqsjmi.png" alt="Productora Logo">
@@ -122,7 +110,6 @@
         <button class="icon-btn" onclick="openModal('settingsModal')">⚙️</button>
     </div>
 
-    <!-- Main View -->
     <div id="homeView" class="view active">
         <div class="controls">
             <div class="search-box">
@@ -148,7 +135,6 @@
         <div class="sentinel" id="sentinel">Veriler yükleniyor...</div>
     </div>
 
-    <!-- Info View -->
     <div id="infoView" class="view" style="padding: 16px;">
         <h2 style="margin-bottom: 20px; color: var(--primary);">Uygulama Bilgisi</h2>
         
@@ -195,7 +181,6 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="switchView('home')">
             <span>🏠</span>
@@ -207,7 +192,6 @@
         </button>
     </div>
 
-    <!-- Settings Modal -->
     <div id="settingsModal" class="modal" onclick="if(event.target===this) closeModal('settingsModal')">
         <div class="modal-content">
             <div class="modal-header">
@@ -251,21 +235,14 @@
 
     <script>
         // ==========================================
-        // 1. GITHUB AYARLARI (BURAYI DÜZENLEYİN)
+        // 1. DOSYA YOLLARI (Göreceli / Relative)
         // ==========================================
-        // GitHub kullanıcı adınızı ve depo adınızı buraya yazın.
-        // Örnek: "https://raw.githubusercontent.com/ahmet123/urunler/main/hot_products/"
-        const GITHUB_USER = "KULLANICI_ADI"; 
-        const GITHUB_REPO = "DEPO_ADI";
-        const GITHUB_BRANCH = "main"; // Genellikle 'main' veya 'master' olur
-        
-        const GITHUB_RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/hot_products/`;
-        
+        // index.html ile aynı klasörde veya alt klasörde olduğu için doğrudan yol yazıyoruz.
+        // NOT: Eğer dosya uzantısı gerçekten .do ise aşağıdaki 'eu_special_30k.csv' yerine 'eu_special_30k.do' yazın.
         const FILES = {
-            up_to_50: "up_to_50_off.csv",
-            // Not: Eğer dosya uzantısı gerçekten .do ise burayı "eu_special_30k.do" olarak değiştirin.
-            special_30k: "eu_special_30k.csv", 
-            eu_local: "eu_local_stock.csv"
+            up_to_50: "hot_products/up_to_50_off.csv",
+            special_30k: "hot_products/eu_special_30k.csv", 
+            eu_local: "hot_products/eu_local_stock.csv"
         };
 
         // ==========================================
@@ -275,7 +252,7 @@
 
         async function fetchAndParseCSV(filename, sourceTag) {
             try {
-                const response = await fetch(GITHUB_RAW_BASE + filename);
+                const response = await fetch(filename);
                 if (!response.ok) throw new Error(`HTTP Hata: ${response.status}`);
                 const text = await response.text();
                 const lines = text.split('\n');
@@ -283,38 +260,40 @@
                 
                 for (let line of lines) {
                     line = line.trim();
-                    // Geçerli bir affiliate linki içermeyen satırları atla
-                    if (!line || !line.includes('https://offer.alibaba.com')) continue;
+                    if (!line) continue;
                     
-                    const lastCommaIndex = line.lastIndexOf(',https://offer.alibaba.com');
-                    if (lastCommaIndex === -1) continue;
+                    // Link her zaman satırın sonunda ",https://" ile başlar
+                    const linkStartIndex = line.lastIndexOf(',https://');
+                    if (linkStartIndex === -1) continue;
                     
-                    const link = line.substring(lastCommaIndex + 1).trim();
-                    const beforeLink = line.substring(0, lastCommaIndex);
+                    const link = line.substring(linkStartIndex + 1).trim();
+                    const beforeLink = line.substring(0, linkStartIndex);
                     const parts = beforeLink.split(',');
                     
-                    // Bozuk satırları atlamak için minimum uzunluk kontrolü
-                    if (parts.length < 10) continue; 
+                    // Sağdan sola doğru Alibaba CSV yapısı:
+                    // -1: ALL, -2: Ref Fiyat, -3: Ürün ID Kodu, -4: in_stock, -5: new
+                    // -6: Kategori, -7: Resim URL, -8: Fiyat, -9: Promo, -10: Ürün Adı
                     
-                    // CSV yapısına göre sondan geriye doğru indis hesaplama
-                    const title = parts[parts.length - 14]?.trim() || "Unknown Product";
-                    const priceStr = parts[parts.length - 12]?.trim() || "0 USD";
-                    const image = parts[parts.length - 11]?.trim() || "https://via.placeholder.com/300";
-                    const category = parts[parts.length - 9]?.trim() || "General";
+                    const category = (parts[parts.length - 6] || "General").trim();
+                    const image = (parts[parts.length - 7] || "https://via.placeholder.com/300").trim();
+                    const priceStr = (parts[parts.length - 8] || "0 USD").trim();
+                    const title = (parts[parts.length - 10] || "Unknown Product").trim();
                     
                     const priceMatch = priceStr.match(/([\d\.]+)/);
                     const price = priceMatch ? parseFloat(priceMatch[1]) : 0;
                     
-                    products.push({
-                        id: Math.random().toString(36).substr(2, 9),
-                        title,
-                        price,
-                        priceStr,
-                        image,
-                        category,
-                        link,
-                        source: sourceTag
-                    });
+                    if (title !== "Unknown Product" && link.includes('offer.alibaba.com')) {
+                        products.push({
+                            id: Math.random().toString(36).substr(2, 9),
+                            title,
+                            price,
+                            priceStr,
+                            image,
+                            category,
+                            link,
+                            source: sourceTag
+                        });
+                    }
                 }
                 return products;
             } catch (error) {
@@ -371,7 +350,6 @@
             const isChecked = document.getElementById('bridgeToggle').checked;
             const message = isChecked ? "webview_acik" : "webview_kapali";
             
-            // Normal tarayıcıda hata vermemesi için kontrol
             if (typeof window.AppInventor !== 'undefined') {
                 window.AppInventor.setWebViewString(message);
             } else {
@@ -384,8 +362,6 @@
         // ==========================================
         function init() {
             loadAllData();
-            
-            // Tema kontrolü
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.getElementById('themeToggle').checked = true;
                 toggleTheme();
@@ -396,10 +372,8 @@
             state.currentCategory = cat;
             state.displayedCount = 0;
             document.getElementById('productGrid').innerHTML = '';
-            
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             renderProducts();
         }
 
@@ -419,26 +393,19 @@
 
         function getFilteredProducts() {
             let filtered = allProducts;
-
-            // Kategori filtresi (Birbirine karıştırmaz)
             if (state.currentCategory !== 'all') {
                 filtered = filtered.filter(p => p.source === state.currentCategory);
             }
-
-            // Arama filtresi
             if (state.searchQuery) {
                 filtered = filtered.filter(p => 
                     p.title.toLowerCase().includes(state.searchQuery) || 
                     p.category.toLowerCase().includes(state.searchQuery)
                 );
             }
-
-            // Sıralama
             if (state.sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
             else if (state.sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
             else if (state.sortBy === 'name-asc') filtered.sort((a, b) => a.title.localeCompare(b.title));
             else if (state.sortBy === 'name-desc') filtered.sort((a, b) => b.title.localeCompare(a.title));
-
             return filtered;
         }
 
@@ -448,14 +415,13 @@
 
             const filtered = getFilteredProducts();
             const nextBatch = filtered.slice(state.displayedCount, state.displayedCount + state.batchSize);
-            
             const grid = document.getElementById('productGrid');
             
             nextBatch.forEach(product => {
                 const card = document.createElement('a');
                 card.className = 'product-card';
                 card.href = product.link;
-                card.target = '_blank'; // Kodular'da harici tarayıcıda açılmasını sağlar
+                card.target = '_blank';
                 
                 card.innerHTML = `
                     <div class="img-container">
@@ -491,21 +457,14 @@
                     }
                 }
             }, { rootMargin: '100px' });
-            
             observer.observe(document.getElementById('sentinel'));
         }
 
         // ==========================================
         // 6. MODAL VE AYARLAR
         // ==========================================
-        function openModal(id) {
-            document.getElementById(id).classList.add('open');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('open');
-        }
-
+        function openModal(id) { document.getElementById(id).classList.add('open'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
         function toggleTheme() {
             const isDark = document.getElementById('themeToggle').checked;
             document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
@@ -514,7 +473,6 @@
         function switchView(viewName) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
             if (viewName === 'home') {
                 document.getElementById('homeView').classList.add('active');
                 document.querySelectorAll('.nav-item')[0].classList.add('active');
@@ -558,7 +516,6 @@
             });
         }
 
-        // Başlat
         window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
