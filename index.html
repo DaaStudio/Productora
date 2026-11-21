@@ -40,124 +40,48 @@ header{
 .sort-btn{padding:0 12px;height:44px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap}
 .sort-btn:active{transform:scale(.96)}
 
-/* CATEGORY BAR */
-.catbar{
-  display:flex;gap:8px;overflow-x:auto;
-  padding:12px 14px 6px;scrollbar-width:none;
-}
+.catbar{display:flex;gap:8px;overflow-x:auto;padding:12px 14px 6px;scrollbar-width:none}
 .catbar::-webkit-scrollbar{display:none}
-.catpill{
-  flex:0 0 auto;padding:10px 14px;border-radius:12px;
-  background:var(--card);border:1px solid var(--border);
-  font-size:13px;font-weight:600;cursor:pointer;
-  white-space:nowrap;color:var(--muted);transition:.15s;
-  display:flex;align-items:center;gap:8px;
-}
+.catpill{flex:0 0 auto;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--muted);transition:.15s;display:flex;align-items:center;gap:8px}
 .catpill:active{transform:scale(.96)}
 .catpill .icon{font-size:16px}
-.catpill .cnt{
-  background:rgba(255,255,255,.1);font-size:10px;
-  padding:1px 6px;border-radius:999px;font-weight:700;
-}
+.catpill .cnt{background:rgba(255,255,255,.1);font-size:10px;padding:1px 6px;border-radius:999px;font-weight:700}
 body.light .catpill .cnt{background:rgba(0,0,0,.06)}
-.catpill.active{
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  color:#fff;border-color:transparent;
-}
+.catpill.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
 .catpill.active .cnt{background:rgba(0,0,0,.2);color:#fff}
 
-/* SUBCATEGORY DROPDOWN — FIXED LIGHT THEME */
-.subwrap{
-  padding:0 14px 10px;
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-}
-.subsel{
-  flex:1;min-width:180px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 14px;border-radius:12px;
-  background:var(--sub-bg);
-  border:1px solid var(--sub-border);
-  font-size:13px;font-weight:600;cursor:pointer;color:var(--text);
-  transition:.15s;
-  box-shadow:0 2px 8px rgba(0,0,0,.04);
-}
-body.light .subsel{
-  background:#dde3f0;
-  border-color:rgba(0,0,0,.15);
-  box-shadow:0 2px 6px rgba(0,0,0,.06);
-}
+.subwrap{padding:0 14px 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.subsel{flex:1;min-width:180px;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:var(--sub-bg);border:1px solid var(--sub-border);font-size:13px;font-weight:600;cursor:pointer;color:var(--text);transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+body.light .subsel{background:#dde3f0;border-color:rgba(0,0,0,.15);box-shadow:0 2px 6px rgba(0,0,0,.06)}
 .subsel:active{transform:scale(.98)}
-.subsel .label{
-  display:flex;align-items:center;gap:8px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.subsel .cnt{
-  background:rgba(255,255,255,.12);font-size:11px;
-  padding:2px 8px;border-radius:999px;font-weight:700;color:var(--muted);
-  margin-left:8px;
-}
+.subsel .label{display:flex;align-items:center;gap:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.subsel .cnt{background:rgba(255,255,255,.12);font-size:11px;padding:2px 8px;border-radius:999px;font-weight:700;color:var(--muted);margin-left:8px}
 body.light .subsel .cnt{background:rgba(0,0,0,.1);color:#3a4560}
 .subsel .arrow{color:var(--muted);font-size:12px;margin-left:8px;transition:.2s}
 body.light .subsel .arrow{color:#3a4560}
 .subsel.open .arrow{transform:rotate(180deg)}
 
-.back-btn{
-  display:none;
-  padding:8px 14px;border-radius:12px;
-  background:var(--card);border:1px solid var(--border);
-  color:var(--text);font-size:12px;cursor:pointer;
-  font-weight:600;align-items:center;gap:6px;
-  flex:0 0 auto;
-}
+.back-btn{display:none;padding:8px 14px;border-radius:12px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:12px;cursor:pointer;font-weight:600;align-items:center;gap:6px;flex:0 0 auto}
 .back-btn.show{display:inline-flex}
 .back-btn:active{transform:scale(.96)}
 
-/* SUBCATEGORY POPUP SHEET */
 .subsheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
 .subsheet-overlay.show{opacity:1;pointer-events:auto}
-.subsheet{
-  position:fixed;left:0;right:0;bottom:0;
-  background:var(--bg2);border-radius:22px 22px 0 0;
-  padding:16px;z-index:201;
-  transform:translateY(100%);transition:transform .25s;
-  max-height:70vh;overflow-y:auto;
-}
+.subsheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-radius:22px 22px 0 0;padding:16px;z-index:201;transform:translateY(100%);transition:transform .25s;max-height:70vh;overflow-y:auto}
 .subsheet.show{transform:translateY(0)}
 .subsheet h4{margin:0 0 12px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
-.subsheet h4 .cls{
-  width:32px;height:32px;border-radius:50%;
-  border:none;background:var(--card);color:var(--text);font-size:16px;cursor:pointer;
-}
-.subopt{
-  padding:14px;border-radius:12px;background:var(--card);
-  margin-bottom:8px;font-size:13px;cursor:pointer;
-  display:flex;align-items:center;justify-content:space-between;
-  transition:.15s;
-}
+.subsheet h4 .cls{width:32px;height:32px;border-radius:50%;border:none;background:var(--card);color:var(--text);font-size:16px;cursor:pointer}
+.subopt{padding:14px;border-radius:12px;background:var(--card);margin-bottom:8px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:.15s}
 .subopt:active{transform:scale(.98)}
 .subopt.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff}
-.subopt .cnt{
-  background:rgba(255,255,255,.1);font-size:11px;
-  padding:2px 8px;border-radius:999px;font-weight:700;color:var(--muted);
-}
+.subopt .cnt{background:rgba(255,255,255,.1);font-size:11px;padding:2px 8px;border-radius:999px;font-weight:700;color:var(--muted)}
 .subopt.active .cnt{background:rgba(0,0,0,.2);color:#fff}
 body.light .subopt .cnt{background:rgba(0,0,0,.06)}
 
-/* SECTION TITLE */
-.section-title{
-  padding:8px 14px 4px;
-  font-size:13px;font-weight:700;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.section-title .count-pill{
-  font-size:11px;color:var(--muted);
-  background:var(--card);padding:3px 10px;border-radius:999px;font-weight:700;
-}
+.section-title{padding:8px 14px 4px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.section-title .count-pill{font-size:11px;color:var(--muted);background:var(--card);padding:3px 10px;border-radius:999px;font-weight:700}
 
-/* PRODUCT GRID */
-.grid{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:8px 14px 14px;
-}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:8px 14px 14px}
 @media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
 
@@ -179,7 +103,6 @@ body.light .subopt .cnt{background:rgba(0,0,0,.06)}
 #sentinel{height:60px;display:grid;place-items:center}
 #sentinel .spinner{width:26px;height:26px}
 
-/* SORT SHEET */
 .sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
 .sheet-overlay.show{opacity:1;pointer-events:auto}
 .sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-radius:20px 20px 0 0;padding:16px;z-index:201;transform:translateY(100%);transition:transform .25s}
@@ -434,7 +357,7 @@ const I18N = {
     noProducts:"No products found.", noLink:"Link not available", linkMissing:"This product has no purchase link.",
     cat_all:"All Categories", cat_eu_local_stock:"EU Local Stock", cat_eu_special_30k:"Special Offer 30K", cat_up_to_50_off:"Up to 50% Off",
     subcategories:"Subcategories", products:"Products", back:"Back", chooseCategory:"Choose a category",
-    langChanged:"Language changed. Reloading...", bridgeChanged:"Opening mode changed. Reloading..."
+    langChanged:"Language changed. Reloading..."
   },
   tr:{
     search:"Ürün veya kategori ara...", all:"Tüm Kategoriler", allSub:"Tümü", buy:"Fırsatı Gör",
@@ -453,7 +376,7 @@ const I18N = {
     noProducts:"Ürün bulunamadı.", noLink:"Bağlantı mevcut değil", linkMissing:"Bu ürünün satın alma bağlantısı yok.",
     cat_all:"Tüm Kategoriler", cat_eu_local_stock:"AB Yerel Stok", cat_eu_special_30k:"Özel Teklif 30K", cat_up_to_50_off:"%50'ye Varan İndirim",
     subcategories:"Alt Kategoriler", products:"Ürünler", back:"Geri", chooseCategory:"Bir kategori seç",
-    langChanged:"Dil değiştirildi. Yeniden yükleniyor...", bridgeChanged:"Açılış modu değiştirildi. Yeniden yükleniyor..."
+    langChanged:"Dil değiştirildi. Yeniden yükleniyor..."
   },
   es:{
     search:"Buscar productos o categorías...", all:"Todas las categorías", allSub:"Todas", buy:"Ver oferta",
@@ -472,7 +395,7 @@ const I18N = {
     noProducts:"No se encontraron productos.", noLink:"Enlace no disponible", linkMissing:"Este producto no tiene enlace de compra.",
     cat_all:"Todas las categorías", cat_eu_local_stock:"Stock Local UE", cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Hasta 50% de Descuento",
     subcategories:"Subcategorías", products:"Productos", back:"Atrás", chooseCategory:"Elige una categoría",
-    langChanged:"Idioma cambiado. Recargando...", bridgeChanged:"Modo de apertura cambiado. Recargando..."
+    langChanged:"Idioma cambiado. Recargando..."
   },
   de:{
     search:"Produkte oder Kategorien suchen...", all:"Alle Kategorien", allSub:"Alle", buy:"Angebot ansehen",
@@ -491,7 +414,7 @@ const I18N = {
     noProducts:"Keine Produkte gefunden.", noLink:"Kein Link verfügbar", linkMissing:"Dieses Produkt hat keinen Kauflink.",
     cat_all:"Alle Kategorien", cat_eu_local_stock:"EU-Lagerbestand", cat_eu_special_30k:"Sonderangebot 30K", cat_up_to_50_off:"Bis zu 50% Rabatt",
     subcategories:"Unterkategorien", products:"Produkte", back:"Zurück", chooseCategory:"Wählen Sie eine Kategorie",
-    langChanged:"Sprache geändert. Wird neu geladen...", bridgeChanged:"Öffnungsmodus geändert. Wird neu geladen..."
+    langChanged:"Sprache geändert. Wird neu geladen..."
   },
   fr:{
     search:"Rechercher des produits ou catégories...", all:"Toutes les catégories", allSub:"Tout", buy:"Voir l'offre",
@@ -510,7 +433,7 @@ const I18N = {
     noProducts:"Aucun produit trouvé.", noLink:"Aucun lien disponible", linkMissing:"Ce produit n'a pas de lien d'achat.",
     cat_all:"Toutes les catégories", cat_eu_local_stock:"Stock local UE", cat_eu_special_30k:"Offre spéciale 30K", cat_up_to_50_off:"Jusqu'à 50% de réduction",
     subcategories:"Sous-catégories", products:"Produits", back:"Retour", chooseCategory:"Choisissez une catégorie",
-    langChanged:"Langue modifiée. Rechargement...", bridgeChanged:"Mode d'ouverture modifié. Rechargement..."
+    langChanged:"Langue modifiée. Rechargement..."
   },
   it:{
     search:"Cerca prodotti o categorie...", all:"Tutte le categorie", allSub:"Tutte", buy:"Vedi offerta",
@@ -529,7 +452,7 @@ const I18N = {
     noProducts:"Nessun prodotto trovato.", noLink:"Nessun link disponibile", linkMissing:"Questo prodotto non ha un link di acquisto.",
     cat_all:"Tutte le categorie", cat_eu_local_stock:"Stock locale UE", cat_eu_special_30k:"Offerta speciale 30K", cat_up_to_50_off:"Fino al 50% di sconto",
     subcategories:"Sottocategorie", products:"Prodotti", back:"Indietro", chooseCategory:"Scegli una categoria",
-    langChanged:"Lingua cambiata. Ricaricamento...", bridgeChanged:"Modalità di apertura cambiata. Ricaricamento..."
+    langChanged:"Lingua cambiata. Ricaricamento..."
   },
   pt:{
     search:"Pesquisar produtos ou categorias...", all:"Todas as categorias", allSub:"Todas", buy:"Ver oferta",
@@ -548,7 +471,7 @@ const I18N = {
     noProducts:"Nenhum produto encontrado.", noLink:"Nenhum link disponível", linkMissing:"Este produto não tem link de compra.",
     cat_all:"Todas as categorias", cat_eu_local_stock:"Estoque Local UE", cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Até 50% de Desconto",
     subcategories:"Subcategorias", products:"Produtos", back:"Voltar", chooseCategory:"Escolha uma categoria",
-    langChanged:"Idioma alterado. Recarregando...", bridgeChanged:"Modo de abertura alterado. Recarregando..."
+    langChanged:"Idioma alterado. Recarregando..."
   },
   ja:{
     search:"商品やカテゴリを検索...", all:"すべてのカテゴリ", allSub:"すべて", buy:"詳細を見る",
@@ -567,7 +490,7 @@ const I18N = {
     noProducts:"商品が見つかりません。", noLink:"リンクがありません", linkMissing:"この商品には購入リンクがありません。",
     cat_all:"すべてのカテゴリ", cat_eu_local_stock:"EU現地在庫", cat_eu_special_30k:"特別オファー30K", cat_up_to_50_off:"最大50%オフ",
     subcategories:"サブカテゴリ", products:"商品", back:"戻る", chooseCategory:"カテゴリを選択",
-    langChanged:"言語が変更されました。再読み込み中...", bridgeChanged:"開くモードが変更されました。再読み込み中..."
+    langChanged:"言語が変更されました。再読み込み中..."
   },
   ko:{
     search:"제품 또는 카테고리 검색...", all:"모든 카테고리", allSub:"전체", buy:"거래 보기",
@@ -586,7 +509,7 @@ const I18N = {
     noProducts:"제품을 찾을 수 없습니다.", noLink:"사용 가능한 링크가 없습니다", linkMissing:"이 제품에는 구매 링크가 없습니다.",
     cat_all:"모든 카테고리", cat_eu_local_stock:"EU 현지 재고", cat_eu_special_30k:"특별 혜택 30K", cat_up_to_50_off:"최대 50% 할인",
     subcategories:"하위 카테고리", products:"제품", back:"뒤로", chooseCategory:"카테고리 선택",
-    langChanged:"언어가 변경되었습니다. 다시 로드 중...", bridgeChanged:"열기 모드가 변경되었습니다. 다시 로드 중..."
+    langChanged:"언어가 변경되었습니다. 다시 로드 중..."
   },
   zh:{
     search:"搜索产品或类别...", all:"所有类别", allSub:"全部", buy:"查看优惠",
@@ -605,7 +528,7 @@ const I18N = {
     noProducts:"未找到产品。", noLink:"无可用链接", linkMissing:"此产品没有购买链接。",
     cat_all:"所有类别", cat_eu_local_stock:"欧盟本地库存", cat_eu_special_30k:"特别优惠 30K", cat_up_to_50_off:"高达 50% 折扣",
     subcategories:"子类别", products:"产品", back:"返回", chooseCategory:"选择类别",
-    langChanged:"语言已更改。正在重新加载...", bridgeChanged:"打开模式已更改。正在重新加载..."
+    langChanged:"语言已更改。正在重新加载..."
   }
 };
 
@@ -635,16 +558,14 @@ function applyTheme(mode){
 applyTheme(localStorage.getItem('pr_theme') || 'dark');
 
 /* ============================================================
-   LANGUAGE — saves + reloads page
+   LANGUAGE — saves state, reloads page
 ============================================================ */
 function applyLang(lang){
-  // Save everything to sessionStorage so we can restore after reload
   const scrollY = window.scrollY;
   sessionStorage.setItem('pr_activeCat', state.activeCat);
   sessionStorage.setItem('pr_activeSub', state.activeSub);
   sessionStorage.setItem('pr_sort', state.sort);
   sessionStorage.setItem('pr_scrollY', scrollY);
-  sessionStorage.setItem('pr_restoreLang', '1');
 
   localStorage.setItem('pr_lang', lang);
   showToast(t('langChanged'));
@@ -652,66 +573,33 @@ function applyLang(lang){
 }
 
 /* ============================================================
-   BRIDGE — Kodular WebView
+   BRIDGE — SADECE kullanıcı toggle'a müdahale ederse mesaj gönderilir
+   Sayfa yüklenmesi, dil değişimi, kategori seçimi vb. sırasında
+   window.AppInventor.setWebViewString ASLA çağrılmaz.
 ============================================================ */
 const bridgeSwitch = document.getElementById('bridgeSwitch');
 const bridgeStatus = document.getElementById('bridgeStatus');
 
-// Kodular için uygun string gönderir; ayrıca window.name fallback
-function sendToApp(msg){
-  try{
-    if(window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
-      window.AppInventor.setWebViewString(msg);
-      return true;
-    }
-    // Kodular alternate
-    if(window.Kodular && typeof window.Kodular.setWebViewString === 'function'){
-      window.Kodular.setWebViewString(msg);
-      return true;
-    }
-    // Android WebView bridge name
-    if(window.Android && typeof window.Android.setWebViewString === 'function'){
-      window.Android.setWebViewString(msg);
-      return true;
-    }
-    if(window.AndroidBridge && typeof window.AndroidBridge.setWebViewString === 'function'){
-      window.AndroidBridge.setWebViewString(msg);
-      return true;
-    }
-  }catch(e){}
-  return false;
-}
-
 function setBridgeUI(on){ bridgeStatus.textContent = on ? t('bridgeOn') : t('bridgeOff'); }
 
+// Sadece toggle değişiminde çağrılır
 bridgeSwitch.addEventListener('change', e => {
   const on = e.target.checked;
   const msg = on ? 'webview_acik' : 'webview_kapali';
+
+  // Save state — no reload, state stays in memory
   localStorage.setItem('pr_bridge', on ? '1' : '0');
-
-  // Send to Android WebView
-  sendToApp(msg);
-
-  // Also try via window.location for WebView deep-link style
-  try{
-    // Some WebViews intercept navigation
-    if(window.location.hash !== msg){
-      // Do nothing if browser mode
-    }
-  }catch(_){}
-
-  // Save state and reload so open in app/media takes effect immediately
-  const scrollY = window.scrollY;
-  sessionStorage.setItem('pr_activeCat', state.activeCat);
-  sessionStorage.setItem('pr_activeSub', state.activeSub);
-  sessionStorage.setItem('pr_sort', state.sort);
-  sessionStorage.setItem('pr_scrollY', scrollY);
-
   setBridgeUI(on);
-  showToast(t('bridgeChanged'));
-  setTimeout(() => location.reload(), 400);
+
+  // ONLY user interaction sends bridge message
+  try{
+    if(window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
+      window.AppInventor.setWebViewString(msg);
+    }
+  }catch(err){ /* ignore */ }
 });
 
+// Restore on load — DOES NOT send any message
 (function restoreBridge(){
   const saved = localStorage.getItem('pr_bridge')==='1';
   bridgeSwitch.checked = saved;
@@ -777,11 +665,8 @@ function parseMoney(raw){
   s = s.replace(/[A-Z]{2,}/g,'').replace(/[€$£¥₹₺₽₩]/g,'').trim();
   const lastComma = s.lastIndexOf(',');
   const lastDot = s.lastIndexOf('.');
-  if(lastComma > lastDot){
-    s = s.replace(/\./g,'').replace(',', '.');
-  } else {
-    s = s.replace(/,/g,'');
-  }
+  if(lastComma > lastDot){ s = s.replace(/\./g,'').replace(',', '.'); }
+  else { s = s.replace(/,/g,''); }
   const n = parseFloat(s);
   return isFinite(n)? n : 0;
 }
@@ -1040,37 +925,24 @@ function renderPage(){
 }
 
 /* ============================================================
-   OPEN PRODUCT — respects bridge mode
+   OPEN PRODUCT
+   - Toggle açıksa (open in app): WebView içinde aç (location.href)
+   - Toggle kapalıysa (open in media): dış tarayıcıda aç (window.open)
+   - Bu fonksiyon bridge mesajı GÖNDERMEZ
 ============================================================ */
 function openProduct(p){
   if(!p.link || p.link.trim()===''){
     showToast(t('linkMissing'));
     return;
   }
-  // Save state for scroll restore
-  sessionStorage.setItem('pr_scrollY', window.scrollY);
-  sessionStorage.setItem('pr_activeCat', state.activeCat);
-  sessionStorage.setItem('pr_activeSub', state.activeSub);
-  sessionStorage.setItem('pr_sort', state.sort);
 
   const inApp = localStorage.getItem('pr_bridge') === '1';
 
   if(inApp){
-    // Uygulamada aç — WebView içinde navigate et, dış tarayıcı açma
-    // Bazı WebView'lerde window.open çalışmayabilir, bu yüzden
-    // location.href kullanıyoruz (WebView bunu yakalar)
-    try{
-      // Önce AppInventor'a bilgi ver (bazı uygulamalar bunu dinler)
-      sendToApp('open_in_app:' + p.link);
-      // Fallback: doğrudan git
-      setTimeout(() => {
-        window.location.href = p.link;
-      }, 100);
-    }catch(e){
-      window.location.href = p.link;
-    }
+    // Open inside WebView (same window)
+    window.location.href = p.link;
   } else {
-    // Medyada aç — dış tarayıcı
+    // Open in external browser/app
     window.open(p.link, '_blank', 'noopener,noreferrer');
   }
 }
@@ -1178,7 +1050,7 @@ function initObserver(){
 initObserver();
 
 /* ============================================================
-   RESTORE STATE ON LOAD (after lang/bridge reload)
+   RESTORE STATE ON LOAD
 ============================================================ */
 function restoreState(){
   try{
@@ -1267,20 +1139,12 @@ document.getElementById('termsBtn').addEventListener('click', () => {
   openModal(termsModal);
 });
 
-/* ============================================================
-   RATE BUTTON — FIXED with correct URL + Kodular intent
-============================================================ */
 document.getElementById('rateBtn').addEventListener('click', () => {
-  // Try Kodular bridge first for rate action
-  const sent = sendToApp('rate_app');
-  if(!sent){
-    // Fallback: open Play Store directly
+  // Play Store — WebView engelliyorsa fallback olarak location.href
+  try{
     window.open(CONFIG.PLAY_URL, '_blank', 'noopener,noreferrer');
-  } else {
-    // Also open as backup so user always gets there
-    setTimeout(() => {
-      window.open(CONFIG.PLAY_URL, '_blank', 'noopener,noreferrer');
-    }, 800);
+  }catch(e){
+    window.location.href = CONFIG.PLAY_URL;
   }
 });
 
@@ -1314,13 +1178,12 @@ function showToast(msg){
   toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
 }
 
-/* LANG SELECT */
 document.getElementById('langSelect').addEventListener('change', e => {
   applyLang(e.target.value);
 });
 
 /* ============================================================
-   UI TEXT HELPER — all language-dependent text
+   APPLY ALL UI TEXT
 ============================================================ */
 function applyAllUIText(){
   document.getElementById('searchInput').placeholder = t('search');
