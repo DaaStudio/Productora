@@ -38,102 +38,117 @@ header{
 .sort-btn{padding:0 12px;height:44px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap}
 .sort-btn:active{transform:scale(.96)}
 
-/* MAIN CATEGORY CARDS */
-.maincats{
-  padding:14px;
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
+/* CATEGORY BAR */
+.catbar{
+  display:flex;gap:8px;overflow-x:auto;
+  padding:12px 14px 6px;scrollbar-width:none;
 }
-.maincat{
-  position:relative;
-  border-radius:16px;
-  padding:16px 14px;
-  background:var(--card);
-  border:1px solid var(--border);
-  cursor:pointer;
-  overflow:hidden;
-  min-height:110px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  transition:transform .15s,box-shadow .2s;
-  box-shadow:var(--shadow);
+.catbar::-webkit-scrollbar{display:none}
+.catpill{
+  flex:0 0 auto;padding:10px 14px;border-radius:12px;
+  background:var(--card);border:1px solid var(--border);
+  font-size:13px;font-weight:600;cursor:pointer;
+  white-space:nowrap;color:var(--muted);transition:.15s;
+  display:flex;align-items:center;gap:8px;
 }
-.maincat:active{transform:scale(.97)}
-.maincat::before{
-  content:"";
-  position:absolute;
-  top:-40px;right:-40px;
-  width:120px;height:120px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  opacity:.18;
+.catpill:active{transform:scale(.96)}
+.catpill .icon{font-size:16px}
+.catpill .cnt{
+  background:rgba(255,255,255,.1);font-size:10px;
+  padding:1px 6px;border-radius:999px;font-weight:700;
 }
-.maincat .mc-icon{font-size:26px;margin-bottom:6px;position:relative;z-index:1}
-.maincat .mc-title{font-size:14px;font-weight:700;line-height:1.25;position:relative;z-index:1}
-.maincat .mc-count{
-  display:inline-flex;align-items:center;gap:4px;
-  margin-top:8px;
-  padding:4px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  font-size:11px;font-weight:700;color:var(--muted);
-  position:relative;z-index:1;
-  align-self:flex-start;
+body.light .catpill .cnt{background:rgba(0,0,0,.06)}
+.catpill.active{
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  color:#fff;border-color:transparent;
 }
-body.light .maincat .mc-count{background:rgba(0,0,0,.06)}
-.maincat.active{border-color:var(--accent);background:linear-gradient(135deg,var(--card),var(--card2))}
-.maincat.active .mc-count{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff}
+.catpill.active .cnt{background:rgba(0,0,0,.2);color:#fff}
 
-/* SUBCATEGORY GRID */
-.subcats{
-  padding:0 14px 8px;
-  display:none;
-  flex-wrap:wrap;
-  gap:8px;
-  align-items:center;
+/* SUBCATEGORY DROPDOWN */
+.subwrap{
+  padding:0 14px 10px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
 }
-.subcats.show{display:flex}
-.subcat-title{
-  font-size:11px;color:var(--muted);font-weight:700;
-  text-transform:uppercase;letter-spacing:.5px;
-  width:100%;
-  margin-bottom:4px;
-}
-.subcat{
-  padding:8px 12px;border-radius:10px;
-  background:var(--card2);
-  border:1px solid var(--border);
-  font-size:12px;cursor:pointer;
-  color:var(--muted);
+.subwrap.hidden{display:none}
+.subsel{
+  flex:1;min-width:180px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;border-radius:12px;
+  background:var(--card);border:1px solid var(--border);
+  font-size:13px;font-weight:600;cursor:pointer;color:var(--text);
   transition:.15s;
-  display:flex;align-items:center;gap:6px;
 }
-.subcat:active{transform:scale(.96)}
-.subcat .sub-count{
-  font-size:10px;
-  background:rgba(255,255,255,.1);
-  padding:1px 6px;
-  border-radius:999px;
-  font-weight:700;
+.subsel:active{transform:scale(.98)}
+.subsel .label{
+  display:flex;align-items:center;gap:8px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
-body.light .subcat .sub-count{background:rgba(0,0,0,.06)}
-.subcat.active{background:var(--accent);color:#fff;border-color:transparent}
-.subcat.active .sub-count{background:rgba(0,0,0,.2);color:#fff}
+.subsel .cnt{
+  background:rgba(255,255,255,.1);font-size:11px;
+  padding:2px 8px;border-radius:999px;font-weight:700;color:var(--muted);
+  margin-left:8px;
+}
+body.light .subsel .cnt{background:rgba(0,0,0,.06)}
+.subsel .arrow{color:var(--muted);font-size:12px;margin-left:8px;transition:.2s}
+.subsel.open .arrow{transform:rotate(180deg)}
 
-/* SORT SHEET */
-.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
-.sheet-overlay.show{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-radius:20px 20px 0 0;padding:16px;z-index:201;transform:translateY(100%);transition:transform .25s}
-.sheet.show{transform:translateY(0)}
-.sheet h4{margin:0 0 12px;font-size:15px}
-.sheet-option{padding:14px;border-radius:12px;background:var(--card);margin-bottom:8px;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.sheet-option.active{background:var(--accent);color:#fff}
+/* BACK BUTTON */
+.back-btn{
+  display:none;
+  padding:8px 14px;border-radius:12px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text);font-size:12px;cursor:pointer;
+  font-weight:600;align-items:center;gap:6px;
+  flex:0 0 auto;
+}
+.back-btn.show{display:inline-flex}
+.back-btn:active{transform:scale(.96)}
+
+/* SUBCATEGORY POPUP SHEET */
+.subsheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
+.subsheet-overlay.show{opacity:1;pointer-events:auto}
+.subsheet{
+  position:fixed;left:0;right:0;bottom:0;
+  background:var(--bg2);border-radius:22px 22px 0 0;
+  padding:16px;z-index:201;
+  transform:translateY(100%);transition:transform .25s;
+  max-height:70vh;overflow-y:auto;
+}
+.subsheet.show{transform:translateY(0)}
+.subsheet h4{margin:0 0 12px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.subsheet h4 .cls{
+  width:32px;height:32px;border-radius:50%;
+  border:none;background:var(--card);color:var(--text);font-size:16px;cursor:pointer;
+}
+.subopt{
+  padding:14px;border-radius:12px;background:var(--card);
+  margin-bottom:8px;font-size:13px;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:.15s;
+}
+.subopt:active{transform:scale(.98)}
+.subopt.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff}
+.subopt .cnt{
+  background:rgba(255,255,255,.1);font-size:11px;
+  padding:2px 8px;border-radius:999px;font-weight:700;color:var(--muted);
+}
+.subopt.active .cnt{background:rgba(0,0,0,.2);color:#fff}
+body.light .subopt .cnt{background:rgba(0,0,0,.06)}
+
+/* SECTION TITLE */
+.section-title{
+  padding:8px 14px 4px;
+  font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.section-title .count-pill{
+  font-size:11px;color:var(--muted);
+  background:var(--card);padding:3px 10px;border-radius:999px;font-weight:700;
+}
 
 /* PRODUCT GRID */
 .grid{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 14px 14px;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:8px 14px 14px;
 }
 @media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
@@ -156,6 +171,15 @@ body.light .subcat .sub-count{background:rgba(0,0,0,.06)}
 #sentinel{height:60px;display:grid;place-items:center}
 #sentinel .spinner{width:26px;height:26px}
 
+/* SORT SHEET */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
+.sheet-overlay.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-radius:20px 20px 0 0;padding:16px;z-index:201;transform:translateY(100%);transition:transform .25s}
+.sheet.show{transform:translateY(0)}
+.sheet h4{margin:0 0 12px;font-size:15px}
+.sheet-option{padding:14px;border-radius:12px;background:var(--card);margin-bottom:8px;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.sheet-option.active{background:var(--accent);color:#fff}
+
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.show{opacity:1;pointer-events:auto}
 .modal{position:fixed;left:0;right:0;bottom:0;top:8%;background:var(--bg2);border-radius:24px 24px 0 0;z-index:301;padding:20px;transform:translateY(100%);transition:transform .3s;overflow-y:auto}
@@ -167,7 +191,6 @@ body.light .subcat .sub-count{background:rgba(0,0,0,.06)}
 .set-row{display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--card);border-radius:14px;margin-bottom:10px}
 .set-row .label{font-size:14px;font-weight:600}
 .set-row .sub{font-size:11px;color:var(--muted);margin-top:2px}
-
 select.lang-select{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:13px;outline:none}
 
 .switch{position:relative;display:inline-block;width:52px;height:30px;flex:0 0 auto}
@@ -202,25 +225,6 @@ input:checked + .slider:before{transform:translateX(22px)}
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:grid;place-items:center;transition:opacity .3s}
 .loading-overlay.hide{opacity:0;pointer-events:none}
 .loading-overlay .spinner{width:50px;height:50px;border-width:4px}
-
-.section-title{
-  padding:16px 14px 8px;
-  font-size:14px;font-weight:700;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.section-title .count-pill{
-  font-size:11px;color:var(--muted);
-  background:var(--card);padding:3px 10px;border-radius:999px;font-weight:700;
-}
-.back-btn{
-  display:none;
-  padding:6px 12px;border-radius:10px;
-  background:var(--card);border:1px solid var(--border);
-  color:var(--text);font-size:12px;cursor:pointer;
-  margin:12px 14px 0;align-items:center;gap:6px;font-weight:600;
-}
-.back-btn.show{display:inline-flex}
-.back-btn:active{transform:scale(.96)}
 </style>
 </head>
 <body>
@@ -240,21 +244,25 @@ input:checked + .slider:before{transform:translateX(22px)}
   </div>
 </header>
 
-<!-- MAIN CATEGORY CARDS -->
-<div class="maincats" id="maincats"></div>
+<!-- MAIN CATEGORY PILLS -->
+<div class="catbar" id="catbar"></div>
 
-<!-- SUBCATEGORY AREA -->
-<div class="subcats" id="subcats">
-  <div class="subcat-title" id="subcatTitle">Subcategories</div>
+<!-- SUBCATEGORY SELECTOR + BACK -->
+<div class="subwrap" id="subwrap">
+  <button class="back-btn" id="backBtn">
+    <span>←</span><span id="backText">Back</span>
+  </button>
+  <div class="subsel" id="subsel">
+    <span class="label">
+      <span id="subselText">All</span>
+      <span class="cnt" id="subselCount">0</span>
+    </span>
+    <span class="arrow">▾</span>
+  </div>
 </div>
 
-<!-- BACK BUTTON (to return to main cats) -->
-<button class="back-btn" id="backBtn">
-  <span>←</span><span id="backText">Back to categories</span>
-</button>
-
 <!-- SECTION TITLE -->
-<div class="section-title" id="sectionTitle" style="display:none">
+<div class="section-title" id="sectionTitle">
   <span id="sectionTitleText">Products</span>
   <span class="count-pill" id="sectionCount">0</span>
 </div>
@@ -264,6 +272,17 @@ input:checked + .slider:before{transform:translateX(22px)}
 
 <button id="scrollTop">↑</button>
 
+<!-- SUBCATEGORY SHEET -->
+<div class="subsheet-overlay" id="subsheetOverlay"></div>
+<div class="subsheet" id="subsheet">
+  <h4>
+    <span id="subsheetTitle">Subcategories</span>
+    <button class="cls" id="closeSubsheet">✕</button>
+  </h4>
+  <div id="subsheetList"></div>
+</div>
+
+<!-- SORT SHEET -->
 <div class="sheet-overlay" id="sortOverlay"></div>
 <div class="sheet" id="sortSheet">
   <h4 id="sortTitle">Sort By</h4>
@@ -398,7 +417,7 @@ const I18N = {
   en:{
     search:"Search products or categories...",
     all:"All Categories", allSub:"All",
-    buy:"View Deal", browse:"Browse products",
+    buy:"View Deal",
     sortBy:"Sort By",
     sortDefault:"Default / Random",
     sortPriceAsc:"Price: Low to High",
@@ -423,13 +442,12 @@ const I18N = {
     cat_all:"All Categories", cat_eu_local_stock:"EU Local Stock",
     cat_eu_special_30k:"Special Offer 30K", cat_up_to_50_off:"Up to 50% Off",
     subcategories:"Subcategories", products:"Products",
-    backToCats:"Back to categories", chooseCategory:"Choose a category to browse",
-    showAll:"Show all", tapToOpen:"Tap to open"
+    back:"Back", chooseCategory:"Choose a category"
   },
   tr:{
     search:"Ürün veya kategori ara...",
     all:"Tüm Kategoriler", allSub:"Tümü",
-    buy:"Fırsatı Gör", browse:"Ürünleri incele",
+    buy:"Fırsatı Gör",
     sortBy:"Sırala",
     sortDefault:"Varsayılan / Rastgele",
     sortPriceAsc:"Fiyat: Düşük → Yüksek",
@@ -454,13 +472,12 @@ const I18N = {
     cat_all:"Tüm Kategoriler", cat_eu_local_stock:"AB Yerel Stok",
     cat_eu_special_30k:"Özel Teklif 30K", cat_up_to_50_off:"%50'ye Varan İndirim",
     subcategories:"Alt Kategoriler", products:"Ürünler",
-    backToCats:"Kategorilere dön", chooseCategory:"İncelemek için bir kategori seçin",
-    showAll:"Tümünü göster", tapToOpen:"Açmak için dokun"
+    back:"Geri", chooseCategory:"Bir kategori seç"
   },
   es:{
     search:"Buscar productos o categorías...",
     all:"Todas las categorías", allSub:"Todas",
-    buy:"Ver oferta", browse:"Explorar productos",
+    buy:"Ver oferta",
     sortBy:"Ordenar por",
     sortDefault:"Predeterminado / Aleatorio",
     sortPriceAsc:"Precio: Menor a Mayor",
@@ -485,13 +502,12 @@ const I18N = {
     cat_all:"Todas las categorías", cat_eu_local_stock:"Stock Local UE",
     cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Hasta 50% de Descuento",
     subcategories:"Subcategorías", products:"Productos",
-    backToCats:"Volver a categorías", chooseCategory:"Elige una categoría para explorar",
-    showAll:"Mostrar todo", tapToOpen:"Toca para abrir"
+    back:"Atrás", chooseCategory:"Elige una categoría"
   },
   de:{
     search:"Produkte oder Kategorien suchen...",
     all:"Alle Kategorien", allSub:"Alle",
-    buy:"Angebot ansehen", browse:"Produkte durchsuchen",
+    buy:"Angebot ansehen",
     sortBy:"Sortieren nach",
     sortDefault:"Standard / Zufällig",
     sortPriceAsc:"Preis: Niedrig → Hoch",
@@ -516,13 +532,12 @@ const I18N = {
     cat_all:"Alle Kategorien", cat_eu_local_stock:"EU-Lagerbestand",
     cat_eu_special_30k:"Sonderangebot 30K", cat_up_to_50_off:"Bis zu 50% Rabatt",
     subcategories:"Unterkategorien", products:"Produkte",
-    backToCats:"Zurück zu Kategorien", chooseCategory:"Wählen Sie eine Kategorie zum Stöbern",
-    showAll:"Alle anzeigen", tapToOpen:"Zum Öffnen tippen"
+    back:"Zurück", chooseCategory:"Wählen Sie eine Kategorie"
   },
   fr:{
     search:"Rechercher des produits ou catégories...",
     all:"Toutes les catégories", allSub:"Tout",
-    buy:"Voir l'offre", browse:"Parcourir les produits",
+    buy:"Voir l'offre",
     sortBy:"Trier par",
     sortDefault:"Par défaut / Aléatoire",
     sortPriceAsc:"Prix : Croissant",
@@ -547,13 +562,12 @@ const I18N = {
     cat_all:"Toutes les catégories", cat_eu_local_stock:"Stock local UE",
     cat_eu_special_30k:"Offre spéciale 30K", cat_up_to_50_off:"Jusqu'à 50% de réduction",
     subcategories:"Sous-catégories", products:"Produits",
-    backToCats:"Retour aux catégories", chooseCategory:"Choisissez une catégorie à parcourir",
-    showAll:"Tout afficher", tapToOpen:"Appuyez pour ouvrir"
+    back:"Retour", chooseCategory:"Choisissez une catégorie"
   },
   it:{
     search:"Cerca prodotti o categorie...",
     all:"Tutte le categorie", allSub:"Tutte",
-    buy:"Vedi offerta", browse:"Sfoglia i prodotti",
+    buy:"Vedi offerta",
     sortBy:"Ordina per",
     sortDefault:"Predefinito / Casuale",
     sortPriceAsc:"Prezzo: Basso → Alto",
@@ -578,13 +592,12 @@ const I18N = {
     cat_all:"Tutte le categorie", cat_eu_local_stock:"Stock locale UE",
     cat_eu_special_30k:"Offerta speciale 30K", cat_up_to_50_off:"Fino al 50% di sconto",
     subcategories:"Sottocategorie", products:"Prodotti",
-    backToCats:"Torna alle categorie", chooseCategory:"Scegli una categoria da esplorare",
-    showAll:"Mostra tutto", tapToOpen:"Tocca per aprire"
+    back:"Indietro", chooseCategory:"Scegli una categoria"
   },
   pt:{
     search:"Pesquisar produtos ou categorias...",
     all:"Todas as categorias", allSub:"Todas",
-    buy:"Ver oferta", browse:"Explorar produtos",
+    buy:"Ver oferta",
     sortBy:"Ordenar por",
     sortDefault:"Padrão / Aleatório",
     sortPriceAsc:"Preço: Menor → Maior",
@@ -609,13 +622,12 @@ const I18N = {
     cat_all:"Todas as categorias", cat_eu_local_stock:"Estoque Local UE",
     cat_eu_special_30k:"Oferta Especial 30K", cat_up_to_50_off:"Até 50% de Desconto",
     subcategories:"Subcategorias", products:"Produtos",
-    backToCats:"Voltar às categorias", chooseCategory:"Escolha uma categoria para explorar",
-    showAll:"Mostrar tudo", tapToOpen:"Toque para abrir"
+    back:"Voltar", chooseCategory:"Escolha uma categoria"
   },
   ja:{
     search:"商品やカテゴリを検索...",
     all:"すべてのカテゴリ", allSub:"すべて",
-    buy:"詳細を見る", browse:"商品を閲覧",
+    buy:"詳細を見る",
     sortBy:"並び替え",
     sortDefault:"デフォルト / ランダム",
     sortPriceAsc:"価格：安い順",
@@ -640,13 +652,12 @@ const I18N = {
     cat_all:"すべてのカテゴリ", cat_eu_local_stock:"EU現地在庫",
     cat_eu_special_30k:"特別オファー30K", cat_up_to_50_off:"最大50%オフ",
     subcategories:"サブカテゴリ", products:"商品",
-    backToCats:"カテゴリに戻る", chooseCategory:"閲覧するカテゴリを選択",
-    showAll:"すべて表示", tapToOpen:"タップして開く"
+    back:"戻る", chooseCategory:"カテゴリを選択"
   },
   ko:{
     search:"제품 또는 카테고리 검색...",
     all:"모든 카테고리", allSub:"전체",
-    buy:"거래 보기", browse:"제품 둘러보기",
+    buy:"거래 보기",
     sortBy:"정렬 기준",
     sortDefault:"기본 / 무작위",
     sortPriceAsc:"가격: 낮은 순",
@@ -671,13 +682,12 @@ const I18N = {
     cat_all:"모든 카테고리", cat_eu_local_stock:"EU 현지 재고",
     cat_eu_special_30k:"특별 혜택 30K", cat_up_to_50_off:"최대 50% 할인",
     subcategories:"하위 카테고리", products:"제품",
-    backToCats:"카테고리로 돌아가기", chooseCategory:"둘러볼 카테고리 선택",
-    showAll:"모두 표시", tapToOpen:"탭하여 열기"
+    back:"뒤로", chooseCategory:"카테고리 선택"
   },
   zh:{
     search:"搜索产品或类别...",
     all:"所有类别", allSub:"全部",
-    buy:"查看优惠", browse:"浏览产品",
+    buy:"查看优惠",
     sortBy:"排序方式",
     sortDefault:"默认 / 随机",
     sortPriceAsc:"价格：从低到高",
@@ -702,8 +712,7 @@ const I18N = {
     cat_all:"所有类别", cat_eu_local_stock:"欧盟本地库存",
     cat_eu_special_30k:"特别优惠 30K", cat_up_to_50_off:"高达 50% 折扣",
     subcategories:"子类别", products:"产品",
-    backToCats:"返回类别", chooseCategory:"选择要浏览的类别",
-    showAll:"显示全部", tapToOpen:"点击打开"
+    back:"返回", chooseCategory:"选择类别"
   }
 };
 
@@ -713,25 +722,20 @@ const I18N = {
 const state = {
   allProducts: [],
   filtered: [],
-  activeCat: 'all',      // main category selected
-  activeSub: '',         // subcategory
-  view: 'main',          // 'main' | 'products'
+  activeCat: 'all',
+  activeSub: '',
   search: '',
   sort: 'default',
   page: 0,
-  shuffledSeed: null,    // daily seed
+  shuffledSeed: null,
   isLoading: false
 };
 
 let currentLang = localStorage.getItem('pr_lang') || 'en';
 function t(key){return (I18N[currentLang]&&I18N[currentLang][key])||I18N.en[key]||key;}
 
-/* ============================================================
-   DAILY SEED — her gün farklı sıralama, aynı gün içinde sabit
-============================================================ */
 function getDailySeed(){
   const d = new Date();
-  // YYYYMMDD sayısı; her gün değişir ama gün içinde sabit
   return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
 }
 state.shuffledSeed = getDailySeed();
@@ -782,19 +786,15 @@ function applyLang(lang){
   document.getElementById('privacyTitle').textContent = t('privacyTitle');
   document.getElementById('termsTitle').textContent = t('termsTitle');
   document.getElementById('copyMail').textContent = t('copy');
-  document.getElementById('backText').textContent = t('backToCats');
-  document.getElementById('subcatTitle').textContent = t('subcategories');
+  document.getElementById('backText').textContent = t('back');
+  document.getElementById('subsheetTitle').textContent = t('subcategories');
 
   document.getElementById('privacyBody').innerHTML = buildPrivacyHTML();
   document.getElementById('termsBody').innerHTML = buildTermsHTML();
 
-  // Rerender current view
-  if(state.view === 'main'){
-    renderMainCats();
-  } else {
-    renderSubcats();
-    applyFilter();
-  }
+  buildCatBar();
+  updateSubSel();
+  updateSectionTitle();
 }
 
 function buildPrivacyHTML(){
@@ -829,6 +829,9 @@ function buildTermsHTML(){
     </div>`;
 }
 
+/* ============================================================
+   BRIDGE
+============================================================ */
 const bridgeSwitch = document.getElementById('bridgeSwitch');
 const bridgeStatus = document.getElementById('bridgeStatus');
 function sendToApp(msg){
@@ -987,11 +990,13 @@ async function loadAll(){
   });
   state.isLoading = false;
   document.getElementById('loadingOverlay').classList.add('hide');
-  renderMainCats();
+  buildCatBar();
+  updateSubSel();
+  applyFilter();
 }
 
 /* ============================================================
-   MAIN CATEGORY CARDS
+   CATEGORY BAR
 ============================================================ */
 const MAIN_CATS = [
   {key:'all', icon:'🛍️', labelKey:'cat_all'},
@@ -1000,93 +1005,36 @@ const MAIN_CATS = [
   {key:'up_to_50_off', icon:'🔥', labelKey:'cat_up_to_50_off'}
 ];
 
-function renderMainCats(){
-  state.view = 'main';
-  const wrap = document.getElementById('maincats');
-  wrap.style.display = 'grid';
+function buildCatBar(){
+  const wrap = document.getElementById('catbar');
   wrap.innerHTML = '';
-  document.getElementById('subcats').classList.remove('show');
-  document.getElementById('backBtn').classList.remove('show');
-  document.getElementById('sectionTitle').style.display = 'none';
-  document.getElementById('grid').innerHTML = '';
-  document.getElementById('sentinel').style.display = 'none';
-
   MAIN_CATS.forEach(c => {
     const count = c.key==='all'
       ? state.allProducts.length
       : state.allProducts.filter(p=>p.catKey===c.key).length;
     const el = document.createElement('div');
-    el.className = 'maincat' + (state.activeCat===c.key && state.activeSub==='' ? ' active':'');
+    el.className = 'catpill' + (state.activeCat===c.key?' active':'');
     el.innerHTML = `
-      <div class="mc-icon">${c.icon}</div>
-      <div class="mc-title">${t(c.labelKey)}</div>
-      <div class="mc-count">${count} ${t('products').toLowerCase()}</div>
+      <span class="icon">${c.icon}</span>
+      <span>${t(c.labelKey)}</span>
+      <span class="cnt">${count}</span>
     `;
-    el.onclick = () => openCategory(c.key);
-    wrap.appendChild(el);
-  });
-}
-
-function openCategory(catKey){
-  state.activeCat = catKey;
-  state.activeSub = '';
-  state.view = 'products';
-  state.page = 0;
-  document.getElementById('maincats').style.display = 'none';
-  document.getElementById('backBtn').classList.add('show');
-  document.getElementById('sentinel').style.display = 'grid';
-  renderSubcats();
-  applyFilter();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function renderSubcats(){
-  const wrap = document.getElementById('subcats');
-  const pool = state.activeCat==='all'
-    ? state.allProducts
-    : state.allProducts.filter(p=>p.catKey===state.activeCat);
-
-  const map = {};
-  pool.forEach(p => {
-    if(!p.category) return;
-    map[p.category] = (map[p.category]||0) + 1;
-  });
-  const cats = Object.keys(map).sort();
-
-  // Clear existing chips but keep title
-  wrap.innerHTML = '';
-  const title = document.createElement('div');
-  title.className = 'subcat-title';
-  title.textContent = t('subcategories');
-  wrap.appendChild(title);
-
-  wrap.classList.add('show');
-
-  // "All" chip
-  const allChip = document.createElement('div');
-  allChip.className = 'subcat' + (state.activeSub===''?' active':'');
-  allChip.innerHTML = `<span>${t('allSub')}</span><span class="sub-count">${pool.length}</span>`;
-  allChip.onclick = () => {
-    state.activeSub = '';
-    state.page = 0;
-    renderSubcats();
-    applyFilter();
-  };
-  wrap.appendChild(allChip);
-
-  cats.forEach(c => {
-    const el = document.createElement('div');
-    el.className = 'subcat' + (state.activeSub===c?' active':'');
-    const display = c.charAt(0).toUpperCase() + c.slice(1);
-    el.innerHTML = `<span>${display}</span><span class="sub-count">${map[c]}</span>`;
     el.onclick = () => {
-      state.activeSub = state.activeSub===c ? '' : c;
+      if(state.activeCat === c.key) return;
+      state.activeCat = c.key;
+      state.activeSub = '';
       state.page = 0;
-      renderSubcats();
+      buildCatBar();
+      updateSubSel();
       applyFilter();
+      window.scrollTo({top:0,behavior:'smooth'});
     };
     wrap.appendChild(el);
   });
+  // back button visibility: only when not 'all'
+  const backBtn = document.getElementById('backBtn');
+  if(state.activeCat !== 'all') backBtn.classList.add('show');
+  else backBtn.classList.remove('show');
 }
 
 document.getElementById('backBtn').addEventListener('click', () => {
@@ -1094,9 +1042,119 @@ document.getElementById('backBtn').addEventListener('click', () => {
   state.activeSub = '';
   state.search = '';
   document.getElementById('searchInput').value = '';
-  renderMainCats();
+  state.page = 0;
+  buildCatBar();
+  updateSubSel();
+  applyFilter();
   window.scrollTo({top:0,behavior:'smooth'});
 });
+
+/* ============================================================
+   SUBCATEGORY SELECTOR
+============================================================ */
+function getSubcats(){
+  const pool = state.activeCat==='all'
+    ? state.allProducts
+    : state.allProducts.filter(p=>p.catKey===state.activeCat);
+  const map = {};
+  pool.forEach(p => {
+    if(!p.category) return;
+    map[p.category] = (map[p.category]||0) + 1;
+  });
+  return {map, poolCount: pool.length, cats: Object.keys(map).sort()};
+}
+
+function updateSubSel(){
+  const sel = document.getElementById('subsel');
+  const text = document.getElementById('subselText');
+  const cnt = document.getElementById('subselCount');
+  const {map, poolCount, cats} = getSubcats();
+
+  if(cats.length === 0){
+    // no subcategories: hide dropdown
+    sel.style.opacity = '0.5';
+    sel.style.pointerEvents = 'none';
+    text.textContent = t('allSub');
+    cnt.textContent = '0';
+    return;
+  }
+  sel.style.opacity = '1';
+  sel.style.pointerEvents = 'auto';
+
+  if(state.activeSub){
+    const display = state.activeSub.charAt(0).toUpperCase() + state.activeSub.slice(1);
+    text.textContent = display;
+    cnt.textContent = map[state.activeSub] || 0;
+  } else {
+    text.textContent = t('allSub');
+    cnt.textContent = poolCount;
+  }
+}
+
+document.getElementById('subsel').addEventListener('click', () => {
+  openSubsheet();
+});
+
+function openSubsheet(){
+  const sheet = document.getElementById('subsheet');
+  const overlay = document.getElementById('subsheetOverlay');
+  const list = document.getElementById('subsheetList');
+  const {map, poolCount, cats} = getSubcats();
+
+  list.innerHTML = '';
+
+  // All option
+  const allOpt = document.createElement('div');
+  allOpt.className = 'subopt' + (state.activeSub===''?' active':'');
+  allOpt.innerHTML = `<span>${t('allSub')}</span><span class="cnt">${poolCount}</span>`;
+  allOpt.onclick = () => {
+    state.activeSub = '';
+    state.page = 0;
+    closeSubsheet();
+    updateSubSel();
+    applyFilter();
+  };
+  list.appendChild(allOpt);
+
+  cats.forEach(c => {
+    const opt = document.createElement('div');
+    opt.className = 'subopt' + (state.activeSub===c?' active':'');
+    const display = c.charAt(0).toUpperCase() + c.slice(1);
+    opt.innerHTML = `<span>${display}</span><span class="cnt">${map[c]}</span>`;
+    opt.onclick = () => {
+      state.activeSub = c;
+      state.page = 0;
+      closeSubsheet();
+      updateSubSel();
+      applyFilter();
+    };
+    list.appendChild(opt);
+  });
+
+  overlay.classList.add('show');
+  sheet.classList.add('show');
+  document.getElementById('subsel').classList.add('open');
+}
+
+function closeSubsheet(){
+  document.getElementById('subsheetOverlay').classList.remove('show');
+  document.getElementById('subsheet').classList.remove('show');
+  document.getElementById('subsel').classList.remove('open');
+}
+
+document.getElementById('closeSubsheet').addEventListener('click', closeSubsheet);
+document.getElementById('subsheetOverlay').addEventListener('click', closeSubsheet);
+
+/* ============================================================
+   SECTION TITLE
+============================================================ */
+function updateSectionTitle(){
+  const label = t('cat_' + state.activeCat) || state.activeCat;
+  document.getElementById('sectionTitleText').textContent = state.activeSub
+    ? state.activeSub.charAt(0).toUpperCase() + state.activeSub.slice(1)
+    : label;
+  document.getElementById('sectionCount').textContent = state.filtered.length;
+}
 
 /* ============================================================
    FILTER + SORT
@@ -1132,16 +1190,7 @@ function applyFilter(){
   }
   state.filtered = list;
   state.page = 0;
-
-  // Update section title
-  const st = document.getElementById('sectionTitle');
-  st.style.display = 'flex';
-  const label = t('cat_' + state.activeCat) || state.activeCat;
-  document.getElementById('sectionTitleText').textContent = state.activeSub
-    ? state.activeSub.charAt(0).toUpperCase() + state.activeSub.slice(1)
-    : label;
-  document.getElementById('sectionCount').textContent = list.length;
-
+  updateSectionTitle();
   document.getElementById('grid').innerHTML = '';
   renderPage();
   updateEmpty();
@@ -1168,6 +1217,13 @@ function openProduct(p){
     showToast(t('linkMissing'));
     return;
   }
+  // Preserve scroll position and current filter state
+  const scrollY = window.scrollY;
+  sessionStorage.setItem('pr_scrollY', scrollY);
+  sessionStorage.setItem('pr_activeCat', state.activeCat);
+  sessionStorage.setItem('pr_activeSub', state.activeSub);
+  sessionStorage.setItem('pr_sort', state.sort);
+
   window.open(p.link, '_blank', 'noopener,noreferrer');
 }
 
@@ -1263,12 +1319,12 @@ function updateEmpty(){
   }
 }
 
+/* INFINITE SCROLL */
 let io;
 function initObserver(){
   if(io) io.disconnect();
   io = new IntersectionObserver(entries => {
     if(entries[0].isIntersecting){
-      if(state.view !== 'products') return;
       if(state.page * CONFIG.PAGE_SIZE < state.filtered.length){
         renderPage();
       }
@@ -1278,23 +1334,39 @@ function initObserver(){
 }
 initObserver();
 
+/* ============================================================
+   RESTORE STATE ON PAGE LOAD
+   - Aynı gün içinde sayfa yeniden açılırsa aynı kategori ve scroll korunur
+   - Üründen geri gelince scroll konumu ve filtre korunur
+============================================================ */
+function restoreState(){
+  try{
+    const savedCat = sessionStorage.getItem('pr_activeCat');
+    const savedSub = sessionStorage.getItem('pr_activeSub');
+    const savedSort = sessionStorage.getItem('pr_sort');
+    const savedScroll = sessionStorage.getItem('pr_scrollY');
+    if(savedCat !== null){
+      state.activeCat = savedCat || 'all';
+      state.activeSub = savedSub || '';
+      state.sort = savedSort || 'default';
+      // mark active sort option
+      document.querySelectorAll('.sheet-option').forEach(x=>x.classList.remove('active'));
+      const opt = document.querySelector(`.sheet-option[data-sort="${state.sort}"]`);
+      if(opt) opt.classList.add('active');
+      // restore scroll after render
+      if(savedScroll){
+        setTimeout(() => window.scrollTo(0, parseInt(savedScroll)||0), 300);
+      }
+    }
+  }catch(e){}
+}
+
 /* SEARCH */
 let searchTimer;
 document.getElementById('searchInput').addEventListener('input', e => {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => {
-    const q = e.target.value.trim();
-    state.search = q;
-    if(q && state.view === 'main'){
-      // switch to products view showing all
-      state.activeCat = 'all';
-      state.activeSub = '';
-      state.view = 'products';
-      document.getElementById('maincats').style.display = 'none';
-      document.getElementById('backBtn').classList.add('show');
-      document.getElementById('sentinel').style.display = 'grid';
-      renderSubcats();
-    }
+    state.search = e.target.value.trim();
     state.page = 0;
     applyFilter();
     window.scrollTo({top:0,behavior:'smooth'});
@@ -1319,6 +1391,7 @@ document.querySelectorAll('.sheet-option').forEach(opt => {
     opt.classList.add('active');
     sortOverlay.classList.remove('show');
     sortSheet.classList.remove('show');
+    state.page = 0;
     applyFilter();
   });
 });
@@ -1399,6 +1472,7 @@ document.getElementById('langSelect').addEventListener('change', e => applyLang(
    INIT
 ============================================================ */
 applyLang(currentLang);
+restoreState();
 loadAll();
 </script>
 </body>
