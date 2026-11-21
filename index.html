@@ -135,6 +135,7 @@ input:checked + .slider:before{transform:translateX(22px)}
 .info-section h4{margin:0 0 8px;font-size:15px;color:var(--accent2)}
 .info-section p{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 8px}
 .info-section p:last-child{margin-bottom:0}
+.info-section ul{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 8px;padding-left:20px}
 .info-section a{color:var(--accent2);word-break:break-all}
 .mail-row{display:flex;align-items:center;gap:8px;margin-top:8px}
 .mail-row a{flex:1;font-size:13px}
@@ -156,6 +157,10 @@ input:checked + .slider:before{transform:translateX(22px)}
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:grid;place-items:center;transition:opacity .3s}
 .loading-overlay.hide{opacity:0;pointer-events:none}
 .loading-overlay .spinner{width:50px;height:50px;border-width:4px}
+
+/* Remove bottom padding issues inside modals */
+.modal > .scroll-content:last-child { margin-bottom: -20px; padding-bottom: 20px; }
+.infoModal .scroll-content > .info-section:last-child { margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -261,7 +266,7 @@ input:checked + .slider:before{transform:translateX(22px)}
   </div>
 </div>
 
-<div class="modal" id="infoModal">
+<div class="modal infoModal" id="infoModal">
   <div class="modal-head">
     <h3 id="infoTitle">ℹ️ Info</h3>
     <button class="close-btn" data-close="all">✕</button>
@@ -288,13 +293,13 @@ input:checked + .slider:before{transform:translateX(22px)}
       <h4 id="importantTitle">Important</h4>
       <p id="importantText"></p>
     </div>
-    <div class="info-section">
+    <div class="info-section" style="margin-bottom:0">
       <h4 id="legalTitle">Legal</h4>
       <div class="legal-btn" id="privacyBtn">
         <span id="privacyBtnText">Privacy Policy</span>
         <span class="arrow">›</span>
       </div>
-      <div class="legal-btn" id="termsBtn">
+      <div class="legal-btn" id="termsBtn" style="margin-bottom:0">
         <span id="termsBtnText">Terms &amp; Conditions</span>
         <span class="arrow">›</span>
       </div>
@@ -327,9 +332,11 @@ input:checked + .slider:before{transform:translateX(22px)}
 const CONFIG = {
   BASE: 'hot_products/',
   FILES: {
-    eu_local_stock:   'eu_local_stock.csv',
-    eu_special_30k:   'eu_special_30k.do',
-    up_to_50_off:     'up_to_50_off.csv'
+    eu_local_stock:      'eu_local_stock.csv',
+    eu_special_30k:      'eu_special_30k.do',
+    up_to_50_off:        'up_to_50_off.csv',
+    new_products:        '1m_new_products.csv',
+    ready_to_ship:       'ready_to_ship_moq.csv'
   },
   PAGE_SIZE: 20,
   PLAY_URL: 'https://play.google.com/store/apps/details?id=com.DaaStudio.BudgetBuddyShop',
@@ -337,19 +344,59 @@ const CONFIG = {
 };
 
 /* ============================================================
-   i18n
+   i18n — anahtar kelimeler + alt kategori sözlüğü
 ============================================================ */
 const I18N = {
-  en:{search:"Search products or categories...",all:"All Categories",allSub:"All",buy:"View Deal",sortBy:"Sort By",sortDefault:"Default / Random",sortPriceAsc:"Price: Low to High",sortPriceDesc:"Price: High to Low",sortNameAz:"Name: A → Z",sortNameZa:"Name: Z → A",sortDiscount:"Biggest Discount",settingsTitle:"Settings",langLabel:"Language",langSub:"Choose your preferred language",themeLabel:"Theme",themeSub:"Dark / Light mode",bridgeLabel:"Open In Media / App",bridgeOn:"Open in app",bridgeOff:"Open in media",infoTitle:"Info",purposeTitle:"App Purpose",purposeText:"Productora is a product discovery application that aggregates affiliate product listings from multiple sources, helping users find the best deals, discounts and offers across categories. We do not sell products directly. All purchases are made through third-party affiliate links.",rateTitle:"Rate the App",rateText:"If you enjoy Productora, please support us with a 5-star rating on Google Play.",rateBtnText:"Rate Productora on Google Play",contactTitle:"Contact",contactText:"Questions or suggestions? Reach us at:",importantTitle:"Important",importantText:"Keep the app always up to date. Deals and links are regularly updated. Make sure you are using the latest version.",legalTitle:"Legal",privacyBtnText:"Privacy Policy",termsBtnText:"Terms & Conditions",privacyTitle:"Privacy Policy",termsTitle:"Terms & Conditions",copy:"Copy",copied:"Email copied!",bridgeNotAvailable:"Bridge not available (browser mode)",noProducts:"No products found.",noLink:"Link not available",linkMissing:"This product has no purchase link.",cat_all:"All Categories",cat_eu_local_stock:"EU Local Stock",cat_eu_special_30k:"Special Offer 30K",cat_up_to_50_off:"Up to 50% Off",subcategories:"Subcategories",products:"Products",back:"Back",chooseCategory:"Choose a category",langChanged:"Language changed. Reloading..."},
-  tr:{search:"Ürün veya kategori ara...",all:"Tüm Kategoriler",allSub:"Tümü",buy:"Fırsatı Gör",sortBy:"Sırala",sortDefault:"Varsayılan / Rastgele",sortPriceAsc:"Fiyat: Düşük → Yüksek",sortPriceDesc:"Fiyat: Yüksek → Düşük",sortNameAz:"İsim: A → Z",sortNameZa:"İsim: Z → A",sortDiscount:"En Yüksek İndirim",settingsTitle:"Ayarlar",langLabel:"Dil",langSub:"Tercih ettiğiniz dili seçin",themeLabel:"Tema",themeSub:"Koyu / Açık mod",bridgeLabel:"Medyada / Uygulamada Aç",bridgeOn:"Uygulamada aç",bridgeOff:"Medyada aç",infoTitle:"Bilgi",purposeTitle:"Uygulama Amacı",purposeText:"Productora, birden fazla kaynaktan gelen satış ortaklığı ürün listelerini bir araya getiren ve kullanıcıların kategorilere göre en iyi fırsatları, indirimleri ve teklifleri bulmasına yardımcı olan bir ürün keşif uygulamasıdır. Ürünleri doğrudan satmıyoruz. Tüm satın alımlar üçüncü taraf satış ortaklığı bağlantıları üzerinden yapılır.",rateTitle:"Uygulamayı Puanla",rateText:"Productora hoşunuza gittiyse, Google Play'de 5 yıldız vererek bizi destekleyin.",rateBtnText:"Productora'yı Google Play'de Puanla",contactTitle:"İletişim",contactText:"Sorularınız veya önerileriniz mi var? Bize ulaşın:",importantTitle:"Önemli",importantText:"Uygulamayı her zaman güncel tutun. Fırsatlar ve bağlantılar düzenli olarak güncellenir. En son sürümü kullandığınızdan emin olun.",legalTitle:"Yasal",privacyBtnText:"Gizlilik Politikası",termsBtnText:"Şartlar ve Koşullar",privacyTitle:"Gizlilik Politikası",termsTitle:"Şartlar ve Koşullar",copy:"Kopyala",copied:"E-posta kopyalandı!",bridgeNotAvailable:"Köprü kullanılamıyor (tarayıcı modu)",noProducts:"Ürün bulunamadı.",noLink:"Bağlantı mevcut değil",linkMissing:"Bu ürünün satın alma bağlantısı yok.",cat_all:"Tüm Kategoriler",cat_eu_local_stock:"AB Yerel Stok",cat_eu_special_30k:"Özel Teklif 30K",cat_up_to_50_off:"%50'ye Varan İndirim",subcategories:"Alt Kategoriler",products:"Ürünler",back:"Geri",chooseCategory:"Bir kategori seç",langChanged:"Dil değiştirildi. Yeniden yükleniyor..."},
-  es:{search:"Buscar productos o categorías...",all:"Todas las categorías",allSub:"Todas",buy:"Ver oferta",sortBy:"Ordenar por",sortDefault:"Predeterminado / Aleatorio",sortPriceAsc:"Precio: Menor a Mayor",sortPriceDesc:"Precio: Mayor a Menor",sortNameAz:"Nombre: A → Z",sortNameZa:"Nombre: Z → A",sortDiscount:"Mayor Descuento",settingsTitle:"Ajustes",langLabel:"Idioma",langSub:"Elige tu idioma preferido",themeLabel:"Tema",themeSub:"Modo oscuro / claro",bridgeLabel:"Abrir en Media / App",bridgeOn:"Abrir en app",bridgeOff:"Abrir en media",infoTitle:"Información",purposeTitle:"Propósito de la app",purposeText:"Productora es una aplicación de descubrimiento de productos que agrega listados de productos de afiliación de múltiples fuentes, ayudando a los usuarios a encontrar las mejores ofertas, descuentos y promociones por categorías. No vendemos productos directamente. Todas las compras se realizan a través de enlaces de afiliación de terceros.",rateTitle:"Califica la app",rateText:"Si disfrutas Productora, apóyanos con una calificación de 5 estrellas en Google Play.",rateBtnText:"Calificar Productora en Google Play",contactTitle:"Contacto",contactText:"¿Preguntas o sugerencias? Contáctanos:",importantTitle:"Importante",importantText:"Mantén la app siempre actualizada. Las ofertas y enlaces se actualizan regularmente. Asegúrate de usar la última versión.",legalTitle:"Legal",privacyBtnText:"Política de Privacidad",termsBtnText:"Términos y Condiciones",privacyTitle:"Política de Privacidad",termsTitle:"Términos y Condiciones",copy:"Copiar",copied:"¡Correo copiado!",bridgeNotAvailable:"Puente no disponible (modo navegador)",noProducts:"No se encontraron productos.",noLink:"Enlace no disponible",linkMissing:"Este producto no tiene enlace de compra.",cat_all:"Todas las categorías",cat_eu_local_stock:"Stock Local UE",cat_eu_special_30k:"Oferta Especial 30K",cat_up_to_50_off:"Hasta 50% de Descuento",subcategories:"Subcategorías",products:"Productos",back:"Atrás",chooseCategory:"Elige una categoría",langChanged:"Idioma cambiado. Recargando..."},
-  de:{search:"Produkte oder Kategorien suchen...",all:"Alle Kategorien",allSub:"Alle",buy:"Angebot ansehen",sortBy:"Sortieren nach",sortDefault:"Standard / Zufällig",sortPriceAsc:"Preis: Niedrig → Hoch",sortPriceDesc:"Preis: Hoch → Niedrig",sortNameAz:"Name: A → Z",sortNameZa:"Name: Z → A",sortDiscount:"Größter Rabatt",settingsTitle:"Einstellungen",langLabel:"Sprache",langSub:"Wählen Sie Ihre bevorzugte Sprache",themeLabel:"Design",themeSub:"Dunkel / Hell",bridgeLabel:"In Media / App öffnen",bridgeOn:"In App öffnen",bridgeOff:"In Media öffnen",infoTitle:"Info",purposeTitle:"App-Zweck",purposeText:"Productora ist eine Produktentdeckungs-App, die Affiliate-Produktlistings aus mehreren Quellen zusammenführt und Nutzern hilft, die besten Angebote, Rabatte und Aktionen nach Kategorien zu finden. Wir verkaufen keine Produkte direkt. Alle Käufe erfolgen über Affiliate-Links Dritter.",rateTitle:"App bewerten",rateText:"Wenn Ihnen Productora gefällt, unterstützen Sie uns mit einer 5-Sterne-Bewertung bei Google Play.",rateBtnText:"Productora bei Google Play bewerten",contactTitle:"Kontakt",contactText:"Fragen oder Vorschläge? Erreichen Sie uns unter:",importantTitle:"Wichtig",importantText:"Halten Sie die App immer aktuell. Angebote und Links werden regelmäßig aktualisiert. Stellen Sie sicher, dass Sie die neueste Version verwenden.",legalTitle:"Rechtliches",privacyBtnText:"Datenschutzrichtlinie",termsBtnText:"Allgemeine Geschäftsbedingungen",privacyTitle:"Datenschutzrichtlinie",termsTitle:"AGB",copy:"Kopieren",copied:"E-Mail kopiert!",bridgeNotAvailable:"Brücke nicht verfügbar (Browser-Modus)",noProducts:"Keine Produkte gefunden.",noLink:"Kein Link verfügbar",linkMissing:"Dieses Produkt hat keinen Kauflink.",cat_all:"Alle Kategorien",cat_eu_local_stock:"EU-Lagerbestand",cat_eu_special_30k:"Sonderangebot 30K",cat_up_to_50_off:"Bis zu 50% Rabatt",subcategories:"Unterkategorien",products:"Produkte",back:"Zurück",chooseCategory:"Wählen Sie eine Kategorie",langChanged:"Sprache geändert. Wird neu geladen..."},
-  fr:{search:"Rechercher des produits ou catégories...",all:"Toutes les catégories",allSub:"Tout",buy:"Voir l'offre",sortBy:"Trier par",sortDefault:"Par défaut / Aléatoire",sortPriceAsc:"Prix : Croissant",sortPriceDesc:"Prix : Décroissant",sortNameAz:"Nom : A → Z",sortNameZa:"Nom : Z → A",sortDiscount:"Meilleure remise",settingsTitle:"Paramètres",langLabel:"Langue",langSub:"Choisissez votre langue préférée",themeLabel:"Thème",themeSub:"Mode sombre / clair",bridgeLabel:"Ouvrir en Media / App",bridgeOn:"Ouvrir dans l'app",bridgeOff:"Ouvrir en media",infoTitle:"Info",purposeTitle:"But de l'app",purposeText:"Productora est une application de découverte de produits qui regroupe des annonces de produits d'affiliation de plusieurs sources, aidant les utilisateurs à trouver les meilleures offres, remises et promotions par catégories. Nous ne vendons pas de produits directement. Tous les achats sont effectués via des liens d'affiliation tiers.",rateTitle:"Noter l'app",rateText:"Si vous aimez Productora, soutenez-nous avec une note de 5 étoiles sur Google Play.",rateBtnText:"Noter Productora sur Google Play",contactTitle:"Contact",contactText:"Des questions ou suggestions ? Contactez-nous :",importantTitle:"Important",importantText:"Gardez l'app toujours à jour. Les offres et liens sont régulièrement mis à jour. Assurez-vous d'utiliser la dernière version.",legalTitle:"Mentions légales",privacyBtnText:"Politique de confidentialité",termsBtnText:"Conditions générales",privacyTitle:"Politique de confidentialité",termsTitle:"Conditions générales",copy:"Copier",copied:"E-mail copié !",bridgeNotAvailable:"Pont non disponible (mode navigateur)",noProducts:"Aucun produit trouvé.",noLink:"Aucun lien disponible",linkMissing:"Ce produit n'a pas de lien d'achat.",cat_all:"Toutes les catégories",cat_eu_local_stock:"Stock local UE",cat_eu_special_30k:"Offre spéciale 30K",cat_up_to_50_off:"Jusqu'à 50% de réduction",subcategories:"Sous-catégories",products:"Produits",back:"Retour",chooseCategory:"Choisissez une catégorie",langChanged:"Langue modifiée. Rechargement..."},
-  it:{search:"Cerca prodotti o categorie...",all:"Tutte le categorie",allSub:"Tutte",buy:"Vedi offerta",sortBy:"Ordina per",sortDefault:"Predefinito / Casuale",sortPriceAsc:"Prezzo: Basso → Alto",sortPriceDesc:"Prezzo: Alto → Basso",sortNameAz:"Nome: A → Z",sortNameZa:"Nome: Z → A",sortDiscount:"Sconto maggiore",settingsTitle:"Impostazioni",langLabel:"Lingua",langSub:"Scegli la tua lingua preferita",themeLabel:"Tema",themeSub:"Modalità scura / chiara",bridgeLabel:"Apri in Media / App",bridgeOn:"Apri nell'app",bridgeOff:"Apri in media",infoTitle:"Info",purposeTitle:"Scopo dell'app",purposeText:"Productora è un'app di scoperta prodotti che aggrega annunci di prodotti di affiliazione da più fonti, aiutando gli utenti a trovare le migliori offerte, sconti e promozioni per categoria. Non vendiamo prodotti direttamente. Tutti gli acquisti avvengono tramite link di affiliazione di terze parti.",rateTitle:"Valuta l'app",rateText:"Se ti piace Productora, supportaci con una valutazione a 5 stelle su Google Play.",rateBtnText:"Valuta Productora su Google Play",contactTitle:"Contatto",contactText:"Domande o suggerimenti? Contattaci:",importantTitle:"Importante",importantText:"Mantieni l'app sempre aggiornata. Offerte e link vengono aggiornati regolarmente. Assicurati di utilizzare l'ultima versione.",legalTitle:"Legale",privacyBtnText:"Informativa sulla privacy",termsBtnText:"Termini e condizioni",privacyTitle:"Informativa sulla privacy",termsTitle:"Termini e condizioni",copy:"Copia",copied:"Email copiata!",bridgeNotAvailable:"Ponte non disponibile (modalità browser)",noProducts:"Nessun prodotto trovato.",noLink:"Nessun link disponibile",linkMissing:"Questo prodotto non ha un link di acquisto.",cat_all:"Tutte le categorie",cat_eu_local_stock:"Stock locale UE",cat_eu_special_30k:"Offerta speciale 30K",cat_up_to_50_off:"Fino al 50% di sconto",subcategories:"Sottocategorie",products:"Prodotti",back:"Indietro",chooseCategory:"Scegli una categoria",langChanged:"Lingua cambiata. Ricaricamento..."},
-  pt:{search:"Pesquisar produtos ou categorias...",all:"Todas as categorias",allSub:"Todas",buy:"Ver oferta",sortBy:"Ordenar por",sortDefault:"Padrão / Aleatório",sortPriceAsc:"Preço: Menor → Maior",sortPriceDesc:"Preço: Maior → Menor",sortNameAz:"Nome: A → Z",sortNameZa:"Nome: Z → A",sortDiscount:"Maior desconto",settingsTitle:"Configurações",langLabel:"Idioma",langSub:"Escolha seu idioma preferido",themeLabel:"Tema",themeSub:"Modo escuro / claro",bridgeLabel:"Abrir em Media / App",bridgeOn:"Abrir no app",bridgeOff:"Abrir em media",infoTitle:"Informação",purposeTitle:"Propósito do app",purposeText:"Productora é um aplicativo de descoberta de produtos que agrega listagens de produtos de afiliados de várias fontes, ajudando os usuários a encontrar as melhores ofertas, descontos e promoções por categoria. Não vendemos produtos diretamente. Todas as compras são feitas através de links de afiliados de terceiros.",rateTitle:"Avalie o app",rateText:"Se você gosta do Productora, apoie-nos com uma avaliação de 5 estrelas no Google Play.",rateBtnText:"Avaliar Productora no Google Play",contactTitle:"Contato",contactText:"Dúvidas ou sugestões? Fale conosco:",importantTitle:"Importante",importantText:"Mantenha o app sempre atualizado. Ofertas e links são atualizados regularmente. Certifique-se de usar a versão mais recente.",legalTitle:"Legal",privacyBtnText:"Política de Privacidade",termsBtnText:"Termos e Condições",privacyTitle:"Política de Privacidade",termsTitle:"Termos e Condições",copy:"Copiar",copied:"E-mail copiado!",bridgeNotAvailable:"Ponte não disponível (modo navegador)",noProducts:"Nenhum produto encontrado.",noLink:"Nenhum link disponível",linkMissing:"Este produto não tem link de compra.",cat_all:"Todas as categorias",cat_eu_local_stock:"Estoque Local UE",cat_eu_special_30k:"Oferta Especial 30K",cat_up_to_50_off:"Até 50% de Desconto",subcategories:"Subcategorias",products:"Produtos",back:"Voltar",chooseCategory:"Escolha uma categoria",langChanged:"Idioma alterado. Recarregando..."},
-  ja:{search:"商品やカテゴリを検索...",all:"すべてのカテゴリ",allSub:"すべて",buy:"詳細を見る",sortBy:"並び替え",sortDefault:"デフォルト / ランダム",sortPriceAsc:"価格：安い順",sortPriceDesc:"価格：高い順",sortNameAz:"名前：A → Z",sortNameZa:"名前：Z → A",sortDiscount:"最大割引",settingsTitle:"設定",langLabel:"言語",langSub:"希望の言語を選択",themeLabel:"テーマ",themeSub:"ダーク / ライトモード",bridgeLabel:"メディア / アプリで開く",bridgeOn:"アプリで開く",bridgeOff:"メディアで開く",infoTitle:"情報",purposeTitle:"アプリの目的",purposeText:"Productoraは、複数のソースからのアフィリエイト商品リストを集約し、ユーザーがカテゴリ別に最適な取引、割引、オファーを見つけるのを支援する商品発見アプリです。当社は商品を直接販売していません。すべての購入は第三者のアフィリエイトリンクを通じて行われます。",rateTitle:"アプリを評価",rateText:"Productoraを気に入っていただけたら、Google Playで5つ星の評価でサポートしてください。",rateBtnText:"Google PlayでProductoraを評価",contactTitle:"お問い合わせ",contactText:"ご質問やご提案がありますか？お問い合わせください：",importantTitle:"重要",importantText:"アプリを常に最新の状態に保ってください。取引とリンクは定期的に更新されます。最新バージョンを使用していることを確認してください。",legalTitle:"法的情報",privacyBtnText:"プライバシーポリシー",termsBtnText:"利用規約",privacyTitle:"プライバシーポリシー",termsTitle:"利用規約",copy:"コピー",copied:"メールをコピーしました！",bridgeNotAvailable:"ブリッジが利用できません（ブラウザモード）",noProducts:"商品が見つかりません。",noLink:"リンクがありません",linkMissing:"この商品には購入リンクがありません。",cat_all:"すべてのカテゴリ",cat_eu_local_stock:"EU現地在庫",cat_eu_special_30k:"特別オファー30K",cat_up_to_50_off:"最大50%オフ",subcategories:"サブカテゴリ",products:"商品",back:"戻る",chooseCategory:"カテゴリを選択",langChanged:"言語が変更されました。再読み込み中..."},
-  ko:{search:"제품 또는 카테고리 검색...",all:"모든 카테고리",allSub:"전체",buy:"거래 보기",sortBy:"정렬 기준",sortDefault:"기본 / 무작위",sortPriceAsc:"가격: 낮은 순",sortPriceDesc:"가격: 높은 순",sortNameAz:"이름: A → Z",sortNameZa:"이름: Z → A",sortDiscount:"최대 할인",settingsTitle:"설정",langLabel:"언어",langSub:"선호하는 언어를 선택하세요",themeLabel:"테마",themeSub:"다크 / 라이트 모드",bridgeLabel:"미디어 / 앱에서 열기",bridgeOn:"앱에서 열기",bridgeOff:"미디어에서 열기",infoTitle:"정보",purposeTitle:"앱 목적",purposeText:"Productora는 여러 소스의 제휴 제품 목록을 집계하여 사용자가 카테고리별로 최고의 거래, 할인 및 혜택을 찾을 수 있도록 돕는 제품 발견 앱입니다. 당사는 제품을 직접 판매하지 않습니다. 모든 구매는 제3자 제휴 링크를 통해 이루어집니다.",rateTitle:"앱 평가",rateText:"Productora가 마음에 드셨다면 Google Play에서 별 5개로 평가해 주세요.",rateBtnText:"Google Play에서 Productora 평가",contactTitle:"연락처",contactText:"질문이나 제안이 있으신가요? 연락주세요:",importantTitle:"중요",importantText:"앱을 항상 최신 상태로 유지하세요. 거래 및 링크는 정기적으로 업데이트됩니다. 최신 버전을 사용하고 있는지 확인하세요.",legalTitle:"법적 정보",privacyBtnText:"개인정보 처리방침",termsBtnText:"이용약관",privacyTitle:"개인정보 처리방침",termsTitle:"이용약관",copy:"복사",copied:"이메일이 복사되었습니다!",bridgeNotAvailable:"브리지를 사용할 수 없습니다 (브라우저 모드)",noProducts:"제품을 찾을 수 없습니다.",noLink:"사용 가능한 링크가 없습니다",linkMissing:"이 제품에는 구매 링크가 없습니다.",cat_all:"모든 카테고리",cat_eu_local_stock:"EU 현지 재고",cat_eu_special_30k:"특별 혜택 30K",cat_up_to_50_off:"최대 50% 할인",subcategories:"하위 카테고리",products:"제품",back:"뒤로",chooseCategory:"카테고리 선택",langChanged:"언어가 변경되었습니다. 다시 로드 중..."},
-  zh:{search:"搜索产品或类别...",all:"所有类别",allSub:"全部",buy:"查看优惠",sortBy:"排序方式",sortDefault:"默认 / 随机",sortPriceAsc:"价格：从低到高",sortPriceDesc:"价格：从高到低",sortNameAz:"名称：A → Z",sortNameZa:"名称：Z → A",sortDiscount:"最大折扣",settingsTitle:"设置",langLabel:"语言",langSub:"选择您的首选语言",themeLabel:"主题",themeSub:"深色 / 浅色模式",bridgeLabel:"在媒体/应用中打开",bridgeOn:"在应用中打开",bridgeOff:"在媒体中打开",infoTitle:"信息",purposeTitle:"应用目的",purposeText:"Productora 是一款产品发现应用，汇集来自多个来源的联盟产品列表，帮助用户按类别找到最佳优惠、折扣和报价。我们不直接销售产品。所有购买均通过第三方联盟链接进行。",rateTitle:"评价应用",rateText:"如果您喜欢 Productora，请在 Google Play 上给我们 5 星好评支持我们。",rateBtnText:"在 Google Play 上评价 Productora",contactTitle:"联系",contactText:"有问题或建议？联系我们：",importantTitle:"重要",importantText:"请始终保持应用更新。优惠和链接会定期更新。确保您使用的是最新版本。",legalTitle:"法律",privacyBtnText:"隐私政策",termsBtnText:"条款和条件",privacyTitle:"隐私政策",termsTitle:"条款和条件",copy:"复制",copied:"邮件已复制！",bridgeNotAvailable:"桥接不可用（浏览器模式）",noProducts:"未找到产品。",noLink:"无可用链接",linkMissing:"此产品没有购买链接。",cat_all:"所有类别",cat_eu_local_stock:"欧盟本地库存",cat_eu_special_30k:"特别优惠 30K",cat_up_to_50_off:"高达 50% 折扣",subcategories:"子类别",products:"产品",back:"返回",chooseCategory:"选择类别",langChanged:"语言已更改。正在重新加载..."}
+  en:{search:"Search products or categories...",all:"All Categories",allSub:"All",buy:"View Deal",sortBy:"Sort By",sortDefault:"Default / Random",sortPriceAsc:"Price: Low to High",sortPriceDesc:"Price: High to Low",sortNameAz:"Name: A → Z",sortNameZa:"Name: Z → A",sortDiscount:"Biggest Discount",settingsTitle:"Settings",langLabel:"Language",langSub:"Choose your preferred language",themeLabel:"Theme",themeSub:"Dark / Light mode",bridgeLabel:"Open In Media / App",bridgeOn:"Open in app",bridgeOff:"Open in media",infoTitle:"Info",purposeTitle:"App Purpose",purposeText:"Productora is a product discovery application that aggregates affiliate product listings from multiple sources, helping users find the best deals, discounts and offers across categories. We do not sell products directly. All purchases are made through third-party affiliate links.",rateTitle:"Rate the App",rateText:"If you enjoy Productora, please support us with a 5-star rating on Google Play.",rateBtnText:"Rate Productora on Google Play",contactTitle:"Contact",contactText:"Questions or suggestions? Reach us at:",importantTitle:"Important",importantText:"Keep the app always up to date. Deals and links are regularly updated. Make sure you are using the latest version.",legalTitle:"Legal",privacyBtnText:"Privacy Policy",termsBtnText:"Terms & Conditions",privacyTitle:"Privacy Policy",termsTitle:"Terms & Conditions",copy:"Copy",copied:"Email copied!",bridgeNotAvailable:"Bridge not available (browser mode)",noProducts:"No products found.",noLink:"Link not available",linkMissing:"This product has no purchase link.",cat_all:"All Categories",cat_eu_local_stock:"EU Local Stock",cat_eu_special_30k:"Special Offer 30K",cat_up_to_50_off:"Up to 50% Off",cat_new_products:"New Products",cat_ready_to_ship:"Ready to Ship",subcategories:"Subcategories",products:"Products",back:"Back",chooseCategory:"Choose a category",langChanged:"Language changed.",
+    subcatDict:{
+      "beauty":"Beauty","electronics":"Electronics","home & garden":"Home & Garden","furniture":"Furniture","toys & hobbies":"Toys & Hobbies","sports & entertainment":"Sports & Entertainment","jewelry eyewear watches & accessories":"Jewelry & Watches","shoes & accessories":"Shoes & Accessories","apparel & accessories":"Apparel & Accessories","packaging & printing":"Packaging & Printing","commercial equipment & machinery":"Commercial Equipment","gifts & crafts":"Gifts & Crafts","school & office supplies":"School & Office","lights & lighting":"Lights & Lighting","tools & hardware":"Tools & Hardware","construction & real estate":"Construction & Real Estate","personal care & household cleaning":"Personal Care","home appliances":"Home Appliances","luggage bags & cases":"Luggage & Bags","sportswear & outdoor apparel":"Sportswear","mother kids & toys":"Mother & Kids","automobiles & motorcycles":"Automobiles","consumer electronics":"Consumer Electronics","phones & accessories":"Phones & Accessories","computer & office":"Computer & Office","security & protection":"Security & Protection","health & beauty":"Health & Beauty","hair extensions & wigs":"Hair Extensions & Wigs","pet supplies":"Pet Supplies","garden supplies":"Garden Supplies","kitchen & dining":"Kitchen & Dining","bathroom products":"Bathroom Products","home decor":"Home Decor","fabrics & textiles":"Fabrics & Textiles","rubber & plastics":"Rubber & Plastics","electrical equipment & supplies":"Electrical Equipment","machinery":"Machinery","vehicle parts & accessories":"Vehicle Parts","agrochemicals":"Agrochemicals","food & beverage":"Food & Beverage","chemicals":"Chemicals","energy":"Energy","renewable energy":"Renewable Energy","business services":"Business Services","advertising":"Advertising"
+    }
+  },
+  tr:{search:"Ürün veya kategori ara...",all:"Tüm Kategoriler",allSub:"Tümü",buy:"Fırsatı Gör",sortBy:"Sırala",sortDefault:"Varsayılan / Rastgele",sortPriceAsc:"Fiyat: Düşük → Yüksek",sortPriceDesc:"Fiyat: Yüksek → Düşük",sortNameAz:"İsim: A → Z",sortNameZa:"İsim: Z → A",sortDiscount:"En Yüksek İndirim",settingsTitle:"Ayarlar",langLabel:"Dil",langSub:"Tercih ettiğiniz dili seçin",themeLabel:"Tema",themeSub:"Koyu / Açık mod",bridgeLabel:"Medyada / Uygulamada Aç",bridgeOn:"Uygulamada aç",bridgeOff:"Medyada aç",infoTitle:"Bilgi",purposeTitle:"Uygulama Amacı",purposeText:"Productora, birden fazla kaynaktan gelen satış ortaklığı ürün listelerini bir araya getiren ve kullanıcıların kategorilere göre en iyi fırsatları, indirimleri ve teklifleri bulmasına yardımcı olan bir ürün keşif uygulamasıdır. Ürünleri doğrudan satmıyoruz. Tüm satın alımlar üçüncü taraf satış ortaklığı bağlantıları üzerinden yapılır.",rateTitle:"Uygulamayı Puanla",rateText:"Productora hoşunuza gittiyse, Google Play'de 5 yıldız vererek bizi destekleyin.",rateBtnText:"Productora'yı Google Play'de Puanla",contactTitle:"İletişim",contactText:"Sorularınız veya önerileriniz mi var? Bize ulaşın:",importantTitle:"Önemli",importantText:"Uygulamayı her zaman güncel tutun. Fırsatlar ve bağlantılar düzenli olarak güncellenir. En son sürümü kullandığınızdan emin olun.",legalTitle:"Yasal",privacyBtnText:"Gizlilik Politikası",termsBtnText:"Şartlar ve Koşullar",privacyTitle:"Gizlilik Politikası",termsTitle:"Şartlar ve Koşullar",copy:"Kopyala",copied:"E-posta kopyalandı!",bridgeNotAvailable:"Köprü kullanılamıyor (tarayıcı modu)",noProducts:"Ürün bulunamadı.",noLink:"Bağlantı mevcut değil",linkMissing:"Bu ürünün satın alma bağlantısı yok.",cat_all:"Tüm Kategoriler",cat_eu_local_stock:"AB Yerel Stok",cat_eu_special_30k:"Özel Teklif 30K",cat_up_to_50_off:"%50'ye Varan İndirim",cat_new_products:"Yeni Ürünler",cat_ready_to_ship:"Hızlı Gönderim",subcategories:"Alt Kategoriler",products:"Ürünler",back:"Geri",chooseCategory:"Bir kategori seç",langChanged:"Dil değiştirildi.",
+    subcatDict:{
+      "beauty":"Güzellik","electronics":"Elektronik","home & garden":"Ev & Bahçe","furniture":"Mobilya","toys & hobbies":"Oyuncak & Hobi","sports & entertainment":"Spor & Eğlence","jewelry eyewear watches & accessories":"Mücevher & Saat","shoes & accessories":"Ayakkabı & Aksesuar","apparel & accessories":"Giyim & Aksesuar","packaging & printing":"Ambalaj & Baskı","commercial equipment & machinery":"Ticari Ekipman","gifts & crafts":"Hediyeler & El Sanatları","school & office supplies":"Okul & Ofis","lights & lighting":"Aydınlatma","tools & hardware":"Alet & Donanım","construction & real estate":"İnşaat & Emlak","personal care & household cleaning":"Kişisel Bakım","home appliances":"Ev Aletleri","luggage bags & cases":"Bavul & Çanta","sportswear & outdoor apparel":"Spor Giyim","mother kids & toys":"Anne & Çocuk","automobiles & motorcycles":"Otomobil & Motosiklet","consumer electronics":"Tüketici Elektroniği","phones & accessories":"Telefon & Aksesuar","computer & office":"Bilgisayar & Ofis","security & protection":"Güvenlik & Koruma","health & beauty":"Sağlık & Güzellik","hair extensions & wigs":"Saç Kaynak & Peruk","pet supplies":"Evcil Hayvan","garden supplies":"Bahçe Malzemeleri","kitchen & dining":"Mutfak & Yemek","bathroom products":"Banyo Ürünleri","home decor":"Ev Dekorasyonu","fabrics & textiles":"Kumaş & Tekstil","rubber & plastics":"Kauçuk & Plastik","electrical equipment & supplies":"Elektrik Ekipmanları","machinery":"Makine","vehicle parts & accessories":"Araç Parçaları","agrochemicals":"Tarım Kimyasalları","food & beverage":"Yiyecek & İçecek","chemicals":"Kimyasallar","energy":"Enerji","renewable energy":"Yenilenebilir Enerji","business services":"Ticari Hizmetler","advertising":"Reklamcılık"
+    }
+  },
+  es:{search:"Buscar productos o categorías...",all:"Todas las categorías",allSub:"Todas",buy:"Ver oferta",sortBy:"Ordenar por",sortDefault:"Predeterminado / Aleatorio",sortPriceAsc:"Precio: Menor a Mayor",sortPriceDesc:"Precio: Mayor a Menor",sortNameAz:"Nombre: A → Z",sortNameZa:"Nombre: Z → A",sortDiscount:"Mayor Descuento",settingsTitle:"Ajustes",langLabel:"Idioma",langSub:"Elige tu idioma preferido",themeLabel:"Tema",themeSub:"Modo oscuro / claro",bridgeLabel:"Abrir en Media / App",bridgeOn:"Abrir en app",bridgeOff:"Abrir en media",infoTitle:"Información",purposeTitle:"Propósito de la app",purposeText:"Productora es una aplicación de descubrimiento de productos que agrega listados de productos de afiliación de múltiples fuentes, ayudando a los usuarios a encontrar las mejores ofertas, descuentos y promociones por categorías. No vendemos productos directamente. Todas las compras se realizan a través de enlaces de afiliación de terceros.",rateTitle:"Califica la app",rateText:"Si disfrutas Productora, apóyanos con una calificación de 5 estrellas en Google Play.",rateBtnText:"Calificar Productora en Google Play",contactTitle:"Contacto",contactText:"¿Preguntas o sugerencias? Contáctanos:",importantTitle:"Importante",importantText:"Mantén la app siempre actualizada. Las ofertas y enlaces se actualizan regularmente. Asegúrate de usar la última versión.",legalTitle:"Legal",privacyBtnText:"Política de Privacidad",termsBtnText:"Términos y Condiciones",privacyTitle:"Política de Privacidad",termsTitle:"Términos y Condiciones",copy:"Copiar",copied:"¡Correo copiado!",bridgeNotAvailable:"Puente no disponible (modo navegador)",noProducts:"No se encontraron productos.",noLink:"Enlace no disponible",linkMissing:"Este producto no tiene enlace de compra.",cat_all:"Todas las categorías",cat_eu_local_stock:"Stock Local UE",cat_eu_special_30k:"Oferta Especial 30K",cat_up_to_50_off:"Hasta 50% de Descuento",cat_new_products:"Productos Nuevos",cat_ready_to_ship:"Envío Rápido",subcategories:"Subcategorías",products:"Productos",back:"Atrás",chooseCategory:"Elige una categoría",langChanged:"Idioma cambiado.",
+    subcatDict:{
+      "beauty":"Belleza","electronics":"Electrónica","home & garden":"Hogar y Jardín","furniture":"Muebles","toys & hobbies":"Juguetes y Pasatiempos","sports & entertainment":"Deportes y Entretenimiento","jewelry eyewear watches & accessories":"Joyería y Relojes","shoes & accessories":"Zapatos y Accesorios","apparel & accessories":"Ropa y Accesorios","packaging & printing":"Embalaje e Impresión","commercial equipment & machinery":"Equipo Comercial","gifts & crafts":"Regalos y Manualidades","school & office supplies":"Escuela y Oficina","lights & lighting":"Iluminación","tools & hardware":"Herramientas y Ferretería","construction & real estate":"Construcción e Inmobiliaria","personal care & household cleaning":"Cuidado Personal","home appliances":"Electrodomésticos","luggage bags & cases":"Equipaje y Bolsos","sportswear & outdoor apparel":"Ropa Deportiva","mother kids & toys":"Madre e Hijos","automobiles & motorcycles":"Automóviles y Motos","consumer electronics":"Electrónica de Consumo","phones & accessories":"Teléfonos y Accesorios","computer & office":"Computadoras y Oficina","security & protection":"Seguridad y Protección","health & beauty":"Salud y Belleza","hair extensions & wigs":"Extensiones y Pelucas","pet supplies":"Mascotas","garden supplies":"Jardín","kitchen & dining":"Cocina y Comedor","bathroom products":"Baño","home decor":"Decoración del Hogar","fabrics & textiles":"Telas y Textiles","rubber & plastics":"Caucho y Plásticos","electrical equipment & supplies":"Equipos Eléctricos","machinery":"Maquinaria","vehicle parts & accessories":"Repuestos de Vehículos","agrochemicals":"Agroquímicos","food & beverage":"Alimentos y Bebidas","chemicals":"Químicos","energy":"Energía","renewable energy":"Energía Renovable","business services":"Servicios Comerciales","advertising":"Publicidad"
+    }
+  },
+  de:{search:"Produkte oder Kategorien suchen...",all:"Alle Kategorien",allSub:"Alle",buy:"Angebot ansehen",sortBy:"Sortieren nach",sortDefault:"Standard / Zufällig",sortPriceAsc:"Preis: Niedrig → Hoch",sortPriceDesc:"Preis: Hoch → Niedrig",sortNameAz:"Name: A → Z",sortNameZa:"Name: Z → A",sortDiscount:"Größter Rabatt",settingsTitle:"Einstellungen",langLabel:"Sprache",langSub:"Wählen Sie Ihre bevorzugte Sprache",themeLabel:"Design",themeSub:"Dunkel / Hell",bridgeLabel:"In Media / App öffnen",bridgeOn:"In App öffnen",bridgeOff:"In Media öffnen",infoTitle:"Info",purposeTitle:"App-Zweck",purposeText:"Productora ist eine Produktentdeckungs-App, die Affiliate-Produktlistings aus mehreren Quellen zusammenführt und Nutzern hilft, die besten Angebote, Rabatte und Aktionen nach Kategorien zu finden. Wir verkaufen keine Produkte direkt. Alle Käufe erfolgen über Affiliate-Links Dritter.",rateTitle:"App bewerten",rateText:"Wenn Ihnen Productora gefällt, unterstützen Sie uns mit einer 5-Sterne-Bewertung bei Google Play.",rateBtnText:"Productora bei Google Play bewerten",contactTitle:"Kontakt",contactText:"Fragen oder Vorschläge? Erreichen Sie uns unter:",importantTitle:"Wichtig",importantText:"Halten Sie die App immer aktuell. Angebote und Links werden regelmäßig aktualisiert. Stellen Sie sicher, dass Sie die neueste Version verwenden.",legalTitle:"Rechtliches",privacyBtnText:"Datenschutzrichtlinie",termsBtnText:"Allgemeine Geschäftsbedingungen",privacyTitle:"Datenschutzrichtlinie",termsTitle:"AGB",copy:"Kopieren",copied:"E-Mail kopiert!",bridgeNotAvailable:"Brücke nicht verfügbar (Browser-Modus)",noProducts:"Keine Produkte gefunden.",noLink:"Kein Link verfügbar",linkMissing:"Dieses Produkt hat keinen Kauflink.",cat_all:"Alle Kategorien",cat_eu_local_stock:"EU-Lagerbestand",cat_eu_special_30k:"Sonderangebot 30K",cat_up_to_50_off:"Bis zu 50% Rabatt",cat_new_products:"Neue Produkte",cat_ready_to_ship:"Sofort Versandfertig",subcategories:"Unterkategorien",products:"Produkte",back:"Zurück",chooseCategory:"Wählen Sie eine Kategorie",langChanged:"Sprache geändert.",
+    subcatDict:{
+      "beauty":"Schönheit","electronics":"Elektronik","home & garden":"Haus & Garten","furniture":"Möbel","toys & hobbies":"Spielzeug & Hobbys","sports & entertainment":"Sport & Unterhaltung","jewelry eyewear watches & accessories":"Schmuck & Uhren","shoes & accessories":"Schuhe & Accessoires","apparel & accessories":"Bekleidung & Accessoires","packaging & printing":"Verpackung & Druck","commercial equipment & machinery":"Gewerbliche Ausrüstung","gifts & crafts":"Geschenke & Basteln","school & office supplies":"Schule & Büro","lights & lighting":"Beleuchtung","tools & hardware":"Werkzeuge & Eisenwaren","construction & real estate":"Bau & Immobilien","personal care & household cleaning":"Körperpflege","home appliances":"Haushaltsgeräte","luggage bags & cases":"Gepäck & Taschen","sportswear & outdoor apparel":"Sportbekleidung","mother kids & toys":"Mutter & Kind","automobiles & motorcycles":"Autos & Motorräder","consumer electronics":"Unterhaltungselektronik","phones & accessories":"Telefone & Zubehör","computer & office":"Computer & Büro","security & protection":"Sicherheit & Schutz","health & beauty":"Gesundheit & Schönheit","hair extensions & wigs":"Haarverlängerungen & Perücken","pet supplies":"Haustierbedarf","garden supplies":"Gartenbedarf","kitchen & dining":"Küche & Essen","bathroom products":"Badezimmer","home decor":"Wohndekoration","fabrics & textiles":"Stoffe & Textilien","rubber & plastics":"Gummi & Kunststoffe","electrical equipment & supplies":"Elektrische Ausrüstung","machinery":"Maschinen","vehicle parts & accessories":"Fahrzeugteile","agrochemicals":"Agrarchemikalien","food & beverage":"Lebensmittel & Getränke","chemicals":"Chemikalien","energy":"Energie","renewable energy":"Erneuerbare Energie","business services":"Geschäftsdienstleistungen","advertising":"Werbung"
+    }
+  },
+  fr:{search:"Rechercher des produits ou catégories...",all:"Toutes les catégories",allSub:"Tout",buy:"Voir l'offre",sortBy:"Trier par",sortDefault:"Par défaut / Aléatoire",sortPriceAsc:"Prix : Croissant",sortPriceDesc:"Prix : Décroissant",sortNameAz:"Nom : A → Z",sortNameZa:"Nom : Z → A",sortDiscount:"Meilleure remise",settingsTitle:"Paramètres",langLabel:"Langue",langSub:"Choisissez votre langue préférée",themeLabel:"Thème",themeSub:"Mode sombre / clair",bridgeLabel:"Ouvrir en Media / App",bridgeOn:"Ouvrir dans l'app",bridgeOff:"Ouvrir en media",infoTitle:"Info",purposeTitle:"But de l'app",purposeText:"Productora est une application de découverte de produits qui regroupe des annonces de produits d'affiliation de plusieurs sources, aidant les utilisateurs à trouver les meilleures offres, remises et promotions par catégories. Nous ne vendons pas de produits directement. Tous les achats sont effectués via des liens d'affiliation tiers.",rateTitle:"Noter l'app",rateText:"Si vous aimez Productora, soutenez-nous avec une note de 5 étoiles sur Google Play.",rateBtnText:"Noter Productora sur Google Play",contactTitle:"Contact",contactText:"Des questions ou suggestions ? Contactez-nous :",importantTitle:"Important",importantText:"Gardez l'app toujours à jour. Les offres et liens sont régulièrement mis à jour. Assurez-vous d'utiliser la dernière version.",legalTitle:"Mentions légales",privacyBtnText:"Politique de confidentialité",termsBtnText:"Conditions générales",privacyTitle:"Politique de confidentialité",termsTitle:"Conditions générales",copy:"Copier",copied:"E-mail copié !",bridgeNotAvailable:"Pont non disponible (mode navigateur)",noProducts:"Aucun produit trouvé.",noLink:"Aucun lien disponible",linkMissing:"Ce produit n'a pas de lien d'achat.",cat_all:"Toutes les catégories",cat_eu_local_stock:"Stock local UE",cat_eu_special_30k:"Offre spéciale 30K",cat_up_to_50_off:"Jusqu'à 50% de réduction",cat_new_products:"Nouveaux Produits",cat_ready_to_ship:"Prêt à Expédier",subcategories:"Sous-catégories",products:"Produits",back:"Retour",chooseCategory:"Choisissez une catégorie",langChanged:"Langue modifiée.",
+    subcatDict:{
+      "beauty":"Beauté","electronics":"Électronique","home & garden":"Maison & Jardin","furniture":"Meubles","toys & hobbies":"Jouets & Loisirs","sports & entertainment":"Sports & Divertissement","jewelry eyewear watches & accessories":"Bijoux & Montres","shoes & accessories":"Chaussures & Accessoires","apparel & accessories":"Vêtements & Accessoires","packaging & printing":"Emballage & Impression","commercial equipment & machinery":"Équipement Commercial","gifts & crafts":"Cadeaux & Artisanat","school & office supplies":"École & Bureau","lights & lighting":"Éclairage","tools & hardware":"Outils & Quincaillerie","construction & real estate":"Construction & Immobilier","personal care & household cleaning":"Soins Personnels","home appliances":"Électroménager","luggage bags & cases":"Bagages & Sacs","sportswear & outdoor apparel":"Vêtements de Sport","mother kids & toys":"Mère & Enfant","automobiles & motorcycles":"Automobiles & Motos","consumer electronics":"Électronique Grand Public","phones & accessories":"Téléphones & Accessoires","computer & office":"Informatique & Bureau","security & protection":"Sécurité & Protection","health & beauty":"Santé & Beauté","hair extensions & wigs":"Extensions & Perruques","pet supplies":"Animaux","garden supplies":"Jardin","kitchen & dining":"Cuisine & Salle à Manger","bathroom products":"Salle de Bain","home decor":"Décoration","fabrics & textiles":"Tissus & Textiles","rubber & plastics":"Caoutchouc & Plastiques","electrical equipment & supplies":"Équipement Électrique","machinery":"Machines","vehicle parts & accessories":"Pièces de Véhicules","agrochemicals":"Agrochimie","food & beverage":"Alimentation & Boissons","chemicals":"Produits Chimiques","energy":"Énergie","renewable energy":"Énergie Renouvelable","business services":"Services Commerciaux","advertising":"Publicité"
+    }
+  },
+  it:{search:"Cerca prodotti o categorie...",all:"Tutte le categorie",allSub:"Tutte",buy:"Vedi offerta",sortBy:"Ordina per",sortDefault:"Predefinito / Casuale",sortPriceAsc:"Prezzo: Basso → Alto",sortPriceDesc:"Prezzo: Alto → Basso",sortNameAz:"Nome: A → Z",sortNameZa:"Nome: Z → A",sortDiscount:"Sconto maggiore",settingsTitle:"Impostazioni",langLabel:"Lingua",langSub:"Scegli la tua lingua preferita",themeLabel:"Tema",themeSub:"Modalità scura / chiara",bridgeLabel:"Apri in Media / App",bridgeOn:"Apri nell'app",bridgeOff:"Apri in media",infoTitle:"Info",purposeTitle:"Scopo dell'app",purposeText:"Productora è un'app di scoperta prodotti che aggrega annunci di prodotti di affiliazione da più fonti, aiutando gli utenti a trovare le migliori offerte, sconti e promozioni per categoria. Non vendiamo prodotti direttamente. Tutti gli acquisti avvengono tramite link di affiliazione di terze parti.",rateTitle:"Valuta l'app",rateText:"Se ti piace Productora, supportaci con una valutazione a 5 stelle su Google Play.",rateBtnText:"Valuta Productora su Google Play",contactTitle:"Contatto",contactText:"Domande o suggerimenti? Contattaci:",importantTitle:"Importante",importantText:"Mantieni l'app sempre aggiornata. Offerte e link vengono aggiornati regolarmente. Assicurati di utilizzare l'ultima versione.",legalTitle:"Legale",privacyBtnText:"Informativa sulla privacy",termsBtnText:"Termini e condizioni",privacyTitle:"Informativa sulla privacy",termsTitle:"Termini e condizioni",copy:"Copia",copied:"Email copiata!",bridgeNotAvailable:"Ponte non disponibile (modalità browser)",noProducts:"Nessun prodotto trovato.",noLink:"Nessun link disponibile",linkMissing:"Questo prodotto non ha un link di acquisto.",cat_all:"Tutte le categorie",cat_eu_local_stock:"Stock locale UE",cat_eu_special_30k:"Offerta speciale 30K",cat_up_to_50_off:"Fino al 50% di sconto",cat_new_products:"Nuovi Prodotti",cat_ready_to_ship:"Pronto alla Spedizione",subcategories:"Sottocategorie",products:"Prodotti",back:"Indietro",chooseCategory:"Scegli una categoria",langChanged:"Lingua cambiata.",
+    subcatDict:{
+      "beauty":"Bellezza","electronics":"Elettronica","home & garden":"Casa & Giardino","furniture":"Mobili","toys & hobbies":"Giocattoli & Hobby","sports & entertainment":"Sport & Intrattenimento","jewelry eyewear watches & accessories":"Gioielli & Orologi","shoes & accessories":"Scarpe & Accessori","apparel & accessories":"Abbigliamento & Accessori","packaging & printing":"Imballaggio & Stampa","commercial equipment & machinery":"Attrezzature Commerciali","gifts & crafts":"Regali & Artigianato","school & office supplies":"Scuola & Ufficio","lights & lighting":"Illuminazione","tools & hardware":"Utensili & Ferramenta","construction & real estate":"Costruzioni & Immobiliare","personal care & household cleaning":"Cura Personale","home appliances":"Elettrodomestici","luggage bags & cases":"Bagagli & Borse","sportswear & outdoor apparel":"Abbigliamento Sportivo","mother kids & toys":"Mamma & Bambino","automobiles & motorcycles":"Auto & Moto","consumer electronics":"Elettronica di Consumo","phones & accessories":"Telefoni & Accessori","computer & office":"Computer & Ufficio","security & protection":"Sicurezza & Protezione","health & beauty":"Salute & Bellezza","hair extensions & wigs":"Extension & Parrucche","pet supplies":"Animali","garden supplies":"Giardino","kitchen & dining":"Cucina & Sala da Pranzo","bathroom products":"Bagno","home decor":"Decorazioni","fabrics & textiles":"Tessuti & Tessili","rubber & plastics":"Gomma & Plastica","electrical equipment & supplies":"Attrezzature Elettriche","machinery":"Macchinari","vehicle parts & accessories":"Ricambi Veicoli","agrochemicals":"Agrochimici","food & beverage":"Cibo & Bevande","chemicals":"Prodotti Chimici","energy":"Energia","renewable energy":"Energia Rinnovabile","business services":"Servizi Commerciali","advertising":"Pubblicità"
+    }
+  },
+  pt:{search:"Pesquisar produtos ou categorias...",all:"Todas as categorias",allSub:"Todas",buy:"Ver oferta",sortBy:"Ordenar por",sortDefault:"Padrão / Aleatório",sortPriceAsc:"Preço: Menor → Maior",sortPriceDesc:"Preço: Maior → Menor",sortNameAz:"Nome: A → Z",sortNameZa:"Nome: Z → A",sortDiscount:"Maior desconto",settingsTitle:"Configurações",langLabel:"Idioma",langSub:"Escolha seu idioma preferido",themeLabel:"Tema",themeSub:"Modo escuro / claro",bridgeLabel:"Abrir em Media / App",bridgeOn:"Abrir no app",bridgeOff:"Abrir em media",infoTitle:"Informação",purposeTitle:"Propósito do app",purposeText:"Productora é um aplicativo de descoberta de produtos que agrega listagens de produtos de afiliados de várias fontes, ajudando os usuários a encontrar as melhores ofertas, descontos e promoções por categoria. Não vendemos produtos diretamente. Todas as compras são feitas através de links de afiliados de terceiros.",rateTitle:"Avalie o app",rateText:"Se você gosta do Productora, apoie-nos com uma avaliação de 5 estrelas no Google Play.",rateBtnText:"Avaliar Productora no Google Play",contactTitle:"Contato",contactText:"Dúvidas ou sugestões? Fale conosco:",importantTitle:"Importante",importantText:"Mantenha o app sempre atualizado. Ofertas e links são atualizados regularmente. Certifique-se de usar a versão mais recente.",legalTitle:"Legal",privacyBtnText:"Política de Privacidade",termsBtnText:"Termos e Condições",privacyTitle:"Política de Privacidade",termsTitle:"Termos e Condições",copy:"Copiar",copied:"E-mail copiado!",bridgeNotAvailable:"Ponte não disponível (modo navegador)",noProducts:"Nenhum produto encontrado.",noLink:"Nenhum link disponível",linkMissing:"Este produto não tem link de compra.",cat_all:"Todas as categorias",cat_eu_local_stock:"Estoque Local UE",cat_eu_special_30k:"Oferta Especial 30K",cat_up_to_50_off:"Até 50% de Desconto",cat_new_products:"Produtos Novos",cat_ready_to_ship:"Pronto para Envio",subcategories:"Subcategorias",products:"Produtos",back:"Voltar",chooseCategory:"Escolha uma categoria",langChanged:"Idioma alterado.",
+    subcatDict:{
+      "beauty":"Beleza","electronics":"Eletrônicos","home & garden":"Casa & Jardim","furniture":"Móveis","toys & hobbies":"Brinquedos & Hobbies","sports & entertainment":"Esportes & Entretenimento","jewelry eyewear watches & accessories":"Joias & Relógios","shoes & accessories":"Sapatos & Acessórios","apparel & accessories":"Roupas & Acessórios","packaging & printing":"Embalagem & Impressão","commercial equipment & machinery":"Equipamento Comercial","gifts & crafts":"Presentes & Artesanato","school & office supplies":"Escola & Escritório","lights & lighting":"Iluminação","tools & hardware":"Ferramentas & Ferragens","construction & real estate":"Construção & Imóveis","personal care & household cleaning":"Cuidados Pessoais","home appliances":"Eletrodomésticos","luggage bags & cases":"Bagagem & Bolsas","sportswear & outdoor apparel":"Roupas Esportivas","mother kids & toys":"Mãe & Filho","automobiles & motorcycles":"Automóveis & Motos","consumer electronics":"Eletrônicos de Consumo","phones & accessories":"Telefones & Acessórios","computer & office":"Computador & Escritório","security & protection":"Segurança & Proteção","health & beauty":"Saúde & Beleza","hair extensions & wigs":"Extensões & Perucas","pet supplies":"Animais de Estimação","garden supplies":"Jardim","kitchen & dining":"Cozinha & Sala de Jantar","bathroom products":"Banheiro","home decor":"Decoração","fabrics & textiles":"Tecidos & Têxteis","rubber & plastics":"Borracha & Plásticos","electrical equipment & supplies":"Equipamentos Elétricos","machinery":"Máquinas","vehicle parts & accessories":"Peças de Veículos","agrochemicals":"Agroquímicos","food & beverage":"Alimentos & Bebidas","chemicals":"Produtos Químicos","energy":"Energia","renewable energy":"Energia Renovável","business services":"Serviços Comerciais","advertising":"Publicidade"
+    }
+  },
+  ja:{search:"商品やカテゴリを検索...",all:"すべてのカテゴリ",allSub:"すべて",buy:"詳細を見る",sortBy:"並び替え",sortDefault:"デフォルト / ランダム",sortPriceAsc:"価格：安い順",sortPriceDesc:"価格：高い順",sortNameAz:"名前：A → Z",sortNameZa:"名前：Z → A",sortDiscount:"最大割引",settingsTitle:"設定",langLabel:"言語",langSub:"希望の言語を選択",themeLabel:"テーマ",themeSub:"ダーク / ライトモード",bridgeLabel:"メディア / アプリで開く",bridgeOn:"アプリで開く",bridgeOff:"メディアで開く",infoTitle:"情報",purposeTitle:"アプリの目的",purposeText:"Productoraは、複数のソースからのアフィリエイト商品リストを集約し、ユーザーがカテゴリ別に最適な取引、割引、オファーを見つけるのを支援する商品発見アプリです。当社は商品を直接販売していません。すべての購入は第三者のアフィリエイトリンクを通じて行われます。",rateTitle:"アプリを評価",rateText:"Productoraを気に入っていただけたら、Google Playで5つ星の評価でサポートしてください。",rateBtnText:"Google PlayでProductoraを評価",contactTitle:"お問い合わせ",contactText:"ご質問やご提案がありますか？お問い合わせください：",importantTitle:"重要",importantText:"アプリを常に最新の状態に保ってください。取引とリンクは定期的に更新されます。最新バージョンを使用していることを確認してください。",legalTitle:"法的情報",privacyBtnText:"プライバシーポリシー",termsBtnText:"利用規約",privacyTitle:"プライバシーポリシー",termsTitle:"利用規約",copy:"コピー",copied:"メールをコピーしました！",bridgeNotAvailable:"ブリッジが利用できません（ブラウザモード）",noProducts:"商品が見つかりません。",noLink:"リンクがありません",linkMissing:"この商品には購入リンクがありません。",cat_all:"すべてのカテゴリ",cat_eu_local_stock:"EU現地在庫",cat_eu_special_30k:"特別オファー30K",cat_up_to_50_off:"最大50%オフ",cat_new_products:"新着商品",cat_ready_to_ship:"即発送可能",subcategories:"サブカテゴリ",products:"商品",back:"戻る",chooseCategory:"カテゴリを選択",langChanged:"言語が変更されました。",
+    subcatDict:{
+      "beauty":"美容","electronics":"電子機器","home & garden":"ホーム＆ガーデン","furniture":"家具","toys & hobbies":"おもちゃ＆ホビー","sports & entertainment":"スポーツ＆エンタメ","jewelry eyewear watches & accessories":"ジュエリー＆時計","shoes & accessories":"靴＆アクセサリー","apparel & accessories":"アパレル＆アクセサリー","packaging & printing":"包装＆印刷","commercial equipment & machinery":"業務用機器","gifts & crafts":"ギフト＆クラフト","school & office supplies":"学校＆オフィス","lights & lighting":"照明","tools & hardware":"工具＆金物","construction & real estate":"建設＆不動産","personal care & household cleaning":"パーソナルケア","home appliances":"家電","luggage bags & cases":"ラゲッジ＆バッグ","sportswear & outdoor apparel":"スポーツウェア","mother kids & toys":"マタニティ＆キッズ","automobiles & motorcycles":"自動車＆バイク","consumer electronics":"家電製品","phones & accessories":"電話＆アクセサリー","computer & office":"コンピュータ＆オフィス","security & protection":"セキュリティ","health & beauty":"健康＆美容","hair extensions & wigs":"ヘアエクステ＆ウィッグ","pet supplies":"ペット用品","garden supplies":"ガーデン用品","kitchen & dining":"キッチン＆ダイニング","bathroom products":"バス用品","home decor":"インテリア","fabrics & textiles":"生地＆テキスタイル","rubber & plastics":"ゴム＆プラスチック","electrical equipment & supplies":"電気設備","machinery":"機械","vehicle parts & accessories":"車両部品","agrochemicals":"農薬","food & beverage":"食品＆飲料","chemicals":"化学品","energy":"エネルギー","renewable energy":"再生可能エネルギー","business services":"ビジネスサービス","advertising":"広告"
+    }
+  },
+  ko:{search:"제품 또는 카테고리 검색...",all:"모든 카테고리",allSub:"전체",buy:"거래 보기",sortBy:"정렬 기준",sortDefault:"기본 / 무작위",sortPriceAsc:"가격: 낮은 순",sortPriceDesc:"가격: 높은 순",sortNameAz:"이름: A → Z",sortNameZa:"이름: Z → A",sortDiscount:"최대 할인",settingsTitle:"설정",langLabel:"언어",langSub:"선호하는 언어를 선택하세요",themeLabel:"테마",themeSub:"다크 / 라이트 모드",bridgeLabel:"미디어 / 앱에서 열기",bridgeOn:"앱에서 열기",bridgeOff:"미디어에서 열기",infoTitle:"정보",purposeTitle:"앱 목적",purposeText:"Productora는 여러 소스의 제휴 제품 목록을 집계하여 사용자가 카테고리별로 최고의 거래, 할인 및 혜택을 찾을 수 있도록 돕는 제품 발견 앱입니다. 당사는 제품을 직접 판매하지 않습니다. 모든 구매는 제3자 제휴 링크를 통해 이루어집니다.",rateTitle:"앱 평가",rateText:"Productora가 마음에 드셨다면 Google Play에서 별 5개로 평가해 주세요.",rateBtnText:"Google Play에서 Productora 평가",contactTitle:"연락처",contactText:"질문이나 제안이 있으신가요? 연락주세요:",importantTitle:"중요",importantText:"앱을 항상 최신 상태로 유지하세요. 거래 및 링크는 정기적으로 업데이트됩니다. 최신 버전을 사용하고 있는지 확인하세요.",legalTitle:"법적 정보",privacyBtnText:"개인정보 처리방침",termsBtnText:"이용약관",privacyTitle:"개인정보 처리방침",termsTitle:"이용약관",copy:"복사",copied:"이메일이 복사되었습니다!",bridgeNotAvailable:"브리지를 사용할 수 없습니다 (브라우저 모드)",noProducts:"제품을 찾을 수 없습니다.",noLink:"사용 가능한 링크가 없습니다",linkMissing:"이 제품에는 구매 링크가 없습니다.",cat_all:"모든 카테고리",cat_eu_local_stock:"EU 현지 재고",cat_eu_special_30k:"특별 혜택 30K",cat_up_to_50_off:"최대 50% 할인",cat_new_products:"신제품",cat_ready_to_ship:"즉시 배송 가능",subcategories:"하위 카테고리",products:"제품",back:"뒤로",chooseCategory:"카테고리 선택",langChanged:"언어가 변경되었습니다.",
+    subcatDict:{
+      "beauty":"뷰티","electronics":"전자제품","home & garden":"홈 & 가든","furniture":"가구","toys & hobbies":"장난감 & 취미","sports & entertainment":"스포츠 & 엔터테인먼트","jewelry eyewear watches & accessories":"주얼리 & 시계","shoes & accessories":"신발 & 액세서리","apparel & accessories":"의류 & 액세서리","packaging & printing":"포장 & 인쇄","commercial equipment & machinery":"상업용 장비","gifts & crafts":"선물 & 공예","school & office supplies":"학교 & 사무용품","lights & lighting":"조명","tools & hardware":"공구 & 하드웨어","construction & real estate":"건설 & 부동산","personal care & household cleaning":"퍼스널 케어","home appliances":"가전제품","luggage bags & cases":"수하물 & 가방","sportswear & outdoor apparel":"스포츠웨어","mother kids & toys":"맘 & 키즈","automobiles & motorcycles":"자동차 & 오토바이","consumer electronics":"소비자 전자제품","phones & accessories":"전화 & 액세서리","computer & office":"컴퓨터 & 사무실","security & protection":"보안 & 보호","health & beauty":"건강 & 뷰티","hair extensions & wigs":"헤어 익스텐션 & 가발","pet supplies":"반려동물 용품","garden supplies":"정원 용품","kitchen & dining":"주방 & 다이닝","bathroom products":"욕실 용품","home decor":"홈 데코","fabrics & textiles":"원단 & 섬유","rubber & plastics":"고무 & 플라스틱","electrical equipment & supplies":"전기 장비","machinery":"기계","vehicle parts & accessories":"차량 부품","agrochemicals":"농약","food & beverage":"식품 & 음료","chemicals":"화학물질","energy":"에너지","renewable energy":"재생 에너지","business services":"비즈니스 서비스","advertising":"광고"
+    }
+  },
+  zh:{search:"搜索产品或类别...",all:"所有类别",allSub:"全部",buy:"查看优惠",sortBy:"排序方式",sortDefault:"默认 / 随机",sortPriceAsc:"价格：从低到高",sortPriceDesc:"价格：从高到低",sortNameAz:"名称：A → Z",sortNameZa:"名称：Z → A",sortDiscount:"最大折扣",settingsTitle:"设置",langLabel:"语言",langSub:"选择您的首选语言",themeLabel:"主题",themeSub:"深色 / 浅色模式",bridgeLabel:"在媒体/应用中打开",bridgeOn:"在应用中打开",bridgeOff:"在媒体中打开",infoTitle:"信息",purposeTitle:"应用目的",purposeText:"Productora 是一款产品发现应用，汇集来自多个来源的联盟产品列表，帮助用户按类别找到最佳优惠、折扣和报价。我们不直接销售产品。所有购买均通过第三方联盟链接进行。",rateTitle:"评价应用",rateText:"如果您喜欢 Productora，请在 Google Play 上给我们 5 星好评支持我们。",rateBtnText:"在 Google Play 上评价 Productora",contactTitle:"联系",contactText:"有问题或建议？联系我们：",importantTitle:"重要",importantText:"请始终保持应用更新。优惠和链接会定期更新。确保您使用的是最新版本。",legalTitle:"法律",privacyBtnText:"隐私政策",termsBtnText:"条款和条件",privacyTitle:"隐私政策",termsTitle:"条款和条件",copy:"复制",copied:"邮件已复制！",bridgeNotAvailable:"桥接不可用（浏览器模式）",noProducts:"未找到产品。",noLink:"无可用链接",linkMissing:"此产品没有购买链接。",cat_all:"所有类别",cat_eu_local_stock:"欧盟本地库存",cat_eu_special_30k:"特别优惠 30K",cat_up_to_50_off:"高达 50% 折扣",cat_new_products:"新产品",cat_ready_to_ship:"可立即发货",subcategories:"子类别",products:"产品",back:"返回",chooseCategory:"选择类别",langChanged:"语言已更改。",
+    subcatDict:{
+      "beauty":"美妆","electronics":"电子产品","home & garden":"家居园艺","furniture":"家具","toys & hobbies":"玩具与爱好","sports & entertainment":"运动娱乐","jewelry eyewear watches & accessories":"珠宝手表","shoes & accessories":"鞋类配件","apparel & accessories":"服装配饰","packaging & printing":"包装印刷","commercial equipment & machinery":"商用设备","gifts & crafts":"礼品工艺","school & office supplies":"学校办公","lights & lighting":"照明","tools & hardware":"工具五金","construction & real estate":"建筑房产","personal care & household cleaning":"个人护理","home appliances":"家用电器","luggage bags & cases":"箱包","sportswear & outdoor apparel":"运动服装","mother kids & toys":"母婴玩具","automobiles & motorcycles":"汽车摩托","consumer electronics":"消费电子","phones & accessories":"手机配件","computer & office":"电脑办公","security & protection":"安全防护","health & beauty":"健康美容","hair extensions & wigs":"接发假发","pet supplies":"宠物用品","garden supplies":"园艺用品","kitchen & dining":"厨房餐饮","bathroom products":"浴室用品","home decor":"家居装饰","fabrics & textiles":"面料纺织","rubber & plastics":"橡胶塑料","electrical equipment & supplies":"电气设备","machinery":"机械","vehicle parts & accessories":"车辆配件","agrochemicals":"农用化学品","food & beverage":"食品饮料","chemicals":"化学品","energy":"能源","renewable energy":"可再生能源","business services":"商业服务","advertising":"广告"
+    }
+  }
 };
 
 /* ============================================================
@@ -363,6 +410,14 @@ const state = {
 
 let currentLang = localStorage.getItem('pr_lang') || 'en';
 function t(key){return (I18N[currentLang]&&I18N[currentLang][key])||I18N.en[key]||key;}
+
+/* Alt kategori çevirisi */
+function tSub(cat){
+  if(!cat) return '';
+  const dict = (I18N[currentLang] && I18N[currentLang].subcatDict) || I18N.en.subcatDict || {};
+  const lower = cat.toLowerCase().trim();
+  return dict[lower] || dict[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
+}
 
 function getDailySeed(){
   const d = new Date();
@@ -378,17 +433,37 @@ function applyTheme(mode){
 applyTheme(localStorage.getItem('pr_theme') || 'dark');
 
 /* ============================================================
-   LANGUAGE
+   LANGUAGE — Reload olmadan anlık değişim
 ============================================================ */
 function applyLang(lang){
-  saveUIState();
+  if(!I18N[lang]) lang = 'en';
+  currentLang = lang;
   localStorage.setItem('pr_lang', lang);
+
+  // 1) Tüm statik UI metinlerini güncelle
+  applyAllUIText();
+
+  // 2) Kategori çubuğunu yeniden oluştur (etiketler değişti)
+  buildCatBar();
+
+  // 3) Alt kategori seçici metnini güncelle
+  updateSubSel();
+
+  // 4) Bölüm başlığını güncelle
+  updateSectionTitle();
+
+  // 5) Grid'i yeniden çiz (buy-btn ve kategori etiketleri çevrilsin)
+  document.getElementById('grid').innerHTML = '';
+  state.page = 0;
+  renderPage();
+  updateEmpty();
+
+  // 6) Açık olan modalın içeriği de güncellenmiş olur (applyAllUIText içinde privacy/terms yenilendi)
   showToast(t('langChanged'));
-  setTimeout(() => location.reload(), 500);
 }
 
 /* ============================================================
-   BRIDGE — SADECE toggle'a müdahalede mesaj gönderilir
+   BRIDGE
 ============================================================ */
 const bridgeSwitch = document.getElementById('bridgeSwitch');
 const bridgeStatus = document.getElementById('bridgeStatus');
@@ -398,11 +473,8 @@ function setBridgeUI(on){ bridgeStatus.textContent = on ? t('bridgeOn') : t('bri
 bridgeSwitch.addEventListener('change', e => {
   const on = e.target.checked;
   const msg = on ? 'webview_acik' : 'webview_kapali';
-
   localStorage.setItem('pr_bridge', on ? '1' : '0');
   setBridgeUI(on);
-
-  // Sadece kullanıcı toggle'a dokunduğunda mesaj gider
   try{
     if(window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
       window.AppInventor.setWebViewString(msg);
@@ -414,7 +486,6 @@ bridgeSwitch.addEventListener('change', e => {
   const saved = localStorage.getItem('pr_bridge')==='1';
   bridgeSwitch.checked = saved;
   setBridgeUI(saved);
-  // NO message sent here
 })();
 
 /* ============================================================
@@ -513,12 +584,15 @@ function normalizeProduct(raw, catKey){
   };
 }
 
+/* ============================================================
+   PARALLEL LOAD
+============================================================ */
 async function loadAll(){
   state.isLoading = true;
   const promises = Object.entries(CONFIG.FILES).map(async ([key, file]) => {
     const url = CONFIG.BASE + file;
     try{
-      const res = await fetch(url, {cache:'no-store'});
+      const res = await fetch(url, {cache:'force-cache'});
       if(!res.ok) throw new Error(res.status);
       const text = await res.text();
       const rows = parseCSV(text);
@@ -540,7 +614,6 @@ async function loadAll(){
   buildCatBar();
   updateSubSel();
   applyFilter();
-  // Scroll restore — after content is ready
   restoreScroll();
 }
 
@@ -551,7 +624,9 @@ const MAIN_CATS = [
   {key:'all', icon:'🛍️', labelKey:'cat_all'},
   {key:'eu_local_stock', icon:'🇪🇺', labelKey:'cat_eu_local_stock'},
   {key:'eu_special_30k', icon:'⭐', labelKey:'cat_eu_special_30k'},
-  {key:'up_to_50_off', icon:'🔥', labelKey:'cat_up_to_50_off'}
+  {key:'up_to_50_off', icon:'🔥', labelKey:'cat_up_to_50_off'},
+  {key:'new_products', icon:'✨', labelKey:'cat_new_products'},
+  {key:'ready_to_ship', icon:'🚚', labelKey:'cat_ready_to_ship'}
 ];
 
 function buildCatBar(){
@@ -569,7 +644,6 @@ function buildCatBar(){
       state.activeCat = c.key;
       state.activeSub = '';
       state.page = 0;
-      // Clear saved scroll when user actively changes category
       sessionStorage.removeItem('pr_scrollY');
       buildCatBar();
       updateSubSel();
@@ -625,8 +699,7 @@ function updateSubSel(){
   sel.style.pointerEvents = 'auto';
 
   if(state.activeSub){
-    const display = state.activeSub.charAt(0).toUpperCase() + state.activeSub.slice(1);
-    text.textContent = display;
+    text.textContent = tSub(state.activeSub);
     cnt.textContent = map[state.activeSub] || 0;
   } else {
     text.textContent = t('allSub');
@@ -657,8 +730,7 @@ function openSubsheet(){
   cats.forEach(c => {
     const opt = document.createElement('div');
     opt.className = 'subopt' + (state.activeSub===c?' active':'');
-    const display = c.charAt(0).toUpperCase() + c.slice(1);
-    opt.innerHTML = `<span>${display}</span><span class="cnt">${map[c]}</span>`;
+    opt.innerHTML = `<span>${tSub(c)}</span><span class="cnt">${map[c]}</span>`;
     opt.onclick = () => {
       state.activeSub = c; state.page = 0;
       sessionStorage.removeItem('pr_scrollY');
@@ -686,7 +758,7 @@ document.getElementById('subsheetOverlay').addEventListener('click', closeSubshe
 function updateSectionTitle(){
   const label = t('cat_' + state.activeCat) || state.activeCat;
   document.getElementById('sectionTitleText').textContent = state.activeSub
-    ? state.activeSub.charAt(0).toUpperCase() + state.activeSub.slice(1)
+    ? tSub(state.activeSub)
     : label;
   document.getElementById('sectionCount').textContent = state.filtered.length;
 }
@@ -744,16 +816,6 @@ function renderPage(){
   state.page++;
 }
 
-/* ============================================================
-   OPEN PRODUCT
-   - Kaydeder: kategori, alt kategori, sıralama, arama, SAYFA, SCROLL
-   - Open in app: window.open('_blank') — WebView yeni pencere açar,
-     geri tuşu ile siteye dönülür ve state korunur
-   - Open in media: window.open('_blank') — dış tarayıcı
-   Fark: in app modunda WebView aynı pencereyi tutar ve geri tuşu
-   site state'ini yeniden yükler. Bu yüzden HER İKİ durumda da
-   window.open('_blank') kullanıyoruz ve sessionStorage ile state koruyoruz.
-============================================================ */
 function saveUIState(){
   sessionStorage.setItem('pr_activeCat', state.activeCat);
   sessionStorage.setItem('pr_activeSub', state.activeSub);
@@ -768,10 +830,7 @@ function openProduct(p){
     showToast(t('linkMissing'));
     return;
   }
-  // Save all state before opening
   saveUIState();
-
-  // Always open in new tab/window. WebView geri tuşu bunu kapatır.
   try{
     window.open(p.link, '_blank', 'noopener,noreferrer');
   }catch(e){
@@ -834,7 +893,7 @@ function makeCard(p){
   if(p.category){
     const ct = document.createElement('div');
     ct.className = 'cat-tag';
-    ct.textContent = p.category;
+    ct.textContent = tSub(p.category);
     body.appendChild(ct);
   }
 
@@ -881,9 +940,6 @@ function initObserver(){
 }
 initObserver();
 
-/* ============================================================
-   RESTORE STATE (after reload or back from external)
-============================================================ */
 function restoreScroll(){
   try{
     const savedScroll = sessionStorage.getItem('pr_scrollY');
@@ -895,14 +951,12 @@ function restoreScroll(){
       document.getElementById('searchInput').value = savedSearch;
     }
     if(savedPage && savedPage > 1){
-      // Render enough pages to match saved state
       while(state.page < savedPage && state.page * CONFIG.PAGE_SIZE < state.filtered.length){
         renderPage();
       }
     }
     if(savedScroll){
       const y = parseInt(savedScroll, 10) || 0;
-      // wait a tick for layout
       setTimeout(() => window.scrollTo(0, y), 60);
       setTimeout(() => window.scrollTo(0, y), 300);
       setTimeout(() => window.scrollTo(0, y), 700);
@@ -926,12 +980,8 @@ function restoreState(){
   }catch(e){}
 }
 
-/* ============================================================
-   PAGE VISIBILITY — when returning from external, re-restore scroll
-============================================================ */
 document.addEventListener('visibilitychange', () => {
   if(!document.hidden){
-    // user came back — reapply scroll
     const y = parseInt(sessionStorage.getItem('pr_scrollY') || '0', 10);
     if(y > 0){
       setTimeout(() => window.scrollTo(0, y), 50);
@@ -940,7 +990,6 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-// pageshow — fires on bfcache restore too
 window.addEventListener('pageshow', (e) => {
   if(e.persisted){
     const y = parseInt(sessionStorage.getItem('pr_scrollY') || '0', 10);
@@ -951,9 +1000,7 @@ window.addEventListener('pageshow', (e) => {
   }
 });
 
-/* ============================================================
-   SEARCH
-============================================================ */
+/* SEARCH */
 let searchTimer;
 document.getElementById('searchInput').addEventListener('input', e => {
   clearTimeout(searchTimer);
@@ -1058,14 +1105,12 @@ function showToast(msg){
   toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
 }
 
-document.getElementById('langSelect').addEventListener('change', e => {
-  applyLang(e.target.value);
-});
-
 /* ============================================================
-   APPLY ALL UI TEXT
+   APPLY ALL UI TEXT — dil değişince anında çağrılır
 ============================================================ */
 function applyAllUIText(){
+  document.documentElement.lang = currentLang;
+
   document.getElementById('searchInput').placeholder = t('search');
   document.getElementById('sortBtn').textContent = '⇅';
   document.getElementById('sortTitle').textContent = t('sortBy');
@@ -1106,37 +1151,72 @@ function applyAllUIText(){
   document.getElementById('langSelect').value = currentLang;
 }
 
+/* ============================================================
+   PRIVACY POLICY
+============================================================ */
 function buildPrivacyHTML(){
   return `
     <div class="info-section">
-      <p>Daa Studio built the Productora app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is.</p>
-      <p>This page informs visitors regarding our policies with the collection, use, and disclosure of Personal Information.</p>
-      <p>If you choose to use our Service, you agree to the collection and use of information in relation to this policy. We will not use or share your information with anyone except as described in this Privacy Policy.</p>
-      <p><strong>Information Collection and Use</strong><br>For a better experience, we may require you to provide certain personally identifiable information. The information we request is retained on your device and is not collected by us in any way. The app uses third-party services that may collect information used to identify you: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p>
-      <p><strong>Log Data</strong><br>Whenever you use our Service, in case of an error we collect data and information (through third-party products) called Log Data. This may include your IP address, device name, OS version, app configuration, time and date of use, and other statistics.</p>
-      <p><strong>Cookies</strong><br>The app may use third-party code and libraries that use cookies to collect information and improve services. You can accept or refuse these cookies.</p>
-      <p><strong>Service Providers</strong><br>We may employ third-party companies to facilitate our Service, provide it on our behalf, perform related services, or assist in analyzing usage. They have access to Personal Information to perform tasks on our behalf and are obligated not to disclose or use it for other purposes.</p>
-      <p><strong>Security</strong><br>Productora app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. We value your trust and strive to use commercially acceptable means to protect your Personal Information, but no method of transmission or storage is 100% secure.</p>
-      <p><strong>Links to Other Sites</strong><br>This Service may contain links to other sites. If you click a third-party link, you will be directed to that site. We strongly advise you to review their Privacy Policy.</p>
-      <p><strong>Children's Privacy</strong><br>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p>
-      <p><strong>Changes to This Privacy Policy</strong><br>We may update our Privacy Policy from time to time. You are advised to review this page periodically. This policy is effective as of 2021-11-01.</p>
-      <p><strong>Contact Us</strong><br>If you have questions or suggestions, contact us at daastudio42@gmail.com.</p>
+      <p>Daa Studio built the Budget Buddy Shop app as a free app. This SERVICE is provided by Daa Studio at no cost and is intended for use as is. This page is used to inform visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service.</p>
+      <p>If you choose to use our Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that we collect is used for providing and improving the Service. We will not use or share your information with anyone except as described in this Privacy Policy. The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at Budget Buddy Shop unless otherwise defined in this Privacy Policy.</p>
+      <p><strong>Information Collection and Use</strong><br>For a better experience, while using our Service, we may require you to provide us with certain personally identifiable information. The information that we request will be retained on your device and is not collected by us in any way. The app does use third party services that may collect information used to identify you.</p>
+      <p><strong>Link to privacy policy of third party service providers used by the app</strong></p>
+      <ul>
+        <li>Google Play Services</li>
+        <li>AdMob</li>
+        <li>Google Analytics for Firebase</li>
+        <li>Firebase Crashlytics</li>
+      </ul>
+      <p><strong>Log Data</strong><br>We want to inform you that whenever you use our Service, in a case of an error in the app we collect data and information (through third party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol ("IP") address, device name, operating system version, the configuration of the app when utilizing our Service, the time and date of your use of the Service, and other statistics.</p>
+      <p><strong>Cookies</strong><br>Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory. This Service does not use these "cookies" explicitly. However, the app may use third party code and libraries that use "cookies" to collect information and improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse our cookies, you may not be able to use some portions of this Service.</p>
+      <p><strong>Service Providers</strong><br>We may employ third-party companies and individuals due to the following reasons:</p>
+      <ul>
+        <li>To facilitate our Service;</li>
+        <li>To provide the Service on our behalf;</li>
+        <li>To perform Service-related services; or</li>
+        <li>To assist us in analyzing how our Service is used.</li>
+      </ul>
+      <p>We want to inform users of this Service that these third parties have access to your Personal Information. The reason is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.</p>
+      <p><strong>Security</strong><br>Budget Buddy Shop app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. We value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and we cannot guarantee its absolute security.</p>
+      <p><strong>Links to Other Sites</strong><br>This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by us. Therefore, we strongly advise you to review the Privacy Policy of these websites. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</p>
+      <p><strong>Children's Privacy</strong><br>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13 years of age. In the case we discover that a child under 13 has provided us with personal information, we immediately delete this from our servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact us so that we will be able to do necessary actions.</p>
+      <p><strong>Changes to This Privacy Policy</strong><br>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page. This policy is effective as of 2025-12-20.</p>
+      <p><strong>Contact Us</strong><br>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at daastudio42@gmail.com.</p>
     </div>`;
 }
+
+/* ============================================================
+   TERMS & CONDITIONS
+============================================================ */
 function buildTermsHTML(){
   return `
     <div class="info-section">
-      <p>By downloading or using the app, these terms automatically apply to you. Productora app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. You may not copy, modify, or extract the source code of the app, or translate it into other languages, or make derivative versions. All trademarks, copyright, database rights and other intellectual property rights related to the app belong to Daa Studio.</p>
-      <p>Daa Studio is committed to ensuring the app is useful and efficient. We reserve the right to make changes or charge for services at any time. We will never charge you without clearly explaining what you are paying for.</p>
-      <p>The app stores and processes personal data you have provided in order to provide our Service. It's your responsibility to keep your phone and app access secure. We recommend not jailbreaking or rooting your phone.</p>
-      <p>The app uses third-party services that declare their own Terms and Conditions: Google Play Services, AdMob, Google Analytics for Firebase, Firebase Crashlytics.</p>
-      <p>Certain functions require an active internet connection. Daa Studio cannot take responsibility if the app does not work at full functionality due to lack of Wi-Fi or data allowance.</p>
-      <p>Daa Studio accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.</p>
-      <p>We may update the app. You promise to always accept updates when offered. We may also stop providing the app and terminate use at any time.</p>
-      <p><strong>Changes to These Terms</strong><br>We may update our Terms from time to time. You are advised to review this page periodically. These terms are effective as of 2021-11-01.</p>
-      <p><strong>Contact Us</strong><br>If you have questions, contact us at daastudio42@gmail.com.</p>
+      <p>By downloading or using the app, these terms will automatically apply to you – you should make sure therefore that you read them carefully before using the app. Budget Buddy Shop app maker and makers are not responsible for any liability and damages. All responsibility belongs to the user. You're not allowed to copy, or modify the app, any part of the app, or our trademarks in any way. You're not allowed to attempt to extract the source code of the app, and you also shouldn't try to translate the app into other languages, or make derivative versions. The app itself, and all the trade marks, copyright, database rights and other intellectual property rights related to it, still belong to Daa Studio.</p>
+      <p>Daa Studio is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve the right to make changes to the app or to charge for its services, at any time and for any reason. We will never charge you for the app or its services without making it very clear to you exactly what you're paying for.</p>
+      <p>The Budget Buddy Shop app stores and processes personal data that you have provided to us, in order to provide our Service. It's your responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak or root your phone, which is the process of removing software restrictions and limitations imposed by the official operating system of your device. It could make your phone vulnerable to malware/viruses/malicious programs, compromise your phone's security features and it could mean that the Budget Buddy Shop app won't work properly or at all.</p>
+      <p>The app does use third party services that declare their own Terms and Conditions. Link to Terms and Conditions of third party service providers used by the app:</p>
+      <ul>
+        <li>Google Play Services</li>
+        <li>AdMob</li>
+        <li>Google Analytics for Firebase</li>
+        <li>Firebase Crashlytics</li>
+      </ul>
+      <p>You should be aware that there are certain things that Daa Studio will not take responsibility for. Certain functions of the app will require the app to have an active internet connection. The connection can be Wi-Fi, or provided by your mobile network provider, but Daa Studio cannot take responsibility for the app not working at full functionality if you don't have access to Wi-Fi, and you don't have any of your data allowance left.</p>
+      <p>If you're using the app outside of an area with Wi-Fi, you should remember that your terms of the agreement with your mobile network provider will still apply. As a result, you may be charged by your mobile provider for the cost of data for the duration of the connection while accessing the app, or other third party charges. In using the app, you're accepting responsibility for any such charges, including roaming data charges if you use the app outside of your home territory (i.e. region or country) without turning off data roaming. If you are not the bill payer for the device on which you're using the app, please be aware that we assume that you have received permission from the bill payer for using the app.</p>
+      <p>Along the same lines, Daa Studio cannot always take responsibility for the way you use the app i.e. You need to make sure that your device stays charged – if it runs out of battery and you can't turn it on to avail the Service, Daa Studio cannot accept responsibility.</p>
+      <p>With respect to Daa Studio's responsibility for your use of the app, when you're using the app, it's important to bear in mind that although we endeavour to ensure that it is updated and correct at all times, we do rely on third parties to provide information to us so that we can make it available to you. Daa Studio accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.</p>
+      <p>At some point, we may wish to update the app. The app is currently available on Android – the requirements for system (and for any additional systems we decide to extend the availability of the app to) may change, and you'll need to download the updates if you want to keep using the app. Daa Studio does not promise that it will always update the app so that it is relevant to you and/or works with the Android version that you have installed on your device. However, you promise to always accept updates to the application when offered to you. We may also wish to stop providing the app, and may terminate use of it at any time without giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from your device.</p>
+      <p><strong>Changes to This Terms and Conditions</strong><br>We may update our Terms and Conditions from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Terms and Conditions on this page. These terms and conditions are effective as of 2025-12-20.</p>
+      <p><strong>Contact Us</strong><br>If you have any questions or suggestions about our Terms and Conditions, do not hesitate to contact us at daastudio42@gmail.com.</p>
     </div>`;
 }
+
+/* ============================================================
+   LANGUAGE SELECT
+============================================================ */
+document.getElementById('langSelect').addEventListener('change', e => {
+  applyLang(e.target.value);
+});
 
 /* ============================================================
    INIT
