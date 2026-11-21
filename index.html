@@ -55,7 +55,7 @@ header{
 
 .subchips{display:flex;gap:8px;overflow-x:auto;padding:8px 14px 4px;scrollbar-width:none;flex-wrap:nowrap}
 .subchips::-webkit-scrollbar{display:none}
-.chip{flex:0 0 auto;padding:8px 14px;border-radius:999px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--muted);display:flex;align-items:center;gap:6px;transition:.2s}
+.chip{flex:0 0 auto;padding:8px 14px;border-radius:999px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--muted);display:flex;align-items:center;gap:6px;transition:.2s;text-transform:capitalize}
 .chip .badge{background:rgba(255,255,255,.12);font-size:10px;padding:1px 6px;border-radius:999px;font-weight:700}
 .chip.active{background:var(--accent);color:#fff;border-color:transparent}
 .chip.active .badge{background:rgba(0,0,0,.2)}
@@ -76,7 +76,7 @@ header{
 .price-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .price{color:var(--accent2);font-weight:800;font-size:15px}
 .old-price{color:var(--muted);font-size:12px;text-decoration:line-through}
-.cat-tag{font-size:11px;color:var(--muted);margin-top:auto}
+.cat-tag{font-size:11px;color:var(--muted);margin-top:auto;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .buy-btn{margin-top:6px;padding:9px;border-radius:10px;text-align:center;font-size:12px;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border:none;cursor:pointer}
 
 #sentinel{height:60px;display:grid;place-items:center}
@@ -585,7 +585,6 @@ const state = {
 let currentLang = localStorage.getItem('pr_lang') || 'en';
 function t(key){return (I18N[currentLang]&&I18N[currentLang][key])||I18N.en[key]||key;}
 
-/* THEME */
 function applyTheme(mode){
   document.body.classList.toggle('light', mode==='light');
   document.getElementById('themeSwitch').checked = (mode==='light');
@@ -593,7 +592,6 @@ function applyTheme(mode){
 }
 applyTheme(localStorage.getItem('pr_theme') || 'dark');
 
-/* APPLY LANGUAGE */
 function applyLang(lang){
   currentLang = lang;
   localStorage.setItem('pr_lang', lang);
@@ -642,7 +640,6 @@ function applyLang(lang){
   applyFilter();
 }
 
-/* LEGAL HTML */
 function buildPrivacyHTML(){
   return `
     <div class="info-section">
@@ -675,7 +672,6 @@ function buildTermsHTML(){
     </div>`;
 }
 
-/* BRIDGE */
 const bridgeSwitch = document.getElementById('bridgeSwitch');
 const bridgeStatus = document.getElementById('bridgeStatus');
 function sendToApp(msg){
@@ -701,7 +697,9 @@ bridgeSwitch.addEventListener('change', e => {
   setBridgeUI(saved);
 })();
 
-/* CSV PARSER */
+/* ============================================================
+   CSV PARSER
+============================================================ */
 function parseCSV(text){
   text = text.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n');
   const delimiter = detectDelimiter(text);
@@ -745,34 +743,68 @@ function detectDelimiter(text){
   return best;
 }
 
-/* NORMALIZE */
+/* ============================================================
+   NORMALIZE — CSV sütunlarına göre düzeltildi
+============================================================ */
 function pick(obj, keys){
   for(const k of keys){
     if(obj[k]!==undefined && String(obj[k]).trim()!=='') return String(obj[k]).trim();
   }
   return '';
 }
-function normalizeProduct(raw, catKey){
-  const title = pick(raw, ['product_name','title','name','product','product_title','urun_adi']);
-  const img   = pick(raw, ['image_url','image','img','picture','image_link','product_image','resim']);
-  const price = pick(raw, ['price','sale_price','discounted_price','current_price','fiyat']);
-  const oldP  = pick(raw, ['original_price','old_price','regular_price','list_price','eski_fiyat']);
-  const link  = pick(raw, ['affiliate_link','link','url','product_url','tracking_link','buy_url','promotion_link','click_url','deeplink','product_link']);
-  const cat   = pick(raw, ['category','categories','product_category','kategori']);
-  const disc  = pick(raw, ['discount','discount_percent','indirim','discount_rate']);
-  const cur   = pick(raw, ['currency','currency_code']) || '€';
 
-  const num = s => {
-    if(!s) return 0;
-    const m = String(s).replace(/[^\d.,-]/g,'').replace(',', '.');
-    const n = parseFloat(m);
-    return isFinite(n)? n : 0;
-  };
-  let p = num(price), op = num(oldP), d = num(disc);
+// Fiyat parse: "32 USD", "0.3 USD", "1,234.56 USD" -> number
+function parseMoney(raw){
+  if(raw===undefined || raw===null) return 0;
+  let s = String(raw).trim();
+  if(!s) return 0;
+  // Remove currency words
+  s = s.replace(/[A-Z]{2,}/g,'').replace(/[€$£¥₹₺₽₩]/g,'').trim();
+  // Handle "1,234.56" or "1.234,56"
+  const lastComma = s.lastIndexOf(',');
+  const lastDot = s.lastIndexOf('.');
+  if(lastComma > lastDot){
+    // comma is decimal sep
+    s = s.replace(/\./g,'').replace(',', '.');
+  } else {
+    // dot is decimal
+    s = s.replace(/,/g,'');
+  }
+  const n = parseFloat(s);
+  return isFinite(n)? n : 0;
+}
+
+// Currency detection from price string
+function detectCurrency(raw){
+  if(!raw) return 'USD';
+  const m = String(raw).match(/[A-Z]{3}/);
+  if(m) return m[0];
+  if(/€/.test(raw)) return 'EUR';
+  if(/\$/.test(raw)) return 'USD';
+  if(/£/.test(raw)) return 'GBP';
+  return 'USD';
+}
+
+function normalizeProduct(raw, catKey){
+  // CSV: category_name, id, title, description, price, image_url, size,
+  // Google_product_category, condition, availability, MPN, Shipping,
+  // language, Delivery time, Manufacturer, GTIN, deep_link
+  const title = pick(raw, ['title','product_name','name','product','product_title','urun_adi']);
+  const img   = pick(raw, ['image_url','image','img','picture','image_link','product_image','resim']);
+  const priceRaw = pick(raw, ['price','sale_price','discounted_price','current_price','fiyat']);
+  const oldP  = pick(raw, ['original_price','old_price','regular_price','list_price','eski_fiyat']);
+  const link  = pick(raw, ['deep_link','affiliate_link','link','url','product_url','tracking_link','buy_url','promotion_link','click_url','deeplink','product_link']);
+  const cat   = pick(raw, ['category_name','category','categories','product_category','kategori']);
+  const disc  = pick(raw, ['discount','discount_percent','indirim','discount_rate']);
+  const cur   = pick(raw, ['currency','currency_code']) || detectCurrency(priceRaw);
+
+  let p = parseMoney(priceRaw);
+  let op = parseMoney(oldP);
+  let d = parseMoney(disc);
   if(!d && op>0 && p>0 && op>p){ d = Math.round((1 - p/op)*100); }
 
   return {
-    id: (catKey + '::' + (link || title || Math.random())).slice(0,300),
+    id: (catKey + '::' + (raw.id || link || title || Math.random())).slice(0,300),
     title: title || 'Untitled product',
     image: img,
     price: p,
@@ -782,11 +814,14 @@ function normalizeProduct(raw, catKey){
     link: link,
     category: cat,
     catKey: catKey,
+    description: pick(raw, ['description','desc','aciklama']),
     _rand: Math.random()
   };
 }
 
-/* LOAD */
+/* ============================================================
+   LOAD
+============================================================ */
 async function loadAll(){
   state.isLoading = true;
   const promises = Object.entries(CONFIG.FILES).map(async ([key, file]) => {
@@ -807,7 +842,7 @@ async function loadAll(){
   results.forEach(arr => all = all.concat(arr));
   const seen = new Set();
   state.allProducts = all.filter(p => {
-    if(!p.link && !p.title) return false;
+    if(!p.title) return false;
     if(seen.has(p.id)) return false;
     seen.add(p.id);
     return true;
@@ -819,7 +854,9 @@ async function loadAll(){
   applyFilter();
 }
 
-/* TABS */
+/* ============================================================
+   TABS
+============================================================ */
 function catLabel(cat){ return t('cat_' + cat) || cat; }
 function buildTabs(){
   const wrap = document.getElementById('tabs');
@@ -850,22 +887,28 @@ function buildTabs(){
   });
 }
 
-/* SUBCHIPS */
+/* ============================================================
+   SUBCHIPS — CSV category_name'den geliyor
+============================================================ */
 function buildSubchips(){
   const wrap = document.getElementById('subchips');
   const pool = state.activeCat==='all'
     ? state.allProducts
     : state.allProducts.filter(p=>p.catKey===state.activeCat);
+
+  // Her kategori kaç ürün var
   const map = {};
   pool.forEach(p => {
     if(!p.category) return;
     map[p.category] = (map[p.category]||0) + 1;
   });
   const cats = Object.keys(map).sort();
+
   wrap.innerHTML = '';
   if(cats.length===0){ wrap.style.display='none'; return; }
   wrap.style.display='flex';
 
+  // All chip
   const allChip = document.createElement('div');
   allChip.className = 'chip' + (state.activeSub===''?' active':'');
   allChip.innerHTML = `<span>${t('allSub')}</span><span class="badge">${pool.length}</span>`;
@@ -880,7 +923,9 @@ function buildSubchips(){
   cats.forEach(c => {
     const el = document.createElement('div');
     el.className = 'chip' + (state.activeSub===c?' active':'');
-    el.innerHTML = `<span>${c}</span><span class="badge">${map[c]}</span>`;
+    // capitalize first letter
+    const display = c.charAt(0).toUpperCase() + c.slice(1);
+    el.innerHTML = `<span>${display}</span><span class="badge">${map[c]}</span>`;
     el.onclick = () => {
       state.activeSub = state.activeSub===c ? '' : c;
       state.page = 0;
@@ -891,7 +936,9 @@ function buildSubchips(){
   });
 }
 
-/* FILTER */
+/* ============================================================
+   FILTER + SORT
+============================================================ */
 function shuffleWithSeed(arr, seed){
   const a = arr.slice();
   a.sort((x,y) => hashStr(x.id + seed) - hashStr(y.id + seed));
@@ -928,7 +975,9 @@ function applyFilter(){
   updateEmpty();
 }
 
-/* RENDER */
+/* ============================================================
+   RENDER
+============================================================ */
 const grid = document.getElementById('grid');
 const sentinel = document.getElementById('sentinel');
 
@@ -1024,8 +1073,10 @@ function makeCard(p){
   card.onclick = () => openProduct(p);
   return card;
 }
+
 function fmtPrice(n, cur){
-  const sym = cur && cur.length<=3 ? cur : '€';
+  const symbols = {USD:'$',EUR:'€',GBP:'£',TRY:'₺',CNY:'¥',JPY:'¥',KRW:'₩',INR:'₹',RUB:'₽'};
+  const sym = symbols[cur] || (cur && cur.length<=3 ? cur+' ' : '$');
   return sym + Number(n).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});
 }
 
@@ -1144,14 +1195,12 @@ document.getElementById('copyMail').addEventListener('click', async () => {
   }
 });
 
-/* SCROLL TOP */
 const scrollTopBtn = document.getElementById('scrollTop');
 window.addEventListener('scroll', () => {
   scrollTopBtn.classList.toggle('show', window.scrollY > 600);
 });
 scrollTopBtn.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 
-/* TOAST */
 let toastTimer;
 function showToast(msg){
   const el = document.getElementById('toast');
@@ -1161,10 +1210,8 @@ function showToast(msg){
   toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
 }
 
-/* LANG */
 document.getElementById('langSelect').addEventListener('change', e => applyLang(e.target.value));
 
-/* INIT */
 applyLang(currentLang);
 loadAll();
 </script>
