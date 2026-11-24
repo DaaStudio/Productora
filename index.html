@@ -431,7 +431,7 @@ function applyTheme(mode){
 applyTheme(localStorage.getItem('pr_theme') || 'dark');
 
 /* ============================================================
-   LANGUAGE — Reload olmadan anlık değişim
+   LANGUAGE
 ============================================================ */
 function applyLang(lang){
   if(!I18N[lang]) lang = 'en';
@@ -451,7 +451,7 @@ function applyLang(lang){
 }
 
 /* ============================================================
-   BRIDGE (APP INVENTOR) - Varsayılan: Kapalı (Open in Media)
+   BRIDGE (APP INVENTOR)
 ============================================================ */
 const bridgeSwitch = document.getElementById('bridgeSwitch');
 const bridgeStatus = document.getElementById('bridgeStatus');
@@ -470,7 +470,6 @@ bridgeSwitch.addEventListener('change', e => {
 });
 
 (function restoreBridge(){
-  // Varsayılan olarak '0' (kapalı / open in media) kabul edilir
   const saved = localStorage.getItem('pr_bridge');
   const isOn = saved === '1'; 
   bridgeSwitch.checked = isOn;
@@ -552,7 +551,6 @@ function detectCurrency(raw){
 }
 
 function normalizeProduct(raw, catKey){
-  // YENİ CSV BAŞLIKLARINA GÖRE ÖNCELİKLENDİRİLMİŞ ALANLAR
   const title = pick(raw, ['title', 'product_name', 'name', 'product', 'product_title', 'urun_adi']);
   const img   = pick(raw, ['image_url', 'image', 'img', 'picture', 'image_link', 'product_image', 'resim']);
   const priceRaw = pick(raw, ['price', 'sale_price', 'discounted_price', 'current_price', 'fiyat']);
@@ -816,21 +814,31 @@ function saveUIState(){
   sessionStorage.setItem('pr_scrollY', window.scrollY);
 }
 
+// ==========================================================
+// DÜZELTİLMİŞ openProduct FONKSİYONU
+// ==========================================================
 function openProduct(p){
   if(!p.link || p.link.trim()===''){
     showToast(t('linkMissing'));
     return;
   }
   saveUIState();
-  
-  // BRIDGE KONTROLÜ: Varsayılan kapalı (0) ise dış tarayıcı, açık (1) ise App Inventor WebView
+
   const isAppMode = localStorage.getItem('pr_bridge') === '1';
-  
-  if(isAppMode && window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
-    // Uygulama içinde aç (App Inventor WebView bileşeni bu string'i okuyup yükleyecek)
-    window.AppInventor.setWebViewString(p.link);
+
+  if(isAppMode){
+    // SADECE App Inventor'a string olarak gönder.
+    // App Inventor tarafındaki "WebViewString değişti" bloğu
+    // bu URL'yi yakalayıp WebView.Url'yi kendisi güncelleyecektir.
+    // window.location.href KULLANMIYORUZ (çatışmayı önler).
+    if(window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
+      window.AppInventor.setWebViewString(p.link);
+    } else {
+      // Yedek: Eğer AppInventor objesi yoksa (test amaçlı tarayıcıda açılıyorsa)
+      window.location.href = p.link;
+    }
   } else {
-    // Dış tarayıcıda aç (Varsayılan)
+    // Dış tarayıcıda aç
     try {
       window.open(p.link, '_blank', 'noopener,noreferrer');
     } catch(e) {
