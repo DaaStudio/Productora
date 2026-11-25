@@ -418,6 +418,10 @@ function applyLang(lang){
   showToast(t('langChanged'));
 }
 
+/* ============================================================
+   BRIDGE — console.log + setWebViewString çift kanal
+   Varsayılan: KAPALI (dış tarayıcı / Open in media)
+============================================================ */
 const bridgeSwitch = document.getElementById('bridgeSwitch');
 const bridgeStatus = document.getElementById('bridgeStatus');
 
@@ -433,6 +437,8 @@ bridgeSwitch.addEventListener('change', e => {
       window.AppInventor.setWebViewString(msg);
     }
   }catch(err){}
+  // Console.log ile de gönder (Konsol Mesajında bloğu yakalayacak)
+  console.log("BRIDGE::" + msg);
 });
 
 (function restoreBridge(){
@@ -442,6 +448,9 @@ bridgeSwitch.addEventListener('change', e => {
   setBridgeUI(isOn);
 })();
 
+/* ============================================================
+   CSV PARSER
+============================================================ */
 function parseCSV(text){
   text = text.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n');
   const delimiter = detectDelimiter(text);
@@ -759,6 +768,9 @@ function saveUIState(){
   sessionStorage.setItem('pr_scrollY', window.scrollY);
 }
 
+/* ============================================================
+   ÜRÜN AÇMA — console.log + setWebViewString çift kanal
+============================================================ */
 function openProduct(p){
   if(!p.link || p.link.trim()===''){
     showToast(t('linkMissing'));
@@ -769,12 +781,17 @@ function openProduct(p){
   const isAppMode = localStorage.getItem('pr_bridge') === '1';
 
   if(isAppMode){
-    // Şalter AÇIK: App Inventor'a URL gönder, bloklar Go To URL ile yüklesin
-    if(window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
-      window.AppInventor.setWebViewString(p.link);
-    }
+    // Kanal 1: setWebViewString (eski yöntem, yedek)
+    try{
+      if(window.AppInventor && typeof window.AppInventor.setWebViewString === 'function'){
+        window.AppInventor.setWebViewString(p.link);
+      }
+    }catch(err){}
+    // Kanal 2: console.log (HER ZAMAN ÇALIŞIR)
+    // Bloktaki "Konsol Mesajında" olayı "OPENURL::" önekini yakalayacak
+    console.log("OPENURL::" + p.link);
   } else {
-    // Şalter KAPALI: Dış tarayıcıda aç
+    // Dış tarayıcıda aç (varsayılan)
     try {
       window.open(p.link, '_blank', 'noopener,noreferrer');
     } catch(e) {
